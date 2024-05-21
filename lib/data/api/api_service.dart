@@ -1,14 +1,19 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:tugas_akhir_app/model/login.dart';
 import 'package:tugas_akhir_app/model/register.dart';
+import 'package:tugas_akhir_app/model/upload.dart';
 
 class ApiService {
   static const String _baseUrl = 'http://localhost:3000';
   static const String _login = '/auth/owners/signin';
   static const String _register = '/auth/owners/signup';
-  static const String _logout = '/auth/owners/signout';
+  // static const String _logout = '/auth/owners/signout';
+  static const String _store = '/stores';
 
   Future<RegisterResponse> register({
     required String email,
@@ -57,6 +62,56 @@ class ApiService {
       return LoginResponse.fromJson(jsonDecode(response.body));
     } else {
       return LoginResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<UploadResponse> addStore(
+    String token,
+    List<List<int>> images,
+    List<String> filenames,
+    String name,
+    String description,
+    String location,
+    double latitude,
+    double longitude,
+    TimeOfDay openAt,
+    TimeOfDay closeAt,
+  ) async {
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('$_baseUrl$_store'),
+    );
+
+    for (int i = 0; i < images.length; i++) {
+      var multipartFile = http.MultipartFile.fromBytes(
+        'images',
+        images[i],
+        filename: filenames[i],
+      );
+      request.files.add(multipartFile);
+    }
+
+    request.fields.addAll({
+      'name': name,
+      'description': description,
+      'location': location,
+      'latitude': latitude.toString(),
+      'longitude': longitude.toString(),
+      'openAt': '${openAt.hour}:${openAt.minute}',
+      'closeAt': '${closeAt.hour}:${closeAt.minute}',
+    });
+
+    request.headers.addAll({
+      'Authorization': 'Bearer $token',
+    });
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to upload store: ${response.reasonPhrase}');
     }
   }
 }

@@ -104,4 +104,10 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
   }
+
+  Future<void> logout() async {
+    await authRepository.saveState(false);
+    await authRepository.deleteUser();
+    notifyListeners();
+  }
 }
