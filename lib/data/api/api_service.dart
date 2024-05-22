@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 import 'package:tugas_akhir_app/model/login.dart';
 import 'package:tugas_akhir_app/model/register.dart';
+import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 
 class ApiService {
@@ -14,6 +13,7 @@ class ApiService {
   static const String _register = '/auth/owners/signup';
   // static const String _logout = '/auth/owners/signout';
   static const String _store = '/stores';
+  static const String _allStore = '/stores/all';
 
   Future<RegisterResponse> register({
     required String email,
@@ -112,6 +112,25 @@ class ApiService {
       return UploadResponse.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to upload store: ${response.reasonPhrase}');
+    }
+  }
+
+  Future<StoreResponse> getAllStore({
+    required String token,
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl$_allStore?page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return StoreResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw StoreResponse.fromJson(jsonDecode(response.body));
     }
   }
 }

@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tugas_akhir_app/common/loading_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
+import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 import 'package:image/image.dart' as img;
 
@@ -26,6 +27,60 @@ class StoreProvider extends ChangeNotifier {
   String? get message => _message;
 
   UploadResponse? uploadResponse;
+  StoreResponse? storeResponse;
+
+  int? pageItems = 1;
+  int sizeItems = 10;
+
+  List<Store> stores = [];
+
+  int _activeStoreCount = 0;
+  int get activeStoreCount => _activeStoreCount;
+
+  Future<void> getAllStore() async {
+    try {
+      if (pageItems == 1) {
+        loadingState = const LoadingState.loading();
+        notifyListeners();
+      }
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      storeResponse = await apiService.getAllStore(
+          token: token!, page: pageItems!, size: sizeItems);
+
+      if (storeResponse!.success) {
+        stores.addAll(storeResponse!.result.data);
+
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+
+        if (storeResponse!.result.data.length < sizeItems) {
+          pageItems = null;
+        } else {
+          pageItems = pageItems! + 1;
+        }
+      } else {
+        loadingState = LoadingState.error(storeResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
+  Future<void> getTotalActiveStore() async {
+    _activeStoreCount = stores.where((store) => store.isActive).length;
+  }
+
+  Future<void> refreshStore() async {
+    pageItems = 1;
+    stores.clear();
+    await getAllStore();
+    await getTotalActiveStore();
+  }
 
   Future<void> addStore(
     String name,

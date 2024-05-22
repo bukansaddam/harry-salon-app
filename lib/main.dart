@@ -61,7 +61,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => di.locator<AuthProvider>()),
         ChangeNotifierProvider(create: (context) => di.locator<HomeProvider>()),
-        ChangeNotifierProvider(create: (context) => di.locator<StoreProvider>()),
+        ChangeNotifierProvider(
+            create: (context) => di.locator<StoreProvider>()),
       ],
       child: MaterialApp.router(
         theme: ThemeData(
