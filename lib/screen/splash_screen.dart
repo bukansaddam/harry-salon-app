@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
@@ -33,12 +32,23 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Harry Styles',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF3B59BA), Color(0xFF354A98)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: const Center(
+        child: Text(
+          'Harry Salon',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 52,
+            fontWeight: FontWeight.bold,
+            decoration: TextDecoration.none,
+          ),
         ),
       ),
     );
