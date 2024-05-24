@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/model/login.dart';
 import 'package:tugas_akhir_app/model/register.dart';
 import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 
 class ApiService {
-  static const String _baseUrl = 'http://localhost:3000';
+  static const String baseUrl = 'http://localhost:3000';
   static const String _login = '/auth/owners/signin';
   static const String _register = '/auth/owners/signup';
   // static const String _logout = '/auth/owners/signout';
@@ -23,7 +24,7 @@ class ApiService {
     required String address,
   }) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl$_register'),
+      Uri.parse('$baseUrl$_register'),
       body: jsonEncode(<String, String>{
         'email': email,
         'password': password,
@@ -48,7 +49,7 @@ class ApiService {
     required String password,
   }) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl$_login'),
+      Uri.parse('$baseUrl$_login'),
       body: jsonEncode(<String, String>{
         'email': email,
         'password': password,
@@ -79,7 +80,7 @@ class ApiService {
   ) async {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('$_baseUrl$_store'),
+      Uri.parse('$baseUrl$_store'),
     );
 
     for (int i = 0; i < images.length; i++) {
@@ -121,7 +122,7 @@ class ApiService {
     int size = 10,
   }) async {
     final response = await http.get(
-      Uri.parse('$_baseUrl$_allStore?page=$page&pageSize=$size'),
+      Uri.parse('$baseUrl$_allStore?page=$page&pageSize=$size'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },
@@ -130,7 +131,25 @@ class ApiService {
     if (response.statusCode == 200) {
       return StoreResponse.fromJson(jsonDecode(response.body));
     } else {
-      throw StoreResponse.fromJson(jsonDecode(response.body));
+      throw Exception('Failed to load store');
+    }
+  }
+
+  Future<DetailStoreResponse> getDetailStore({
+    required String token,
+    required String id,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_store/$id'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return DetailStoreResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw DetailStoreResponse.fromJson(jsonDecode(response.body));
     }
   }
 }

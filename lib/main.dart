@@ -4,12 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
-import 'package:tugas_akhir_app/screen/dashboard/add_store_screen.dart';
-import 'package:tugas_akhir_app/screen/dashboard/dashboard_screen.dart';
+import 'package:tugas_akhir_app/screen/store/add_store_screen.dart';
+import 'package:tugas_akhir_app/screen/store/dashboard_screen.dart';
 import 'package:tugas_akhir_app/screen/home_screen.dart';
-import 'package:tugas_akhir_app/screen/login_screen.dart';
-import 'package:tugas_akhir_app/screen/register_screen.dart';
+import 'package:tugas_akhir_app/screen/auth/login_screen.dart';
+import 'package:tugas_akhir_app/screen/auth/register_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
+import 'package:tugas_akhir_app/screen/store/detail_statistic_screen.dart';
+import 'package:tugas_akhir_app/screen/store/detail_store_screen.dart';
 import 'injection.dart' as di;
 
 void main() {
@@ -47,7 +49,21 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
         path: 'add-store',
         name: 'add_store',
         builder: (context, state) => const AddStoreScreen(),
-      )
+      ),
+      GoRoute(
+          path: 'detail-store/:id',
+          name: 'detail_store',
+          builder: (context, state) {
+            final id = state.pathParameters['id'];
+            return DetailStoreScreen(id: id!);
+          },
+          routes: [
+            GoRoute(
+              path: 'detail-statistic',
+              name: 'detail_statistic',
+              builder: (context, state) => const DetailStatisticScreen(),
+            )
+          ])
     ],
   )
 ]);
@@ -59,10 +75,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => di.locator<AuthProvider>()),
-        ChangeNotifierProvider(create: (context) => di.locator<HomeProvider>()),
         ChangeNotifierProvider(
-            create: (context) => di.locator<StoreProvider>()),
+          create: (context) => di.locator<AuthProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<HomeProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<StoreProvider>(),
+        ),
       ],
       child: MaterialApp.router(
         theme: ThemeData(

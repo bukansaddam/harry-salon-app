@@ -11,7 +11,8 @@ class StoreResponse with _$StoreResponse {
     required StoreResult result,
   }) = _StoreResponse;
 
-  factory StoreResponse.fromJson(Map<String, dynamic> json) => _$StoreResponseFromJson(json);
+  factory StoreResponse.fromJson(Map<String, dynamic> json) =>
+      _$StoreResponseFromJson(json);
 }
 
 @freezed
@@ -22,11 +23,12 @@ class StoreResult with _$StoreResult {
     required List<Store> data,
   }) = _StoreResult;
 
-  factory StoreResult.fromJson(Map<String, dynamic> json) => _$StoreResultFromJson(json);
+  factory StoreResult.fromJson(Map<String, dynamic> json) =>
+      _$StoreResultFromJson(json);
 }
 
 @freezed
-class Store with _$Store{
+class Store with _$Store {
   const factory Store({
     required String id,
     required String name,
