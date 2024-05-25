@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/search_bar.dart';
@@ -116,8 +117,14 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                 }
                 final employee = provider.employees[index];
                 return ListTile(
+                  onTap: () {
+                    context.pushNamed('detail_employee', pathParameters: {
+                      'id': employee.id,
+                    });
+                  },
                   leading: CircleAvatar(
-                    child: Image.network(employee.avatar),
+                    radius: 20,
+                    backgroundImage: Image.network(employee.avatar).image,
                   ),
                   title: Text(employee.name),
                   trailing: PopupMenuButton(

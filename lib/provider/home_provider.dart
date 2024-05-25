@@ -8,6 +8,14 @@ class HomeProvider extends ChangeNotifier {
 
   HomeProvider({required this.apiService, required this.authRepository});
 
+  int _selectedIndex = 0;
+  int get selectedIndex => _selectedIndex;
+
+  Future<void> onItemTapped(int index) async {
+    _selectedIndex = index;
+    notifyListeners();
+  }
+
   Future<bool> logout() async {
     try {
       await authRepository.deleteUser();

@@ -205,7 +205,9 @@ StoreResult _$StoreResultFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$StoreResult {
+  @JsonKey(name: 'total_count')
   int? get totalCount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'total_pages')
   int? get totalPages => throw _privateConstructorUsedError;
   List<Store> get data => throw _privateConstructorUsedError;
 
@@ -221,7 +223,10 @@ abstract class $StoreResultCopyWith<$Res> {
           StoreResult value, $Res Function(StoreResult) then) =
       _$StoreResultCopyWithImpl<$Res, StoreResult>;
   @useResult
-  $Res call({int? totalCount, int? totalPages, List<Store> data});
+  $Res call(
+      {@JsonKey(name: 'total_count') int? totalCount,
+      @JsonKey(name: 'total_pages') int? totalPages,
+      List<Store> data});
 }
 
 /// @nodoc
@@ -266,7 +271,10 @@ abstract class _$$StoreResultImplCopyWith<$Res>
       __$$StoreResultImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int? totalCount, int? totalPages, List<Store> data});
+  $Res call(
+      {@JsonKey(name: 'total_count') int? totalCount,
+      @JsonKey(name: 'total_pages') int? totalPages,
+      List<Store> data});
 }
 
 /// @nodoc
@@ -305,8 +313,8 @@ class __$$StoreResultImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$StoreResultImpl implements _StoreResult {
   const _$StoreResultImpl(
-      {required this.totalCount,
-      required this.totalPages,
+      {@JsonKey(name: 'total_count') required this.totalCount,
+      @JsonKey(name: 'total_pages') required this.totalPages,
       required final List<Store> data})
       : _data = data;
 
@@ -314,8 +322,10 @@ class _$StoreResultImpl implements _StoreResult {
       _$$StoreResultImplFromJson(json);
 
   @override
+  @JsonKey(name: 'total_count')
   final int? totalCount;
   @override
+  @JsonKey(name: 'total_pages')
   final int? totalPages;
   final List<Store> _data;
   @override
@@ -363,16 +373,18 @@ class _$StoreResultImpl implements _StoreResult {
 
 abstract class _StoreResult implements StoreResult {
   const factory _StoreResult(
-      {required final int? totalCount,
-      required final int? totalPages,
+      {@JsonKey(name: 'total_count') required final int? totalCount,
+      @JsonKey(name: 'total_pages') required final int? totalPages,
       required final List<Store> data}) = _$StoreResultImpl;
 
   factory _StoreResult.fromJson(Map<String, dynamic> json) =
       _$StoreResultImpl.fromJson;
 
   @override
+  @JsonKey(name: 'total_count')
   int? get totalCount;
   @override
+  @JsonKey(name: 'total_pages')
   int? get totalPages;
   @override
   List<Store> get data;

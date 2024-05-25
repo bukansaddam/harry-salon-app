@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
+import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/screen/employee/employee_screen.dart';
 import 'package:tugas_akhir_app/screen/store/dashboard_screen.dart';
 import 'package:tugas_akhir_app/screen/widgets/item_drawer.dart';
@@ -12,14 +14,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
   String _title = 'Dashboard';
   bool _expanded = true;
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _selectedIndex = context.watch<HomeProvider>().selectedIndex;
+  }
+
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    context.read<HomeProvider>().onItemTapped(index);
   }
 
   static const List<Widget> _widgetOptions = <Widget>[

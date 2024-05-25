@@ -22,8 +22,8 @@ Map<String, dynamic> _$$StoreResponseImplToJson(_$StoreResponseImpl instance) =>
 
 _$StoreResultImpl _$$StoreResultImplFromJson(Map<String, dynamic> json) =>
     _$StoreResultImpl(
-      totalCount: (json['totalCount'] as num?)?.toInt(),
-      totalPages: (json['totalPages'] as num?)?.toInt(),
+      totalCount: (json['total_count'] as num?)?.toInt(),
+      totalPages: (json['total_pages'] as num?)?.toInt(),
       data: (json['data'] as List<dynamic>)
           .map((e) => Store.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -31,8 +31,8 @@ _$StoreResultImpl _$$StoreResultImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$StoreResultImplToJson(_$StoreResultImpl instance) =>
     <String, dynamic>{
-      'totalCount': instance.totalCount,
-      'totalPages': instance.totalPages,
+      'total_count': instance.totalCount,
+      'total_pages': instance.totalPages,
       'data': instance.data,
     };
 

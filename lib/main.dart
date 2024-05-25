@@ -5,6 +5,8 @@ import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
+import 'package:tugas_akhir_app/screen/employee/detail_employee_screen.dart';
+import 'package:tugas_akhir_app/screen/employee/employee_screen.dart';
 import 'package:tugas_akhir_app/screen/store/add_store_screen.dart';
 import 'package:tugas_akhir_app/screen/store/dashboard_screen.dart';
 import 'package:tugas_akhir_app/screen/home_screen.dart';
@@ -52,19 +54,33 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
         builder: (context, state) => const AddStoreScreen(),
       ),
       GoRoute(
-          path: 'detail-store/:id',
-          name: 'detail_store',
-          builder: (context, state) {
-            final id = state.pathParameters['id'];
-            return DetailStoreScreen(id: id!);
-          },
-          routes: [
-            GoRoute(
-              path: 'detail-statistic',
-              name: 'detail_statistic',
-              builder: (context, state) => const DetailStatisticScreen(),
-            )
-          ])
+        path: 'detail-store/:id',
+        name: 'detail_store',
+        builder: (context, state) {
+          final id = state.pathParameters['id'];
+          return DetailStoreScreen(id: id!);
+        },
+        routes: [
+          GoRoute(
+            path: 'detail-statistic',
+            name: 'detail_statistic',
+            builder: (context, state) => const DetailStatisticScreen(),
+          )
+        ],
+      ),
+      GoRoute(
+        path: 'employee',
+        name: 'employee',
+        builder: (context, state) => const EmployeeScreen(),
+      ),
+      GoRoute(
+        path: 'detail-employee/:id',
+        name: 'detail_employee',
+        builder: (context, state) {
+          final id = state.pathParameters['id'];
+          return DetailEmployeeScreen(id: id!);
+        },
+      ),
     ],
   )
 ]);

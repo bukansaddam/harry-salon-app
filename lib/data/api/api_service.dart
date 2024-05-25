@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:tugas_akhir_app/model/detail_employee.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/model/employee.dart';
 import 'package:tugas_akhir_app/model/login.dart';
@@ -17,6 +18,7 @@ class ApiService {
   static const String _store = '/stores';
   static const String _allStore = '/stores/all';
   static const String _allEmployee = '/employees/all';
+  static const String _employee = '/employees';
 
   Future<RegisterResponse> register({
     required String email,
@@ -172,6 +174,24 @@ class ApiService {
       return EmployeeResponse.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load employee');
+    }
+  }
+
+  Future<DetailEmployeeResponse> getDetailEmployee({
+    required String token,
+    required String id,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_employee/$id'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return DetailEmployeeResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw DetailEmployeeResponse.fromJson(jsonDecode(response.body));
     }
   }
 }
