@@ -18,8 +18,8 @@ class StoreResponse with _$StoreResponse {
 @freezed
 class StoreResult with _$StoreResult {
   const factory StoreResult({
-    required int? totalCount,
-    required int? totalPages,
+    @JsonKey(name: 'total_count') required int? totalCount,
+    @JsonKey(name: 'total_pages') required int? totalPages,
     required List<Store> data,
   }) = _StoreResult;
 

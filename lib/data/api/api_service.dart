@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tugas_akhir_app/model/detail_store.dart';
+import 'package:tugas_akhir_app/model/employee.dart';
 import 'package:tugas_akhir_app/model/login.dart';
 import 'package:tugas_akhir_app/model/register.dart';
 import 'package:tugas_akhir_app/model/store.dart';
@@ -15,6 +16,7 @@ class ApiService {
   // static const String _logout = '/auth/owners/signout';
   static const String _store = '/stores';
   static const String _allStore = '/stores/all';
+  static const String _allEmployee = '/employees/all';
 
   Future<RegisterResponse> register({
     required String email,
@@ -150,6 +152,26 @@ class ApiService {
       return DetailStoreResponse.fromJson(jsonDecode(response.body));
     } else {
       throw DetailStoreResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<EmployeeResponse> getAllEmployee({
+    required String token,
+    String name = '',
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_allEmployee?name=$name&page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return EmployeeResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load employee');
     }
   }
 }

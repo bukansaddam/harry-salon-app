@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
+import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/screen/store/add_store_screen.dart';
@@ -84,6 +85,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => di.locator<StoreProvider>(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<EmployeeProvider>(),
+        )
       ],
       child: MaterialApp.router(
         theme: ThemeData(

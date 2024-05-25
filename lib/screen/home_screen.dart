@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:tugas_akhir_app/screen/employee/employee_screen.dart';
 import 'package:tugas_akhir_app/screen/store/dashboard_screen.dart';
 import 'package:tugas_akhir_app/screen/widgets/item_drawer.dart';
 
@@ -23,10 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     DashboardScreen(),
-    Text(
-      'Employee',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
+    EmployeeScreen(),
     Text(
       'Service',
       style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
