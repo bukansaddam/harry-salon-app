@@ -289,7 +289,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
         );
         if (mounted) {
           if (provider.uploadResponse!.success) {
-            context.read<StoreProvider>().refreshStore();
+            provider.refreshStore();
             _showMessage(context, provider.uploadResponse!.message);
             context.pop();
           } else {

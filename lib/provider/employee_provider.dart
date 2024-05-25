@@ -3,6 +3,7 @@ import 'package:tugas_akhir_app/common/loading_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/employee.dart';
+import 'package:tugas_akhir_app/model/upload.dart';
 
 class EmployeeProvider extends ChangeNotifier {
   final ApiService apiService;
@@ -13,13 +14,14 @@ class EmployeeProvider extends ChangeNotifier {
   LoadingState loadingState = const LoadingState.initial();
 
   EmployeeResponse? employeeResponse;
+  UploadResponse? uploadResponse;
 
   int? pageItems = 1;
   int sizeItems = 10;
 
   List<Employee> employees = [];
 
-  Future<void> getAllEmployee(String searchValue) async {
+  Future<void> getAllEmployee({String? searchValue}) async {
     try {
       if (pageItems == 1) {
         loadingState = const LoadingState.loading();
@@ -42,7 +44,10 @@ class EmployeeProvider extends ChangeNotifier {
       }
 
       employeeResponse = await apiService.getAllEmployee(
-          token: token, page: pageItems!, size: sizeItems, name: searchValue);
+          token: token,
+          page: pageItems!,
+          size: sizeItems,
+          name: searchValue ?? '');
 
       if (employeeResponse == null) {
         loadingState = const LoadingState.error('Employee not found');
@@ -55,7 +60,6 @@ class EmployeeProvider extends ChangeNotifier {
           employees.clear();
         }
         employees.addAll(employeeResponse!.result.data);
-        debugPrint(employees.toString());
 
         loadingState = const LoadingState.loaded();
         notifyListeners();
@@ -70,16 +74,46 @@ class EmployeeProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      debugPrint(e.toString());
       loadingState = LoadingState.error(e.toString());
       notifyListeners();
     }
   }
 
-  Future<void> refreshEmployee(String searchValue) async {
+  Future<void> refreshEmployee({String? searchValue}) async {
     loadingState = const LoadingState.loading();
     pageItems = 1;
     employees.clear();
-    await getAllEmployee(searchValue);
+    await getAllEmployee();
+  }
+
+  Future<void> createEmployee(String name, String address, String storeId,
+      String phoneNumber, String email, String password) async {
+    try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        loadingState = const LoadingState.error('Token not found');
+        notifyListeners();
+        return;
+      }
+
+      uploadResponse = await apiService.createEmployee(
+          token, name, address, storeId, phoneNumber, email, password);
+
+      if (uploadResponse!.success) {
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(uploadResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
   }
 }

@@ -28,13 +28,13 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         if (employeeProvider.pageItems != null) {
-          employeeProvider.getAllEmployee('');
+          employeeProvider.getAllEmployee();
         }
       }
     });
 
     Future.microtask(() async {
-      employeeProvider.refreshEmployee('');
+      employeeProvider.refreshEmployee();
     });
   }
 
@@ -49,7 +49,7 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 1000), () {
-      context.read<EmployeeProvider>().refreshEmployee(query);
+      context.read<EmployeeProvider>().refreshEmployee(searchValue: query);
     });
   }
 
@@ -171,7 +171,9 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
         ),
       ),
       child: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          context.goNamed('add_employee');
+        },
         backgroundColor: Colors.transparent,
         elevation: 0,
         child: const Icon(Icons.add, color: Colors.white),

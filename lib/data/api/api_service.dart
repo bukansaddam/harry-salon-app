@@ -194,4 +194,37 @@ class ApiService {
       throw DetailEmployeeResponse.fromJson(jsonDecode(response.body));
     }
   }
+
+  Future<UploadResponse> createEmployee(
+    String token,
+    String name,
+    String address,
+    String storeId,
+    String phone,
+    String email,
+    String password,
+  ) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl$_employee'),
+      body: jsonEncode(<String, String>{
+        'name': name,
+        'address': address,
+        'storeId': storeId,
+        'phone': phone,
+        'email': email,
+        'password': password,
+      }),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
 }

@@ -5,6 +5,7 @@ import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
+import 'package:tugas_akhir_app/screen/employee/add_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/detail_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/employee_screen.dart';
 import 'package:tugas_akhir_app/screen/store/add_store_screen.dart';
@@ -80,6 +81,11 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
           final id = state.pathParameters['id'];
           return DetailEmployeeScreen(id: id!);
         },
+      ),
+      GoRoute(
+        path: 'add-employee',
+        name: 'add_employee',
+        builder: (context, state) => const AddEmployeeScreen(),
       ),
     ],
   )
