@@ -44,6 +44,7 @@ _$EmployeeImpl _$$EmployeeImplFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       name: json['name'] as String,
       avatar: json['avatar'] as String,
+      storeId: json['storeId'] as String?,
     );
 
 Map<String, dynamic> _$$EmployeeImplToJson(_$EmployeeImpl instance) =>
@@ -51,4 +52,5 @@ Map<String, dynamic> _$$EmployeeImplToJson(_$EmployeeImpl instance) =>
       'id': instance.id,
       'name': instance.name,
       'avatar': instance.avatar,
+      'storeId': instance.storeId,
     };

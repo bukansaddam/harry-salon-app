@@ -16,6 +16,7 @@ import 'package:tugas_akhir_app/screen/auth/register_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
 import 'package:tugas_akhir_app/screen/store/detail_statistic_screen.dart';
 import 'package:tugas_akhir_app/screen/store/detail_store_screen.dart';
+import 'package:tugas_akhir_app/screen/store/more_employee_screen.dart';
 import 'injection.dart' as di;
 
 void main() {
@@ -66,6 +67,14 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
             path: 'detail-statistic',
             name: 'detail_statistic',
             builder: (context, state) => const DetailStatisticScreen(),
+          ),
+          GoRoute(
+            path: 'more-employee',
+            name: 'more_employee',
+            builder: (context, state) {
+              final storeId = state.pathParameters['id'];
+              return MoreEmployeeScreen(storeId: storeId!);
+            },
           )
         ],
       ),
@@ -116,12 +125,14 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.white,
-              elevation: 0,
-              titleTextStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontSize: 20)),
+            backgroundColor: Colors.white,
+            elevation: 0,
+            titleTextStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontSize: 20,
+            ),
+          ),
         ),
         routerConfig: _router,
       ),

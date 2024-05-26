@@ -405,6 +405,7 @@ mixin _$Employee {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get avatar => throw _privateConstructorUsedError;
+  String? get storeId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -417,7 +418,7 @@ abstract class $EmployeeCopyWith<$Res> {
   factory $EmployeeCopyWith(Employee value, $Res Function(Employee) then) =
       _$EmployeeCopyWithImpl<$Res, Employee>;
   @useResult
-  $Res call({String id, String name, String avatar});
+  $Res call({String id, String name, String avatar, String? storeId});
 }
 
 /// @nodoc
@@ -436,6 +437,7 @@ class _$EmployeeCopyWithImpl<$Res, $Val extends Employee>
     Object? id = null,
     Object? name = null,
     Object? avatar = null,
+    Object? storeId = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -450,6 +452,10 @@ class _$EmployeeCopyWithImpl<$Res, $Val extends Employee>
           ? _value.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
               as String,
+      storeId: freezed == storeId
+          ? _value.storeId
+          : storeId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -462,7 +468,7 @@ abstract class _$$EmployeeImplCopyWith<$Res>
       __$$EmployeeImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name, String avatar});
+  $Res call({String id, String name, String avatar, String? storeId});
 }
 
 /// @nodoc
@@ -479,6 +485,7 @@ class __$$EmployeeImplCopyWithImpl<$Res>
     Object? id = null,
     Object? name = null,
     Object? avatar = null,
+    Object? storeId = freezed,
   }) {
     return _then(_$EmployeeImpl(
       id: null == id
@@ -493,6 +500,10 @@ class __$$EmployeeImplCopyWithImpl<$Res>
           ? _value.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
               as String,
+      storeId: freezed == storeId
+          ? _value.storeId
+          : storeId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -501,7 +512,10 @@ class __$$EmployeeImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$EmployeeImpl implements _Employee {
   const _$EmployeeImpl(
-      {required this.id, required this.name, required this.avatar});
+      {required this.id,
+      required this.name,
+      required this.avatar,
+      required this.storeId});
 
   factory _$EmployeeImpl.fromJson(Map<String, dynamic> json) =>
       _$$EmployeeImplFromJson(json);
@@ -512,10 +526,12 @@ class _$EmployeeImpl implements _Employee {
   final String name;
   @override
   final String avatar;
+  @override
+  final String? storeId;
 
   @override
   String toString() {
-    return 'Employee(id: $id, name: $name, avatar: $avatar)';
+    return 'Employee(id: $id, name: $name, avatar: $avatar, storeId: $storeId)';
   }
 
   @override
@@ -525,12 +541,13 @@ class _$EmployeeImpl implements _Employee {
             other is _$EmployeeImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.avatar, avatar) || other.avatar == avatar));
+            (identical(other.avatar, avatar) || other.avatar == avatar) &&
+            (identical(other.storeId, storeId) || other.storeId == storeId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, avatar);
+  int get hashCode => Object.hash(runtimeType, id, name, avatar, storeId);
 
   @JsonKey(ignore: true)
   @override
@@ -550,7 +567,8 @@ abstract class _Employee implements Employee {
   const factory _Employee(
       {required final String id,
       required final String name,
-      required final String avatar}) = _$EmployeeImpl;
+      required final String avatar,
+      required final String? storeId}) = _$EmployeeImpl;
 
   factory _Employee.fromJson(Map<String, dynamic> json) =
       _$EmployeeImpl.fromJson;
@@ -561,6 +579,8 @@ abstract class _Employee implements Employee {
   String get name;
   @override
   String get avatar;
+  @override
+  String? get storeId;
   @override
   @JsonKey(ignore: true)
   _$$EmployeeImplCopyWith<_$EmployeeImpl> get copyWith =>

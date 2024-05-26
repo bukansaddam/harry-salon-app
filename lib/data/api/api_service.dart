@@ -16,8 +16,6 @@ class ApiService {
   static const String _register = '/auth/owners/signup';
   // static const String _logout = '/auth/owners/signout';
   static const String _store = '/stores';
-  static const String _allStore = '/stores/all';
-  static const String _allEmployee = '/employees/all';
   static const String _employee = '/employees';
 
   Future<RegisterResponse> register({
@@ -126,7 +124,7 @@ class ApiService {
     int size = 10,
   }) async {
     final response = await http.get(
-      Uri.parse('$baseUrl$_allStore?page=$page&pageSize=$size'),
+      Uri.parse('$baseUrl$_store/all?page=$page&pageSize=$size'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },
@@ -164,7 +162,7 @@ class ApiService {
     int size = 10,
   }) async {
     final response = await http.get(
-      Uri.parse('$baseUrl$_allEmployee?name=$name&page=$page&pageSize=$size'),
+      Uri.parse('$baseUrl$_employee/all?name=$name&page=$page&pageSize=$size'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },
@@ -225,6 +223,28 @@ class ApiService {
       return UploadResponse.fromJson(jsonDecode(response.body));
     } else {
       return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<EmployeeResponse> getEmployeeByStore({
+    required String token,
+    required String storeId,
+    String name = '',
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse(
+          '$baseUrl$_employee/store/$storeId?name=$name&page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return EmployeeResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return EmployeeResponse.fromJson(jsonDecode(response.body));
     }
   }
 }

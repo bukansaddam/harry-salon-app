@@ -42,6 +42,17 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     super.dispose();
   }
 
+  void _onSelected(value) {
+    switch (value) {
+      case 'Edit':
+        ToastMessage.show(context, 'Edit');
+        break;
+      case 'Delete':
+        ToastMessage.show(context, 'Delete');
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -62,7 +73,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
             ),
             loaded: () {
               final detailStore = detailProvider.detailStoreResponse!.data;
-              return _buildBody(context, detailStore);
+              return _buildBody(context, detailStore, detailProvider);
             },
             error: (message) => Center(
               child: Text(message),
@@ -73,7 +84,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildBody(BuildContext context, DetailStore detailStore) {
+  Widget _buildBody(BuildContext context, DetailStore detailStore,
+      StoreDetailProvider detailProvider) {
     return Scaffold(
       body: Stack(
         children: [
@@ -280,7 +292,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                             controller: _tabController,
                             physics: const NeverScrollableScrollPhysics(),
                             children: [
-                              _buildDetail(detailStore),
+                              _buildDetail(detailStore, detailProvider),
                               _buildReport(detailStore),
                             ],
                           ),
@@ -297,7 +309,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildDetail(DetailStore detailStore) {
+  Widget _buildDetail(
+      DetailStore detailStore, StoreDetailProvider detailProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -310,18 +323,62 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           detailStore.description,
           textAlign: TextAlign.justify,
         ),
-        const SizedBox(height: 16),
-        const Text(
+        const SizedBox(height: 12),
+        _buildServiceSection(detailStore),
+        const SizedBox(height: 12),
+        _buildEmployeeSection(detailStore, detailProvider),
+        const SizedBox(height: 12),
+        _buildRatingSection(detailStore),
+        const SizedBox(height: 12),
+        _buildCommoditySection(detailStore),
+      ],
+    );
+  }
+
+  Widget _buildReport(DetailStore detailStore) {
+    List<double> weeklyData = [];
+    for (int i = 0; i < 7; i++) {
+      weeklyData.add(Random().nextInt(90) + 10);
+    }
+    List<int> dates = [];
+    DateTime now = DateTime.now().subtract(const Duration(days: 1));
+    for (int i = 6; i >= 0; i--) {
+      DateTime date = now.subtract(Duration(days: i));
+      dates.add(date.day);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildStatisticSection(weeklyData, dates),
+        _buildHistorySection(),
+      ],
+    );
+  }
+
+  Widget _buildServiceSection(DetailStore detailStore) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
           'Services',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
-        const SizedBox(height: 4),
-        const ListTile(
+        SizedBox(height: 4),
+        ListTile(
           title: Text('Potong Rambut'),
           trailing: Text('Rp 50.000'),
           leading: Icon(Icons.abc),
         ),
-        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildEmployeeSection(
+      DetailStore detailStore, StoreDetailProvider detailProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -330,7 +387,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                context.goNamed(
+                  'more_employee',
+                  pathParameters: {'id': widget.id},
+                );
+              },
               child: const Text(
                 'see more',
                 style: TextStyle(color: Colors.blue),
@@ -339,11 +401,46 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           ],
         ),
         const SizedBox(height: 4),
-        const ListTile(
-          title: Text('Joe Bambang'),
-          leading: Icon(Icons.abc),
+        _buildListEmployee(detailStore, detailProvider),
+        Center(
+          child: Text(
+            '${detailProvider.employees.length - 3} more employees',
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 16,
+            ),
+          ),
         ),
-        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildListEmployee(
+      DetailStore detailStore, StoreDetailProvider detailProvider) {
+    if (detailProvider.employees.isEmpty) {
+      return const Center(child: Text('No employees found'));
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: 3,
+      itemBuilder: (context, index) {
+        return ListTile(
+            title: Text(detailProvider.employees[index].name),
+            leading: CircleAvatar(
+              radius: 20,
+              backgroundImage:
+                  Image.network(detailProvider.employees[index].avatar).image,
+            ));
+      },
+    );
+  }
+
+  Widget _buildRatingSection(DetailStore detailStore) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -393,7 +490,14 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           title: Text('Joe Bambang'),
           leading: Icon(Icons.abc),
         ),
-        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildCommoditySection(DetailStore detailStore) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -419,129 +523,118 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildReport(DetailStore detailStore) {
-    List<double> weeklyData = [];
-    for (int i = 0; i < 7; i++) {
-      weeklyData.add(Random().nextInt(90) + 10);
-    }
-    List<int> dates = [];
-    DateTime now = DateTime.now().subtract(const Duration(days: 1));
-    for (int i = 6; i >= 0; i--) {
-      DateTime date = now.subtract(Duration(days: i));
-      dates.add(date.day);
-    }
+  Widget _buildStatisticSection(List<double> weeklyData, List<int> dates) {
+    return InkWell(
+      onTap: () {
+        context.goNamed('detail_statistic', pathParameters: {'id': widget.id});
+      },
+      child: Container(
+        width: double.infinity,
+        height: 200,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(13),
+          color: const Color.fromARGB(255, 242, 246, 252),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        '${DateFormat('dd MMM').format(DateTime.now().subtract(const Duration(days: 7)))} - Yesterday',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.black),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 4,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              child: MyBarGraph(
+                                weeklyData: weeklyData,
+                                weeklyDate: dates,
+                                onTapedBar: (event, response, index, _) {
+                                  if (response != null &&
+                                      response.spot != null &&
+                                      event is FlTapUpEvent) {
+                                    final x = response.spot!.touchedBarGroup.x;
+                                    final y = response.spot!.touchedRodData.toY;
 
+                                    if (index == x) {
+                                      debugPrint('x: $x');
+                                      debugPrint('y: $y');
+                                    }
+                                  }
+                                },
+                                onPressed: false,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              const Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Total Income',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    'Rp 1.000.000',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Total Order',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    '1000',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHistorySection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        InkWell(
-          onTap: () {
-            context
-                .goNamed('detail_statistic', pathParameters: {'id': widget.id});
-          },
-          child: Container(
-            width: double.infinity,
-            height: 200,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(13),
-              color: const Color.fromARGB(255, 242, 246, 252),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            '${DateFormat('dd MMM').format(DateTime.now().subtract(const Duration(days: 7)))} - Yesterday',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.black),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: SizedBox(
-                                  child: MyBarGraph(
-                                    weeklyData: weeklyData,
-                                    weeklyDate: dates,
-                                    onTapedBar: (event, response, index, _) {
-                                      if (response != null &&
-                                          response.spot != null &&
-                                          event is FlTapUpEvent) {
-                                        final x =
-                                            response.spot!.touchedBarGroup.x;
-                                        final y =
-                                            response.spot!.touchedRodData.toY;
-
-                                        if (index == x) {
-                                          debugPrint('x: $x');
-                                          debugPrint('y: $y');
-                                        }
-                                      }
-                                    },
-                                    onPressed: false,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  const Expanded(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Total Income',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        'Rp 1.000.000',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 23,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Total Order',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        '1000',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ))
-                ],
-              ),
-            ),
-          ),
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -565,16 +658,5 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
         ),
       ],
     );
-  }
-
-  void _onSelected(value) {
-    switch (value) {
-      case 'Edit':
-        ToastMessage.show(context, 'Edit');
-        break;
-      case 'Delete':
-        ToastMessage.show(context, 'Delete');
-        break;
-    }
   }
 }

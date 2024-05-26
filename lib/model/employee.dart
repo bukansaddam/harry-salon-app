@@ -33,6 +33,7 @@ class Employee with _$Employee {
     required String id,
     required String name,
     required String avatar,
+    required String? storeId,
   }) = _Employee;
 
   factory Employee.fromJson(Map<String, dynamic> json) =>
