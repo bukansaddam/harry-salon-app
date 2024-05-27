@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:tugas_akhir_app/model/detail_employee.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/model/employee.dart';
+import 'package:tugas_akhir_app/model/hairstyle.dart';
 import 'package:tugas_akhir_app/model/login.dart';
 import 'package:tugas_akhir_app/model/register.dart';
 import 'package:tugas_akhir_app/model/store.dart';
@@ -17,6 +18,7 @@ class ApiService {
   // static const String _logout = '/auth/owners/signout';
   static const String _store = '/stores';
   static const String _employee = '/employees';
+  static const String _hairstyle = '/hairstyles';
 
   Future<RegisterResponse> register({
     required String email,
@@ -245,6 +247,26 @@ class ApiService {
       return EmployeeResponse.fromJson(jsonDecode(response.body));
     } else {
       return EmployeeResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<HairstyleResponse> getAllHairstyle({
+    required String token,
+    String name = '',
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_hairstyle?name=$name&page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return HairstyleResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return HairstyleResponse.fromJson(jsonDecode(response.body));
     }
   }
 }
