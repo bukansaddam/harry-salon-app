@@ -1,48 +1,40 @@
 import 'dart:io';
 
-import 'package:delightful_toast/delight_toast.dart';
-import 'package:delightful_toast/toast/components/toast_card.dart';
-import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:tugas_akhir_app/provider/store_provider.dart';
+import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
+import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
-class AddStoreScreen extends StatefulWidget {
-  const AddStoreScreen({super.key});
+class AddHairstyleScreen extends StatefulWidget {
+  const AddHairstyleScreen({super.key});
 
   @override
-  State<AddStoreScreen> createState() => _AddStoreScreenState();
+  State<AddHairstyleScreen> createState() => _AddHairstyleScreenState();
 }
 
-class _AddStoreScreenState extends State<AddStoreScreen> {
+class _AddHairstyleScreenState extends State<AddHairstyleScreen> {
   final _nameController = TextEditingController();
-  final _addressController = TextEditingController();
-  final _openController = TextEditingController();
-  final _closeController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  final formKey = GlobalKey<FormState>();
-  late StoreProvider _imagesProvider;
+  final _formKey = GlobalKey<FormState>();
+  late HairstyleProvider _imageProvider;
 
   @override
   void didChangeDependencies() {
+    _imageProvider = Provider.of<HairstyleProvider>(context, listen: false);
     super.didChangeDependencies();
-    _imagesProvider = Provider.of<StoreProvider>(context, listen: false);
   }
 
   @override
   void dispose() {
-    _imagesProvider.clearImage();
     _nameController.dispose();
-    _addressController.dispose();
-    _openController.dispose();
-    _closeController.dispose();
     _descriptionController.dispose();
+    _imageProvider.clearImage();
     super.dispose();
   }
 
@@ -50,13 +42,13 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Store'),
+        title: const Text('Add Hairstyle'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Form(
-            key: formKey,
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -80,98 +72,8 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                 const SizedBox(height: 4),
                 CustomTextField(
                   controller: _nameController,
-                  hintText: 'Input store name here',
+                  hintText: 'Input hairstyle name here',
                   labelText: 'Name',
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Address',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                CustomTextField(
-                  controller: _addressController,
-                  hintText: 'Input store address here',
-                  labelText: 'Address',
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Open',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          InkWell(
-                            onTap: () async {
-                              showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.fromDateTime(
-                                          DateTime.now()))
-                                  .then((timeOpen) {
-                                if (mounted && timeOpen != null) {
-                                  _openController.text =
-                                      timeOpen.format(context);
-                                }
-                              });
-                            },
-                            child: CustomTextField(
-                              controller: _openController,
-                              hintText: 'Choose Time',
-                              labelText: 'Time',
-                              enabled: false,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Close',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          InkWell(
-                            onTap: () {
-                              showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.fromDateTime(
-                                          DateTime.now()))
-                                  .then((timeClose) {
-                                if (mounted && timeClose != null) {
-                                  _closeController.text =
-                                      timeClose.format(context);
-                                }
-                              });
-                            },
-                            child: CustomTextField(
-                              controller: _closeController,
-                              hintText: 'Choose Time',
-                              labelText: 'Time',
-                              enabled: false,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
                 ),
                 const SizedBox(height: 12),
                 const Text(
@@ -184,48 +86,27 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                 const SizedBox(height: 4),
                 CustomTextField(
                   controller: _descriptionController,
-                  hintText: 'Input store description here',
-                  minLines: 4,
+                  hintText: 'Input hairstyle description here',
                   labelText: 'Description',
                 ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Services',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Center(
-                  child: Text(
-                    'Services not added yet',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                CustomButton(
-                  function: () {},
-                  text: 'Add Services',
-                  width: 170,
-                  height: 30,
-                ),
                 const SizedBox(height: 60),
-                context.watch<StoreProvider>().loadingState.when(
-                      initial: () =>
-                          CustomButton(function: _onSubmit, text: 'Submit'),
+                context.watch<HairstyleProvider>().loadingState.when(
+                      initial: () => CustomButton(
+                        function: _onSubmit,
+                        text: 'Submit',
+                      ),
                       loading: () => const Center(
                         child: CircularProgressIndicator(),
                       ),
-                      loaded: () =>
-                          CustomButton(function: _onSubmit, text: 'Submit'),
-                      error: (message) =>
-                          CustomButton(function: _onSubmit, text: 'Submit'),
+                      loaded: () => CustomButton(
+                        function: _onSubmit,
+                        text: 'Submit',
+                      ),
+                      error: (message) => CustomButton(
+                        function: _onSubmit,
+                        text: 'Submit',
+                      ),
                     ),
-                const SizedBox(height: 40),
               ],
             ),
           ),
@@ -235,48 +116,33 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
   }
 
   void _onSubmit() async {
-    if (formKey.currentState!.validate()) {
-      final provider = context.read<StoreProvider>();
+    if (_formKey.currentState!.validate()) {
+      final provider = context.read<HairstyleProvider>();
 
       final name = _nameController.text;
-      final address = _addressController.text;
-      final open = _openController.text;
-      final close = _closeController.text;
       final description = _descriptionController.text;
 
-      if (provider.imageUrls.isEmpty) {
-        _showMessage(context, 'Please add image');
+      if (_imageProvider.imageUrls.isEmpty) {
+        ToastMessage.show(context, 'Please add image');
       } else {
-        await provider.addStore(
-          name,
-          description,
-          address,
-          0.0,
-          0.0,
-          TimeOfDay(
-            hour: int.parse(open.split(':')[0]),
-            minute: int.parse(open.split(':')[1]),
-          ),
-          TimeOfDay(
-            hour: int.parse(close.split(':')[0]),
-            minute: int.parse(close.split(':')[1]),
-          ),
+        await provider.addHairstyle(
+          name: name,
+          description: description,
         );
-        if (mounted) {
-          if (provider.uploadResponse!.success) {
-            provider.refreshStore();
-            _showMessage(context, provider.uploadResponse!.message);
-            context.pop();
-          } else {
-            _showMessage(context, provider.uploadResponse!.message);
-          }
+
+        if (provider.uploadResponse!.success) {
+          provider.refreshHairstyle();
+          ToastMessage.show(context, 'Hairstyle added');
+          context.pop();
+        } else {
+          ToastMessage.show(context, provider.uploadResponse!.message);
         }
       }
     }
   }
 
   Widget _buildImage(BuildContext context) {
-    final provider = context.watch<StoreProvider>();
+    final provider = context.watch<HairstyleProvider>();
     return provider.imageUrls.isNotEmpty
         ? SizedBox(
             height: 100,
@@ -414,7 +280,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
   }
 
   void _onCameraView(BuildContext context) async {
-    final provider = context.read<StoreProvider>();
+    final provider = context.read<HairstyleProvider>();
 
     final isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
     final isLinux = defaultTargetPlatform == TargetPlatform.linux;
@@ -431,12 +297,12 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
         provider.addImage(pickedFile);
       }
       provider.setImages([pickedFile]);
-      _showMessage(context, 'Image added');
+      ToastMessage.show(context, 'Image added');
     }
   }
 
   void _onGalleryView(BuildContext context) async {
-    final provider = context.read<StoreProvider>();
+    final provider = context.read<HairstyleProvider>();
 
     final isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
     final isLinux = defaultTargetPlatform == TargetPlatform.linux;
@@ -452,23 +318,11 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
       } else {
         provider.setImages(pickedFiles);
       }
-      _showMessage(context, 'Image added');
+      ToastMessage.show(context, 'Image added');
     }
 
     if (mounted) {
       context.pop();
     }
-  }
-
-  void _showMessage(BuildContext context, String message) {
-    DelightToastBar(
-      autoDismiss: true,
-      builder: (context) => ToastCard(
-        leading: const Icon(Icons.ac_unit_rounded),
-        title: Text(message),
-      ),
-      position: DelightSnackbarPosition.top,
-      snackbarDuration: const Duration(seconds: 3),
-    ).show(context);
   }
 }

@@ -288,4 +288,44 @@ class ApiService {
       return DetailHairstyleResponse.fromJson(jsonDecode(response.body));
     }
   }
+
+  Future<UploadResponse> addHairstyle(
+    String token,
+    String name,
+    String description,
+    List<List<int>> images,
+    List<String> filenames,
+  ) async {
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('$baseUrl$_hairstyle'),
+    );
+
+    for (int i = 0; i < images.length; i++) {
+      var multipartFile = http.MultipartFile.fromBytes(
+        'image',
+        images[i],
+        filename: filenames[i],
+      );
+      request.files.add(multipartFile);
+    }
+
+    request.fields.addAll({
+      'name': name,
+      'description': description,
+    });
+
+    request.headers.addAll({
+      'Authorization': 'Bearer $token',
+    });
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
 }

@@ -403,14 +403,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
         const SizedBox(height: 4),
         _buildListEmployee(detailStore, detailProvider),
         Center(
-          child: Text(
-            '${detailProvider.employees.length - 3} more employees',
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 16,
-            ),
-          ),
-        ),
+            child: detailProvider.employees.length > 3
+                ? Text(
+                    'and ${detailProvider.employees.length - 3} more employees',
+                    style: const TextStyle(color: Colors.grey),
+                  )
+                : const SizedBox()),
       ],
     );
   }

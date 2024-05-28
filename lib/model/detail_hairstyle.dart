@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'dart:convert';
 
 part 'detail_hairstyle.freezed.dart';
 part 'detail_hairstyle.g.dart';
@@ -27,5 +26,6 @@ class DetailHairstyle with _$DetailHairstyle {
     required List<String> images,
   }) = _DetailHairstyle;
 
-  factory DetailHairstyle.fromJson(Map<String, dynamic> json) => _$DetailHairstyleFromJson(json);
+  factory DetailHairstyle.fromJson(Map<String, dynamic> json) =>
+      _$DetailHairstyleFromJson(json);
 }

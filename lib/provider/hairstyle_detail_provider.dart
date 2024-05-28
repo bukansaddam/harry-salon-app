@@ -10,7 +10,9 @@ class HairstyleDetailProvider extends ChangeNotifier {
   final String id;
 
   HairstyleDetailProvider(
-      {required this.apiService, required this.authRepository, required this.id}) {
+      {required this.apiService,
+      required this.authRepository,
+      required this.id}) {
     getDetailHairstyle(id);
   }
 

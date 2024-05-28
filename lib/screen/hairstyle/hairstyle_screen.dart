@@ -7,7 +7,6 @@ import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/model/hairstyle.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/search_bar.dart';
-import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class HairstyleScreen extends StatefulWidget {
   const HairstyleScreen({super.key});
@@ -140,7 +139,9 @@ class _HairstyleScreenState extends State<HairstyleScreen> {
         ),
       ),
       child: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          context.goNamed('add_hairstyle');
+        },
         backgroundColor: Colors.transparent,
         elevation: 0,
         child: const Icon(Icons.add, color: Colors.white),
@@ -151,7 +152,8 @@ class _HairstyleScreenState extends State<HairstyleScreen> {
   Widget _buildListItem(BuildContext context, Hairstyle hairstyle, int index) {
     return InkWell(
       onTap: () {
-        context.goNamed('detail_hairstyle', pathParameters: {'id': hairstyle.id});
+        context
+            .goNamed('detail_hairstyle', pathParameters: {'id': hairstyle.id});
       },
       child: Container(
         height: index == 1 ? 300 : 400,

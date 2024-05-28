@@ -142,14 +142,15 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
         return Builder(
           builder: (BuildContext context) {
             return Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                ),
-                child: Image.network(
-                  "${ApiService.baseUrl}/$index",
-                  fit: BoxFit.cover,
-                ));
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Colors.black,
+              ),
+              child: Image.network(
+                "${ApiService.baseUrl}/$index",
+                fit: BoxFit.cover,
+              ),
+            );
           },
         );
       }).toList(),
