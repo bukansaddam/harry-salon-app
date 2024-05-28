@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/model/hairstyle.dart';
@@ -150,7 +151,7 @@ class _HairstyleScreenState extends State<HairstyleScreen> {
   Widget _buildListItem(BuildContext context, Hairstyle hairstyle, int index) {
     return InkWell(
       onTap: () {
-        ToastMessage.show(context, 'You clicked ${hairstyle.name}');
+        context.goNamed('detail_hairstyle', pathParameters: {'id': hairstyle.id});
       },
       child: Container(
         height: index == 1 ? 300 : 400,

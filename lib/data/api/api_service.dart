@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tugas_akhir_app/model/detail_employee.dart';
+import 'package:tugas_akhir_app/model/detail_hairstyle.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/model/employee.dart';
 import 'package:tugas_akhir_app/model/hairstyle.dart';
@@ -267,6 +268,24 @@ class ApiService {
       return HairstyleResponse.fromJson(jsonDecode(response.body));
     } else {
       return HairstyleResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<DetailHairstyleResponse> getDetailHairstyle({
+    required String token,
+    required String id,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_hairstyle/$id'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return DetailHairstyleResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return DetailHairstyleResponse.fromJson(jsonDecode(response.body));
     }
   }
 }
