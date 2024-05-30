@@ -5,6 +5,7 @@ import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
+import 'package:tugas_akhir_app/provider/payslip_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/screen/employee/add_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/detail_employee_screen.dart';
@@ -12,6 +13,7 @@ import 'package:tugas_akhir_app/screen/employee/employee_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/add_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/detail_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
+import 'package:tugas_akhir_app/screen/payslip/payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/store/add_store_screen.dart';
 import 'package:tugas_akhir_app/screen/store/dashboard_screen.dart';
 import 'package:tugas_akhir_app/screen/home_screen.dart';
@@ -117,7 +119,12 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
         path: 'add-hairstyle',
         name: 'add_hairstyle',
         builder: (context, state) => const AddHairstyleScreen(),
-      )
+      ),
+      GoRoute(
+        path: 'payslip',
+        name: 'payslip',
+        builder: (context, state) => const PayslipScreen(),
+      ),
     ],
   )
 ]);
@@ -143,6 +150,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<HairstyleProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<PayslipProvider>(),
         ),
       ],
       child: MaterialApp.router(

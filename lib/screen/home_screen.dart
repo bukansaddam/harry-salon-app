@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/screen/employee/employee_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
+import 'package:tugas_akhir_app/screen/payslip/payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/store/dashboard_screen.dart';
 import 'package:tugas_akhir_app/screen/widgets/item_drawer.dart';
 
@@ -36,10 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'Service',
       style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
     ),
-    Text(
-      'Payslip',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
+    PayslipScreen(),
     HairstyleScreen(),
     Text(
       'Profile',
