@@ -396,14 +396,14 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                 leading: const Icon(Icons.camera),
                 title: const Text('Camera'),
                 onTap: () {
-                  _onCameraView(context);
+                  _onCameraView();
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.image),
                 title: const Text('Gallery'),
                 onTap: () {
-                  _onGalleryView(context);
+                  _onGalleryView();
                 },
               ),
             ],
@@ -413,7 +413,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
     );
   }
 
-  void _onCameraView(BuildContext context) async {
+  void _onCameraView() async {
     final provider = context.read<StoreProvider>();
 
     final isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
@@ -435,7 +435,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
     }
   }
 
-  void _onGalleryView(BuildContext context) async {
+  void _onGalleryView() async {
     final provider = context.read<StoreProvider>();
 
     final isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
@@ -446,7 +446,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
 
     final List<XFile> pickedFiles = await picker.pickMultiImage();
 
-    if (pickedFiles.isNotEmpty) {
+    if (pickedFiles.isNotEmpty && mounted) {
       if (provider.imageUrls.isNotEmpty) {
         provider.addImages(pickedFiles);
       } else {

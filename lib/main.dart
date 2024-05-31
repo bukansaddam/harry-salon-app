@@ -13,6 +13,9 @@ import 'package:tugas_akhir_app/screen/employee/employee_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/add_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/detail_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
+import 'package:tugas_akhir_app/screen/payslip/add_deduction_screen.dart';
+import 'package:tugas_akhir_app/screen/payslip/add_earning_screen.dart';
+import 'package:tugas_akhir_app/screen/payslip/add_payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/payslip/payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/store/add_store_screen.dart';
 import 'package:tugas_akhir_app/screen/store/dashboard_screen.dart';
@@ -124,6 +127,23 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
         path: 'payslip',
         name: 'payslip',
         builder: (context, state) => const PayslipScreen(),
+      ),
+      GoRoute(
+        path: 'add-payslip',
+        name: 'add_payslip',
+        builder: (context, state) => const AddPayslipScreen(),
+        routes: [
+          GoRoute(
+            path: 'add-earning',
+            name: 'add_earning',
+            builder: (context, state) => const AddEarningScreen(),
+          ),
+          GoRoute(
+            path: 'add-deduction',
+            name: 'add_deduction',
+            builder: (context, state) => const AddDeductionScreen(),
+          ),
+        ],
       ),
     ],
   )

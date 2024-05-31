@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tugas_akhir_app/model/detail_employee.dart';
 import 'package:tugas_akhir_app/model/detail_hairstyle.dart';
+import 'package:tugas_akhir_app/model/detail_payslip.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/model/employee.dart';
 import 'package:tugas_akhir_app/model/hairstyle.dart';
@@ -348,6 +349,52 @@ class ApiService {
       return PayslipResponse.fromJson(jsonDecode(response.body));
     } else {
       return PayslipResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<UploadResponse> createPayslip(
+    String token,
+    List<List<int>> images,
+    List<String> filenames,
+    String name,
+    String employeeId,
+    int total,
+    List<SubDetailPayslip> earnings,
+    List<SubDetailPayslip> deductions,
+  ) async {
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('$baseUrl$_payslip'),
+    );
+
+    for (int i = 0; i < images.length; i++) {
+      var multipartFile = http.MultipartFile.fromBytes(
+        'attachment',
+        images[i],
+        filename: filenames[i],
+      );
+      request.files.add(multipartFile);
+    }
+
+    request.fields.addAll({
+      'name': name,
+      'employeeId': employeeId,
+      'total': total.toString(),
+      'earnings': jsonEncode(earnings),
+      'deductions': jsonEncode(deductions),
+    });
+
+    request.headers.addAll({
+      'Authorization': 'Bearer $token',
+    });
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
     }
   }
 }

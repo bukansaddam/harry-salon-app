@@ -130,12 +130,14 @@ class _AddHairstyleScreenState extends State<AddHairstyleScreen> {
           description: description,
         );
 
-        if (provider.uploadResponse!.success) {
-          provider.refreshHairstyle();
-          ToastMessage.show(context, 'Hairstyle added');
-          context.pop();
-        } else {
-          ToastMessage.show(context, provider.uploadResponse!.message);
+        if (mounted) {
+          if (provider.uploadResponse!.success) {
+            provider.refreshHairstyle();
+            ToastMessage.show(context, 'Hairstyle added');
+            context.pop();
+          } else {
+            ToastMessage.show(context, provider.uploadResponse!.message);
+          }
         }
       }
     }
@@ -262,14 +264,14 @@ class _AddHairstyleScreenState extends State<AddHairstyleScreen> {
                 leading: const Icon(Icons.camera),
                 title: const Text('Camera'),
                 onTap: () {
-                  _onCameraView(context);
+                  _onCameraView();
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.image),
                 title: const Text('Gallery'),
                 onTap: () {
-                  _onGalleryView(context);
+                  _onGalleryView();
                 },
               ),
             ],
@@ -279,7 +281,7 @@ class _AddHairstyleScreenState extends State<AddHairstyleScreen> {
     );
   }
 
-  void _onCameraView(BuildContext context) async {
+  void _onCameraView() async {
     final provider = context.read<HairstyleProvider>();
 
     final isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
@@ -301,7 +303,7 @@ class _AddHairstyleScreenState extends State<AddHairstyleScreen> {
     }
   }
 
-  void _onGalleryView(BuildContext context) async {
+  void _onGalleryView() async {
     final provider = context.read<HairstyleProvider>();
 
     final isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
@@ -312,7 +314,7 @@ class _AddHairstyleScreenState extends State<AddHairstyleScreen> {
 
     final List<XFile> pickedFiles = await picker.pickMultiImage();
 
-    if (pickedFiles.isNotEmpty) {
+    if (pickedFiles.isNotEmpty && mounted) {
       if (provider.imageUrls.isNotEmpty) {
         provider.addImages(pickedFiles);
       } else {

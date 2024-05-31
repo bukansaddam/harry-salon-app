@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/model/payslip.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/search_bar.dart';
-import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class PayslipScreen extends StatefulWidget {
   const PayslipScreen({super.key});
@@ -54,14 +54,6 @@ class _PayslipScreenState extends State<PayslipScreen> {
     });
   }
 
-  void _onSelected(value) {
-    switch (value) {
-      case 'Delete':
-        ToastMessage.show(context, 'Delete');
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +74,7 @@ class _PayslipScreenState extends State<PayslipScreen> {
       ),
       child: FloatingActionButton(
         onPressed: () {
-          // do something here
+          context.goNamed('add_payslip');
         },
         backgroundColor: Colors.transparent,
         elevation: 0,
