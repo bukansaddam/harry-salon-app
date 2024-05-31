@@ -16,6 +16,7 @@ import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/payslip/add_deduction_screen.dart';
 import 'package:tugas_akhir_app/screen/payslip/add_earning_screen.dart';
 import 'package:tugas_akhir_app/screen/payslip/add_payslip_screen.dart';
+import 'package:tugas_akhir_app/screen/payslip/detail_payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/payslip/payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/store/add_store_screen.dart';
 import 'package:tugas_akhir_app/screen/store/dashboard_screen.dart';
@@ -145,6 +146,14 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
           ),
         ],
       ),
+      GoRoute(
+        path: 'detail-payslip/:id',
+        name: 'detail_payslip',
+        builder: (context, state) {
+          final id = state.pathParameters['id'];
+          return DetailPayslipScreen(id: id!);
+        },
+      )
     ],
   )
 ]);

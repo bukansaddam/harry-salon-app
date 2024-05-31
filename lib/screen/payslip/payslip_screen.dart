@@ -152,7 +152,10 @@ class _PayslipScreenState extends State<PayslipScreen> {
   Widget _buildItem(BuildContext context, Payslip payslip) {
     return ListTile(
       onTap: () {
-        // do something here
+        context.goNamed(
+          'detail_payslip',
+          pathParameters: {'id': payslip.id},
+        );
       },
       leading: CircleAvatar(
         radius: 20,

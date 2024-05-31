@@ -211,8 +211,10 @@ DetailPayslip _$DetailPayslipFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$DetailPayslip {
   String get id => throw _privateConstructorUsedError;
+  String get avatar => throw _privateConstructorUsedError;
+  String get employeeName => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String get attachment => throw _privateConstructorUsedError;
+  String? get attachment => throw _privateConstructorUsedError;
   int get total => throw _privateConstructorUsedError;
   String get employeeId => throw _privateConstructorUsedError;
   String get createdBy => throw _privateConstructorUsedError;
@@ -235,8 +237,10 @@ abstract class $DetailPayslipCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String avatar,
+      String employeeName,
       String name,
-      String attachment,
+      String? attachment,
       int total,
       String employeeId,
       String createdBy,
@@ -260,8 +264,10 @@ class _$DetailPayslipCopyWithImpl<$Res, $Val extends DetailPayslip>
   @override
   $Res call({
     Object? id = null,
+    Object? avatar = null,
+    Object? employeeName = null,
     Object? name = null,
-    Object? attachment = null,
+    Object? attachment = freezed,
     Object? total = null,
     Object? employeeId = null,
     Object? createdBy = null,
@@ -275,14 +281,22 @@ class _$DetailPayslipCopyWithImpl<$Res, $Val extends DetailPayslip>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      avatar: null == avatar
+          ? _value.avatar
+          : avatar // ignore: cast_nullable_to_non_nullable
+              as String,
+      employeeName: null == employeeName
+          ? _value.employeeName
+          : employeeName // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      attachment: null == attachment
+      attachment: freezed == attachment
           ? _value.attachment
           : attachment // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       total: null == total
           ? _value.total
           : total // ignore: cast_nullable_to_non_nullable
@@ -325,8 +339,10 @@ abstract class _$$DetailPayslipImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
+      String avatar,
+      String employeeName,
       String name,
-      String attachment,
+      String? attachment,
       int total,
       String employeeId,
       String createdBy,
@@ -348,8 +364,10 @@ class __$$DetailPayslipImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? avatar = null,
+    Object? employeeName = null,
     Object? name = null,
-    Object? attachment = null,
+    Object? attachment = freezed,
     Object? total = null,
     Object? employeeId = null,
     Object? createdBy = null,
@@ -363,14 +381,22 @@ class __$$DetailPayslipImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      avatar: null == avatar
+          ? _value.avatar
+          : avatar // ignore: cast_nullable_to_non_nullable
+              as String,
+      employeeName: null == employeeName
+          ? _value.employeeName
+          : employeeName // ignore: cast_nullable_to_non_nullable
+              as String,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      attachment: null == attachment
+      attachment: freezed == attachment
           ? _value.attachment
           : attachment // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       total: null == total
           ? _value.total
           : total // ignore: cast_nullable_to_non_nullable
@@ -408,6 +434,8 @@ class __$$DetailPayslipImplCopyWithImpl<$Res>
 class _$DetailPayslipImpl implements _DetailPayslip {
   const _$DetailPayslipImpl(
       {required this.id,
+      required this.avatar,
+      required this.employeeName,
       required this.name,
       required this.attachment,
       required this.total,
@@ -426,9 +454,13 @@ class _$DetailPayslipImpl implements _DetailPayslip {
   @override
   final String id;
   @override
+  final String avatar;
+  @override
+  final String employeeName;
+  @override
   final String name;
   @override
-  final String attachment;
+  final String? attachment;
   @override
   final int total;
   @override
@@ -457,7 +489,7 @@ class _$DetailPayslipImpl implements _DetailPayslip {
 
   @override
   String toString() {
-    return 'DetailPayslip(id: $id, name: $name, attachment: $attachment, total: $total, employeeId: $employeeId, createdBy: $createdBy, createdAt: $createdAt, updatedAt: $updatedAt, earnings: $earnings, deductions: $deductions)';
+    return 'DetailPayslip(id: $id, avatar: $avatar, employeeName: $employeeName, name: $name, attachment: $attachment, total: $total, employeeId: $employeeId, createdBy: $createdBy, createdAt: $createdAt, updatedAt: $updatedAt, earnings: $earnings, deductions: $deductions)';
   }
 
   @override
@@ -466,6 +498,9 @@ class _$DetailPayslipImpl implements _DetailPayslip {
         (other.runtimeType == runtimeType &&
             other is _$DetailPayslipImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.avatar, avatar) || other.avatar == avatar) &&
+            (identical(other.employeeName, employeeName) ||
+                other.employeeName == employeeName) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.attachment, attachment) ||
                 other.attachment == attachment) &&
@@ -488,6 +523,8 @@ class _$DetailPayslipImpl implements _DetailPayslip {
   int get hashCode => Object.hash(
       runtimeType,
       id,
+      avatar,
+      employeeName,
       name,
       attachment,
       total,
@@ -515,8 +552,10 @@ class _$DetailPayslipImpl implements _DetailPayslip {
 abstract class _DetailPayslip implements DetailPayslip {
   const factory _DetailPayslip(
       {required final String id,
+      required final String avatar,
+      required final String employeeName,
       required final String name,
-      required final String attachment,
+      required final String? attachment,
       required final int total,
       required final String employeeId,
       required final String createdBy,
@@ -531,9 +570,13 @@ abstract class _DetailPayslip implements DetailPayslip {
   @override
   String get id;
   @override
+  String get avatar;
+  @override
+  String get employeeName;
+  @override
   String get name;
   @override
-  String get attachment;
+  String? get attachment;
   @override
   int get total;
   @override
@@ -560,8 +603,8 @@ SubDetailPayslip _$SubDetailPayslipFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SubDetailPayslip {
-  String get name => throw _privateConstructorUsedError;
-  int get amount => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
+  int? get amount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -575,7 +618,7 @@ abstract class $SubDetailPayslipCopyWith<$Res> {
           SubDetailPayslip value, $Res Function(SubDetailPayslip) then) =
       _$SubDetailPayslipCopyWithImpl<$Res, SubDetailPayslip>;
   @useResult
-  $Res call({String name, int amount});
+  $Res call({String? name, int? amount});
 }
 
 /// @nodoc
@@ -591,18 +634,18 @@ class _$SubDetailPayslipCopyWithImpl<$Res, $Val extends SubDetailPayslip>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
-    Object? amount = null,
+    Object? name = freezed,
+    Object? amount = freezed,
   }) {
     return _then(_value.copyWith(
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      amount: null == amount
+              as String?,
+      amount: freezed == amount
           ? _value.amount
           : amount // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
     ) as $Val);
   }
 }
@@ -615,7 +658,7 @@ abstract class _$$SubDetailPayslipImplCopyWith<$Res>
       __$$SubDetailPayslipImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, int amount});
+  $Res call({String? name, int? amount});
 }
 
 /// @nodoc
@@ -629,18 +672,18 @@ class __$$SubDetailPayslipImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
-    Object? amount = null,
+    Object? name = freezed,
+    Object? amount = freezed,
   }) {
     return _then(_$SubDetailPayslipImpl(
-      name: null == name
+      name: freezed == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      amount: null == amount
+              as String?,
+      amount: freezed == amount
           ? _value.amount
           : amount // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
     ));
   }
 }
@@ -654,9 +697,9 @@ class _$SubDetailPayslipImpl implements _SubDetailPayslip {
       _$$SubDetailPayslipImplFromJson(json);
 
   @override
-  final String name;
+  final String? name;
   @override
-  final int amount;
+  final int? amount;
 
   @override
   String toString() {
@@ -693,16 +736,16 @@ class _$SubDetailPayslipImpl implements _SubDetailPayslip {
 
 abstract class _SubDetailPayslip implements SubDetailPayslip {
   const factory _SubDetailPayslip(
-      {required final String name,
-      required final int amount}) = _$SubDetailPayslipImpl;
+      {required final String? name,
+      required final int? amount}) = _$SubDetailPayslipImpl;
 
   factory _SubDetailPayslip.fromJson(Map<String, dynamic> json) =
       _$SubDetailPayslipImpl.fromJson;
 
   @override
-  String get name;
+  String? get name;
   @override
-  int get amount;
+  int? get amount;
   @override
   @JsonKey(ignore: true)
   _$$SubDetailPayslipImplCopyWith<_$SubDetailPayslipImpl> get copyWith =>

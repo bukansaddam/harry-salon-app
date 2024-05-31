@@ -397,4 +397,22 @@ class ApiService {
       return UploadResponse.fromJson(jsonDecode(response.body));
     }
   }
+
+  Future<DetailPayslipResponse> getDetailPayslip({
+    required String token,
+    required String id,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_payslip/$id'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return DetailPayslipResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return DetailPayslipResponse.fromJson(jsonDecode(response.body));
+    }
+  }
 }

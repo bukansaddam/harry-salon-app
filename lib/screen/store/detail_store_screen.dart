@@ -422,7 +422,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: 3,
+      itemCount: detailProvider.employees.length,
       itemBuilder: (context, index) {
         return ListTile(
             title: Text(detailProvider.employees[index].name),

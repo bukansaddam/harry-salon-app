@@ -19,8 +19,10 @@ class DetailPayslipResponse with _$DetailPayslipResponse {
 class DetailPayslip with _$DetailPayslip {
   const factory DetailPayslip({
     required String id,
+    required String avatar,
+    required String employeeName,
     required String name,
-    required String attachment,
+    required String? attachment,
     required int total,
     required String employeeId,
     required String createdBy,
@@ -37,8 +39,8 @@ class DetailPayslip with _$DetailPayslip {
 @freezed
 class SubDetailPayslip with _$SubDetailPayslip {
   const factory SubDetailPayslip({
-    required String name,
-    required int amount,
+    required String? name,
+    required int? amount,
   }) = _SubDetailPayslip;
 
   factory SubDetailPayslip.fromJson(Map<String, dynamic> json) =>

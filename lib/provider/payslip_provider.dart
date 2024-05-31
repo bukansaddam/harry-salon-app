@@ -131,11 +131,11 @@ class PayslipProvider extends ChangeNotifier {
     totalDeduction = 0;
 
     for (var earning in earnings) {
-      totalEarning += earning.amount;
+      totalEarning += earning.amount!;
     }
 
     for (var deduction in deductions) {
-      totalDeduction += deduction.amount;
+      totalDeduction += deduction.amount!;
     }
 
     totalPayslip = totalEarning - totalDeduction;

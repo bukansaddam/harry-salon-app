@@ -32,6 +32,15 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
   Employee? dropdownValue;
 
   @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      context.read<EmployeeProvider>().getAllEmployee();
+    });
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _payslipProvider = Provider.of<PayslipProvider>(context, listen: false);
@@ -39,12 +48,11 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
     _dateController.text =
         DateFormat('EEEE, dd MMMM yyyy').format(_selectedDate);
 
-    Future.microtask(() {
-      context.read<EmployeeProvider>().getAllEmployee();
-    });
-
-    if (context.watch<EmployeeProvider>().employees.isNotEmpty) {
-      dropdownValue = context.watch<EmployeeProvider>().employees.first;
+    final employees = context.watch<EmployeeProvider>().employees;
+    if (dropdownValue == null && employees.isNotEmpty) {
+      setState(() {
+        dropdownValue = employees.first;
+      });
     }
   }
 
@@ -509,7 +517,7 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(provider.earnings[index].name),
+                Text(provider.earnings[index].name!),
                 Row(
                   children: [
                     Text(
@@ -583,7 +591,7 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(provider.deductions[index].name),
+                Text(provider.deductions[index].name!),
                 Row(
                   children: [
                     Text(

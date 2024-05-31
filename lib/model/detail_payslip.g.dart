@@ -25,8 +25,10 @@ Map<String, dynamic> _$$DetailPayslipResponseImplToJson(
 _$DetailPayslipImpl _$$DetailPayslipImplFromJson(Map<String, dynamic> json) =>
     _$DetailPayslipImpl(
       id: json['id'] as String,
+      avatar: json['avatar'] as String,
+      employeeName: json['employeeName'] as String,
       name: json['name'] as String,
-      attachment: json['attachment'] as String,
+      attachment: json['attachment'] as String?,
       total: (json['total'] as num).toInt(),
       employeeId: json['employeeId'] as String,
       createdBy: json['createdBy'] as String,
@@ -43,6 +45,8 @@ _$DetailPayslipImpl _$$DetailPayslipImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$DetailPayslipImplToJson(_$DetailPayslipImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'avatar': instance.avatar,
+      'employeeName': instance.employeeName,
       'name': instance.name,
       'attachment': instance.attachment,
       'total': instance.total,
@@ -57,8 +61,8 @@ Map<String, dynamic> _$$DetailPayslipImplToJson(_$DetailPayslipImpl instance) =>
 _$SubDetailPayslipImpl _$$SubDetailPayslipImplFromJson(
         Map<String, dynamic> json) =>
     _$SubDetailPayslipImpl(
-      name: json['name'] as String,
-      amount: (json['amount'] as num).toInt(),
+      name: json['name'] as String?,
+      amount: (json['amount'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$SubDetailPayslipImplToJson(

@@ -11,6 +11,8 @@ class CustomTextField extends StatefulWidget {
   final int minLines;
   final bool enabled;
   final bool counter;
+  final Icon? prefixIcon;
+  final String? text;
 
   const CustomTextField({
     super.key,
@@ -23,6 +25,8 @@ class CustomTextField extends StatefulWidget {
     this.enabled = true,
     this.inputFormatters,
     this.counter = false,
+    this.prefixIcon,
+    this.text,
   });
 
   @override
@@ -40,6 +44,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
     }
     _charCountNotifier = ValueNotifier<String>(widget.controller.text);
     widget.controller.addListener(_updateCharCount);
+
+    if (widget.text != null) {
+      widget.controller.text = widget.text!;
+    }
     super.initState();
   }
 
@@ -136,6 +144,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               floatingLabelStyle: const TextStyle(
                 color: Color(0xFF3B59BA),
               ),
+              prefixIcon: widget.prefixIcon,
               counterText: _counterText(),
               counterStyle: _counterColor(),
               filled: true,
