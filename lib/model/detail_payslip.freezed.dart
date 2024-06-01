@@ -217,6 +217,7 @@ mixin _$DetailPayslip {
   String? get attachment => throw _privateConstructorUsedError;
   int get total => throw _privateConstructorUsedError;
   String get employeeId => throw _privateConstructorUsedError;
+  DateTime get date => throw _privateConstructorUsedError;
   String get createdBy => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
@@ -243,6 +244,7 @@ abstract class $DetailPayslipCopyWith<$Res> {
       String? attachment,
       int total,
       String employeeId,
+      DateTime date,
       String createdBy,
       DateTime createdAt,
       DateTime updatedAt,
@@ -270,6 +272,7 @@ class _$DetailPayslipCopyWithImpl<$Res, $Val extends DetailPayslip>
     Object? attachment = freezed,
     Object? total = null,
     Object? employeeId = null,
+    Object? date = null,
     Object? createdBy = null,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -305,6 +308,10 @@ class _$DetailPayslipCopyWithImpl<$Res, $Val extends DetailPayslip>
           ? _value.employeeId
           : employeeId // ignore: cast_nullable_to_non_nullable
               as String,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       createdBy: null == createdBy
           ? _value.createdBy
           : createdBy // ignore: cast_nullable_to_non_nullable
@@ -345,6 +352,7 @@ abstract class _$$DetailPayslipImplCopyWith<$Res>
       String? attachment,
       int total,
       String employeeId,
+      DateTime date,
       String createdBy,
       DateTime createdAt,
       DateTime updatedAt,
@@ -370,6 +378,7 @@ class __$$DetailPayslipImplCopyWithImpl<$Res>
     Object? attachment = freezed,
     Object? total = null,
     Object? employeeId = null,
+    Object? date = null,
     Object? createdBy = null,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -405,6 +414,10 @@ class __$$DetailPayslipImplCopyWithImpl<$Res>
           ? _value.employeeId
           : employeeId // ignore: cast_nullable_to_non_nullable
               as String,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       createdBy: null == createdBy
           ? _value.createdBy
           : createdBy // ignore: cast_nullable_to_non_nullable
@@ -440,6 +453,7 @@ class _$DetailPayslipImpl implements _DetailPayslip {
       required this.attachment,
       required this.total,
       required this.employeeId,
+      required this.date,
       required this.createdBy,
       required this.createdAt,
       required this.updatedAt,
@@ -466,6 +480,8 @@ class _$DetailPayslipImpl implements _DetailPayslip {
   @override
   final String employeeId;
   @override
+  final DateTime date;
+  @override
   final String createdBy;
   @override
   final DateTime createdAt;
@@ -489,7 +505,7 @@ class _$DetailPayslipImpl implements _DetailPayslip {
 
   @override
   String toString() {
-    return 'DetailPayslip(id: $id, avatar: $avatar, employeeName: $employeeName, name: $name, attachment: $attachment, total: $total, employeeId: $employeeId, createdBy: $createdBy, createdAt: $createdAt, updatedAt: $updatedAt, earnings: $earnings, deductions: $deductions)';
+    return 'DetailPayslip(id: $id, avatar: $avatar, employeeName: $employeeName, name: $name, attachment: $attachment, total: $total, employeeId: $employeeId, date: $date, createdBy: $createdBy, createdAt: $createdAt, updatedAt: $updatedAt, earnings: $earnings, deductions: $deductions)';
   }
 
   @override
@@ -507,6 +523,7 @@ class _$DetailPayslipImpl implements _DetailPayslip {
             (identical(other.total, total) || other.total == total) &&
             (identical(other.employeeId, employeeId) ||
                 other.employeeId == employeeId) &&
+            (identical(other.date, date) || other.date == date) &&
             (identical(other.createdBy, createdBy) ||
                 other.createdBy == createdBy) &&
             (identical(other.createdAt, createdAt) ||
@@ -529,6 +546,7 @@ class _$DetailPayslipImpl implements _DetailPayslip {
       attachment,
       total,
       employeeId,
+      date,
       createdBy,
       createdAt,
       updatedAt,
@@ -558,6 +576,7 @@ abstract class _DetailPayslip implements DetailPayslip {
       required final String? attachment,
       required final int total,
       required final String employeeId,
+      required final DateTime date,
       required final String createdBy,
       required final DateTime createdAt,
       required final DateTime updatedAt,
@@ -581,6 +600,8 @@ abstract class _DetailPayslip implements DetailPayslip {
   int get total;
   @override
   String get employeeId;
+  @override
+  DateTime get date;
   @override
   String get createdBy;
   @override

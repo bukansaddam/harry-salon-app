@@ -77,13 +77,7 @@ class _HairstyleScreenState extends State<HairstyleScreen> {
             ),
           ),
           Expanded(
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: _buildList(context),
-              ),
-            ),
+            child: _buildList(context),
           ),
         ],
       ),
@@ -105,16 +99,21 @@ class _HairstyleScreenState extends State<HairstyleScreen> {
             );
           },
           loaded: () {
-            return StaggeredGrid.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              children: List.generate(
-                provider.hairstyles.length,
-                (index) {
-                  final hairstyle = provider.hairstyles[index];
-                  return _buildListItem(context, hairstyle, index);
-                },
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: StaggeredGrid.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  children: List.generate(
+                    provider.hairstyles.length,
+                    (index) {
+                      final hairstyle = provider.hairstyles[index];
+                      return _buildListItem(context, hairstyle, index);
+                    },
+                  ),
+                ),
               ),
             );
           },

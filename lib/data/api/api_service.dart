@@ -354,11 +354,12 @@ class ApiService {
 
   Future<UploadResponse> createPayslip(
     String token,
-    List<List<int>> images,
-    List<String> filenames,
+    List<int> images,
+    String filenames,
     String name,
     String employeeId,
     int total,
+    DateTime date,
     List<SubDetailPayslip> earnings,
     List<SubDetailPayslip> deductions,
   ) async {
@@ -367,19 +368,18 @@ class ApiService {
       Uri.parse('$baseUrl$_payslip'),
     );
 
-    for (int i = 0; i < images.length; i++) {
-      var multipartFile = http.MultipartFile.fromBytes(
-        'attachment',
-        images[i],
-        filename: filenames[i],
-      );
-      request.files.add(multipartFile);
-    }
+    var multipartFile = http.MultipartFile.fromBytes(
+      'attachment',
+      images,
+      filename: filenames,
+    );
+    request.files.add(multipartFile);
 
     request.fields.addAll({
       'name': name,
       'employeeId': employeeId,
       'total': total.toString(),
+      'date': date.toIso8601String(),
       'earnings': jsonEncode(earnings),
       'deductions': jsonEncode(deductions),
     });

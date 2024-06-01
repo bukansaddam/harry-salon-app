@@ -189,14 +189,14 @@ class _AddHairstyleScreenState extends State<AddHairstyleScreen> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
+                                    context.pop();
                                   },
                                   child: const Text('No'),
                                 ),
                                 TextButton(
                                   onPressed: () {
                                     provider.removeImage(index);
-                                    Navigator.pop(context);
+                                    context.pop();
                                   },
                                   child: const Text('Yes'),
                                 ),

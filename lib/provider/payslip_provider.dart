@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tugas_akhir_app/common/loading_state.dart';
@@ -19,11 +18,11 @@ class PayslipProvider extends ChangeNotifier {
     required this.apiService,
   });
 
-  List<XFile> _images = [];
-  List<String> _imageUrls = [];
+  XFile? _image;
+  String? _imageUrl;
 
-  List<XFile> get images => _images;
-  List<String> get imageUrls => _imageUrls;
+  XFile? get image => _image;
+  String? get imageUrl => _imageUrl;
 
   PayslipResponse? payslipResponse;
   UploadResponse? uploadResponse;
@@ -162,6 +161,7 @@ class PayslipProvider extends ChangeNotifier {
     String name,
     String employeeId,
     int total,
+    DateTime date,
     List<SubDetailPayslip> earnings,
     List<SubDetailPayslip> deductions,
   ) async {
@@ -172,24 +172,29 @@ class PayslipProvider extends ChangeNotifier {
       final repository = await authRepository.getUser();
       final token = repository?.token;
 
-      List<List<int>> compressedImages = [];
-      List<String> filenames = [];
+      if (token == null) {
+        loadingState = const LoadingState.error('Token not found');
+        notifyListeners();
+        return;
+      }
 
-      for (var image in _images) {
-        var bytes = await image.readAsBytes();
-        var compressedBytes = await compressImage(bytes);
-        var filename = image.name;
-        filenames.add(filename);
-        compressedImages.add(compressedBytes);
+      List<int> compressedImage = [];
+      String filename = '';
+
+      if (_image != null) {
+        var bytes = await _image!.readAsBytes();
+        compressedImage = await compressImage(bytes);
+        filename = _image!.name;
       }
 
       uploadResponse = await apiService.createPayslip(
-        token!,
-        compressedImages,
-        filenames,
+        token,
+        compressedImage,
+        filename,
         name,
         employeeId,
         total,
+        date,
         earnings,
         deductions,
       );
@@ -236,32 +241,30 @@ class PayslipProvider extends ChangeNotifier {
     return newByte;
   }
 
-  void setImages(List<XFile> images) {
-    _images = images;
-    _imageUrls = images.map((e) => e.path).toList();
-    notifyListeners();
-  }
-
-  void addImage(XFile image) {
-    _images.add(image);
-    _imageUrls.add(image.path);
-    notifyListeners();
-  }
-
-  void addImages(List<XFile> newImages) {
-    _images.addAll(newImages);
-    _imageUrls.addAll(newImages.map((e) => e.path));
-    notifyListeners();
-  }
-
-  void removeImage(int index) {
-    _images.removeAt(index);
-    _imageUrls.removeAt(index);
+  void setImage(XFile image) {
+    _image = image;
+    _imageUrl = image.path;
     notifyListeners();
   }
 
   void clearImage() {
-    _images = [];
-    _imageUrls = [];
+    _image = null;
+    _imageUrl = null;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
+  }
+
+  void clearPayslip() {
+    _image = null;
+    _imageUrl = null;
+    earnings.clear();
+    deductions.clear();
+    totalEarning = 0;
+    totalDeduction = 0;
+    totalPayslip = 0;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
   }
 }

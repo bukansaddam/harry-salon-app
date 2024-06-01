@@ -60,7 +60,7 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
   void dispose() {
     _titleController.dispose();
     _dateController.dispose();
-    _payslipProvider.clearImage();
+    _payslipProvider.clearPayslip();
     super.dispose();
   }
 
@@ -224,79 +224,46 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
 
   Widget _buildImage(BuildContext context) {
     final provider = context.watch<PayslipProvider>();
-    return provider.imageUrls.isNotEmpty
-        ? SizedBox(
-            height: 100,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: provider.imageUrls.length + 1,
-              itemBuilder: (context, index) {
-                if (index == provider.imageUrls.length) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: InkWell(
-                      onTap: () {
-                        _buildBottomSheet(context);
-                      },
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Icon(
-                          Icons.add,
-                          size: 50,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: InkWell(
-                      onLongPress: () {
-                        showDialog(
-                          context: context,
-                          builder: (_) {
-                            return AlertDialog(
-                              title: const Text('Delete Image'),
-                              content: const Text(
-                                  'Are you sure want to delete this image?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('No'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    provider.removeImage(index);
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Yes'),
-                                ),
-                              ],
-                            );
+    return provider.imageUrl != null
+        ? Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: InkWell(
+              onLongPress: () {
+                showDialog(
+                  context: context,
+                  builder: (_) {
+                    return AlertDialog(
+                      title: const Text('Delete Image'),
+                      content:
+                          const Text('Are you sure want to delete this image?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            context.pop();
                           },
-                        );
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.file(
-                          File(provider.imageUrls[index]),
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
+                          child: const Text('No'),
                         ),
-                      ),
-                    ),
-                  );
-                }
+                        TextButton(
+                          onPressed: () {
+                            provider.clearImage();
+                            context.pop();
+                          },
+                          child: const Text('Yes'),
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.file(
+                  File(provider.imageUrl!),
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           )
         : InkWell(
@@ -374,10 +341,7 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
 
     if (pickedFile != null) {
       if (!mounted) return;
-      if (provider.imageUrls.isNotEmpty) {
-        provider.addImage(pickedFile);
-      }
-      provider.setImages([pickedFile]);
+      provider.setImage(pickedFile);
       ToastMessage.show(context, 'Image added');
     }
   }
@@ -391,14 +355,11 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
 
     final ImagePicker picker = ImagePicker();
 
-    final List<XFile> pickedFiles = await picker.pickMultiImage();
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFiles.isNotEmpty && mounted) {
-      if (provider.imageUrls.isNotEmpty) {
-        provider.addImages(pickedFiles);
-      } else {
-        provider.setImages(pickedFiles);
-      }
+    if (pickedFile != null && mounted) {
+      provider.setImage(pickedFile);
       ToastMessage.show(context, 'Image added');
     }
 
@@ -539,14 +500,14 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
+                                    context.pop();
                                   },
                                   child: const Text('No'),
                                 ),
                                 TextButton(
                                   onPressed: () {
                                     provider.removeEarning(index);
-                                    Navigator.pop(context);
+                                    context.pop();
                                   },
                                   child: const Text('Yes'),
                                 ),
@@ -613,14 +574,14 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context);
+                                    context.pop();
                                   },
                                   child: const Text('No'),
                                 ),
                                 TextButton(
                                   onPressed: () {
                                     provider.removeDeduction(index);
-                                    Navigator.pop(context);
+                                    context.pop();
                                   },
                                   child: const Text('Yes'),
                                 ),
@@ -648,6 +609,7 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
       final name = _titleController.text;
       final employeeId = dropdownValue!.id;
       final total = provider.totalPayslip;
+      final date = _selectedDate;
       final earnings = provider.earnings;
       final deductions = provider.deductions;
 
@@ -657,7 +619,7 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
       }
 
       await provider.createPayslip(
-          name, employeeId, total, earnings, deductions);
+          name, employeeId, total, date, earnings, deductions);
 
       if (mounted) {
         if (provider.uploadResponse!.success) {

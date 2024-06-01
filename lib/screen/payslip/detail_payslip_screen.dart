@@ -108,7 +108,7 @@ class _DetailPayslipScreenState extends State<DetailPayslipScreen> {
                       enabled: false,
                       prefixIcon: const Icon(Icons.calendar_month),
                       text: DateFormat('dd MMMM yyyy').format(
-                        provider.detailPayslipResponse!.data.createdAt,
+                        provider.detailPayslipResponse!.data.date,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -277,7 +277,7 @@ class _DetailPayslipScreenState extends State<DetailPayslipScreen> {
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
-                              provider.detailPayslipResponse!.data.attachment!,
+                              '${ApiService.baseUrl}/${provider.detailPayslipResponse!.data.attachment}',
                               height: 200,
                               width: 100,
                               fit: BoxFit.cover,

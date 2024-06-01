@@ -25,6 +25,7 @@ class DetailPayslip with _$DetailPayslip {
     required String? attachment,
     required int total,
     required String employeeId,
+    required DateTime date,
     required String createdBy,
     required DateTime createdAt,
     required DateTime updatedAt,
