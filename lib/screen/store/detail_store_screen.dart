@@ -402,7 +402,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                context.goNamed(
+                  'more_service',
+                  pathParameters: {'id': widget.id},
+                );
+              },
               child: const Text(
                 'see more',
                 style: TextStyle(color: Colors.blue),

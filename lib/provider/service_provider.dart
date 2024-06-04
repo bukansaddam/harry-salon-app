@@ -38,6 +38,7 @@ class ServiceProvider extends ChangeNotifier {
         storeId: storeId,
         page: pageItems!,
         size: sizeItems,
+        name: searchValue,
       );
 
       if (serviceResponse!.success) {
