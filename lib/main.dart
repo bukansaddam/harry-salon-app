@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
+import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
+import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/add_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/detail_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/employee_screen.dart';
@@ -84,6 +86,14 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
             builder: (context, state) {
               final storeId = state.pathParameters['id'];
               return MoreEmployeeScreen(storeId: storeId!);
+            },
+          ),
+          GoRoute(
+            path: 'more-commodity',
+            name: 'more_commodity',
+            builder: (context, state) {
+              final storeId = state.pathParameters['id'];
+              return CommodityScreen(storeId: storeId!);
             },
           )
         ],
@@ -182,6 +192,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<PayslipProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<CommodityProvider>(),
         ),
       ],
       child: MaterialApp.router(

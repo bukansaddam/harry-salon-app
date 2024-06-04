@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tugas_akhir_app/screen/widgets/bar_graph/bar_data.dart';
 import 'package:tugas_akhir_app/screen/widgets/bar_graph/bar_graph.dart';
 import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
@@ -33,6 +34,28 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
     }
     totalValue =
         weeklyData.fold(0, (previousValue, element) => previousValue + element);
+
+    List<int> dates = [];
+    DateTime currentDate = firstDate;
+    while (!currentDate.isAfter(lastDate)) {
+      dates.add(int.parse(DateFormat('dd').format(currentDate)));
+      currentDate = currentDate.add(const Duration(days: 1));
+    }
+
+    if (weeklyData.length == 7 && dates.length == 7) {
+      BarData barData = BarData(
+        day1: weeklyData[0],
+        day2: weeklyData[1],
+        day3: weeklyData[2],
+        day4: weeklyData[3],
+        day5: weeklyData[4],
+        day6: weeklyData[5],
+        day7: weeklyData[6],
+        date: dates,
+      );
+      barData.initBarData();
+    }
+
     super.initState();
   }
 
@@ -50,10 +73,10 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
 
   Widget _buildBody(BuildContext context) {
     List<int> dates = [];
-    int formatedDayFirstDate = int.parse(DateFormat('dd').format(firstDate));
-    int formatedDayLastDate = int.parse(DateFormat('dd').format(lastDate));
-    for (int i = formatedDayFirstDate; i <= formatedDayLastDate; i++) {
-      dates.add(i);
+    DateTime currentDate = firstDate;
+    while (!currentDate.isAfter(lastDate)) {
+      dates.add(int.parse(DateFormat('dd').format(currentDate)));
+      currentDate = currentDate.add(const Duration(days: 1));
     }
 
     return Container(
@@ -158,35 +181,35 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
           SizedBox(
             width: double.infinity,
             height: 200,
-            child: MyBarGraph(
-              weeklyData: weeklyData,
-              weeklyDate: dates,
-              onTapedBar: (event, response, index, isPressed) {
-                if (response != null &&
-                    response.spot != null &&
-                    event is FlTapUpEvent) {
-                  // final x = response.spot!.touchedBarGroup.x;
-                  final y = response.spot!.touchedRodData.toY;
-                  if (isPressed) {
-                    setState(() {
-                      // weeklyData.clear();
-                      // for (int i = 0; i < 7; i++) {
-                      //   weeklyData.add(Random().nextInt(90) + 10);
-                      // }
-                      totalValue = weeklyData.fold(0,
-                          (previousValue, element) => previousValue + element);
-                    });
-                  } else {
-                    setState(() {
-                      totalValue = y.toDouble();
-                    });
-                  }
-                }
-              },
-              onPressed: true,
-              barWidth: 40,
-              showLeftTitles: true,
-            ),
+            child: (weeklyData.length == 7 && dates.length == 7)
+                ? MyBarGraph(
+                    weeklyData: weeklyData,
+                    weeklyDate: dates,
+                    onTapedBar: (event, response, index, isPressed) {
+                      if (response != null &&
+                          response.spot != null &&
+                          event is FlTapUpEvent) {
+                        final y = response.spot!.touchedRodData.toY;
+                        if (isPressed) {
+                          setState(() {
+                            totalValue = weeklyData.fold(
+                                0,
+                                (previousValue, element) =>
+                                    previousValue + element);
+                          });
+                        } else {
+                          setState(() {
+                            totalValue = y.toDouble();
+                          });
+                        }
+                      }
+                    },
+                    onPressed: true,
+                    barWidth: 40,
+                    showLeftTitles: true,
+                  )
+                : const Center(
+                    child: Text('Data tidak lengkap, harap periksa inputan.')),
           ),
           const SizedBox(height: 16),
           const Text(

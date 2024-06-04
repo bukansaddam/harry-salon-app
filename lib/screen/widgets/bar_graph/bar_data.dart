@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:tugas_akhir_app/screen/widgets/bar_graph/individual_bar.dart';
 
 class BarData {
@@ -24,14 +25,18 @@ class BarData {
   List<IndividualBar> barData = [];
 
   void initBarData() {
-    barData = [
-      IndividualBar(x: date[0], y: day1),
-      IndividualBar(x: date[1], y: day2),
-      IndividualBar(x: date[2], y: day3),
-      IndividualBar(x: date[3], y: day4),
-      IndividualBar(x: date[4], y: day5),
-      IndividualBar(x: date[5], y: day6),
-      IndividualBar(x: date[6], y: day7),
-    ];
+    if (date.length >= 7) {
+      barData = [
+        IndividualBar(x: date[0], y: day1),
+        IndividualBar(x: date[1], y: day2),
+        IndividualBar(x: date[2], y: day3),
+        IndividualBar(x: date[3], y: day4),
+        IndividualBar(x: date[4], y: day5),
+        IndividualBar(x: date[5], y: day6),
+        IndividualBar(x: date[6], y: day7),
+      ];
+    } else {
+      debugPrint('The date list has fewer than 7 elements');
+    }
   }
 }

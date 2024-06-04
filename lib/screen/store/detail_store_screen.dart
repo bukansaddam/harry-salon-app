@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
+import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/provider/store_detail_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/bar_graph/bar_graph.dart';
 import 'package:tugas_akhir_app/screen/widgets/tab_item.dart';
@@ -29,10 +30,28 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
   late TabController _tabController;
   final ScrollController _scrollController = ScrollController();
 
+  CommodityProvider? commodityProvider;
+  bool _isDataFetched = false;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_isDataFetched) {
+      commodityProvider = Provider.of<CommodityProvider>(context);
+
+      Future.microtask(() {
+        commodityProvider!.refreshCommodity(storeId: widget.id);
+      });
+
+      _isDataFetched = true;
+    }
   }
 
   @override
@@ -60,8 +79,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           authRepository: AuthRepository(),
           apiService: ApiService(),
           id: widget.id),
-      child: Consumer<StoreDetailProvider>(
-        builder: (context, detailProvider, child) {
+      child: Consumer2<StoreDetailProvider, CommodityProvider>(
+        builder: (context, detailProvider, commodityProvider, child) {
           final state = detailProvider.loadingState;
 
           return state.when(
@@ -73,7 +92,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
             ),
             loaded: () {
               final detailStore = detailProvider.detailStoreResponse!.data;
-              return _buildBody(context, detailStore, detailProvider);
+              return _buildBody(
+                  context, detailStore, detailProvider, commodityProvider);
             },
             error: (message) => Center(
               child: Text(message),
@@ -85,7 +105,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
   }
 
   Widget _buildBody(BuildContext context, DetailStore detailStore,
-      StoreDetailProvider detailProvider) {
+      StoreDetailProvider detailProvider, CommodityProvider commodityProvider) {
     return Scaffold(
       body: Stack(
         children: [
@@ -292,7 +312,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                             controller: _tabController,
                             physics: const NeverScrollableScrollPhysics(),
                             children: [
-                              _buildDetail(detailStore, detailProvider),
+                              _buildDetail(detailStore, detailProvider,
+                                  commodityProvider),
                               _buildReport(detailStore),
                             ],
                           ),
@@ -309,8 +330,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildDetail(
-      DetailStore detailStore, StoreDetailProvider detailProvider) {
+  Widget _buildDetail(DetailStore detailStore,
+      StoreDetailProvider detailProvider, CommodityProvider commodityProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -330,7 +351,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
         const SizedBox(height: 12),
         _buildRatingSection(detailStore),
         const SizedBox(height: 12),
-        _buildCommoditySection(detailStore),
+        _buildCommoditySection(detailStore, commodityProvider),
       ],
     );
   }
@@ -492,7 +513,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildCommoditySection(DetailStore detailStore) {
+  Widget _buildCommoditySection(
+      DetailStore detailStore, CommodityProvider commodityProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -513,11 +535,50 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           ],
         ),
         const SizedBox(height: 4),
-        const ListTile(
-          title: Text('Joe Bambang'),
-          leading: Icon(Icons.abc),
+        SizedBox(
+          height: 150,
+          child: _buildListCommodity(detailStore, commodityProvider),
         ),
       ],
+    );
+  }
+
+  Widget _buildListCommodity(
+      DetailStore detailStore, CommodityProvider commodityProvider) {
+    if (commodityProvider.commodities.isEmpty) {
+      return const Center(child: Text('No Commodities found'));
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: commodityProvider.commodities.length,
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  '${ApiService.baseUrl}/${commodityProvider.commodities[index].image}',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                commodityProvider.commodities[index].name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
