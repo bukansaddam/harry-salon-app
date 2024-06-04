@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:contentsize_tabbarview/contentsize_tabbarview.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
+import 'package:tugas_akhir_app/provider/review_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_detail_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
@@ -34,6 +36,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
 
   CommodityProvider? commodityProvider;
   ServiceProvider? serviceProvider;
+  ReviewProvider? reviewProvider;
   bool _isDataFetched = false;
 
   @override
@@ -49,10 +52,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     if (!_isDataFetched) {
       commodityProvider = Provider.of<CommodityProvider>(context);
       serviceProvider = Provider.of<ServiceProvider>(context);
+      reviewProvider = Provider.of<ReviewProvider>(context);
 
       Future.microtask(() {
         commodityProvider!.refreshCommodity(storeId: widget.id);
         serviceProvider!.refreshService(storeId: widget.id);
+        reviewProvider!.refreshReview(storeId: widget.id);
       });
 
       _isDataFetched = true;
@@ -140,10 +145,10 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           authRepository: AuthRepository(),
           apiService: ApiService(),
           id: widget.id),
-      child: Consumer4<StoreDetailProvider, CommodityProvider, ServiceProvider,
-          StoreProvider>(
+      child: Consumer5<StoreDetailProvider, CommodityProvider, ServiceProvider,
+          StoreProvider, ReviewProvider>(
         builder: (context, detailProvider, commodityProvider, serviceProvider,
-            storeProvider, child) {
+            storeProvider, reviewProvider, child) {
           final state = detailProvider.loadingState;
 
           return state.when(
@@ -162,6 +167,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                 commodityProvider,
                 serviceProvider,
                 storeProvider,
+                reviewProvider,
               );
             },
             error: (message) => Center(
@@ -180,6 +186,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     CommodityProvider commodityProvider,
     ServiceProvider serviceProvider,
     StoreProvider storeProvider,
+    ReviewProvider reviewProvider,
   ) {
     return Scaffold(
       body: Stack(
@@ -405,8 +412,13 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                             controller: _tabController,
                             physics: const NeverScrollableScrollPhysics(),
                             children: [
-                              _buildDetail(detailStore, detailProvider,
-                                  commodityProvider, serviceProvider),
+                              _buildDetail(
+                                detailStore,
+                                detailProvider,
+                                commodityProvider,
+                                serviceProvider,
+                                reviewProvider,
+                              ),
                               _buildReport(detailStore),
                             ],
                           ),
@@ -424,10 +436,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
   }
 
   Widget _buildDetail(
-      DetailStore detailStore,
-      StoreDetailProvider detailProvider,
-      CommodityProvider commodityProvider,
-      ServiceProvider serviceProvider) {
+    DetailStore detailStore,
+    StoreDetailProvider detailProvider,
+    CommodityProvider commodityProvider,
+    ServiceProvider serviceProvider,
+    ReviewProvider reviewProvider,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -445,7 +459,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
         const SizedBox(height: 12),
         _buildEmployeeSection(detailStore, detailProvider),
         const SizedBox(height: 12),
-        _buildRatingSection(detailStore),
+        _buildRatingSection(detailStore, reviewProvider),
         const SizedBox(height: 12),
         _buildCommoditySection(detailStore, commodityProvider),
       ],
@@ -607,7 +621,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildRatingSection(DetailStore detailStore) {
+  Widget _buildRatingSection(
+      DetailStore detailStore, ReviewProvider reviewProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -619,7 +634,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                context.goNamed(
+                  'more_review',
+                  pathParameters: {'id': widget.id},
+                );
+              },
               child: const Text(
                 'see more',
                 style: TextStyle(color: Colors.blue),
@@ -627,25 +647,25 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
             ),
           ],
         ),
-        const Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Icon(
+            const Icon(
               Icons.star_rounded,
               color: Colors.yellow,
               size: 55,
             ),
             Text.rich(
               TextSpan(
-                text: '5',
-                style: TextStyle(
+                text: reviewProvider.averageRating.toString(),
+                style: const TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
                 ),
                 children: [
                   TextSpan(
-                    text: '/5 (1000 Reviews)',
-                    style: TextStyle(
+                    text: '/5 (${reviewProvider.totalReview} Reviews)',
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.normal,
                       color: Colors.grey,
@@ -656,11 +676,91 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
             )
           ],
         ),
-        const ListTile(
-          title: Text('Joe Bambang'),
-          leading: Icon(Icons.abc),
-        ),
+        _buildItemReview(reviewProvider),
       ],
+    );
+  }
+
+  Widget _buildItemReview(ReviewProvider reviewProvider) {
+    if (reviewProvider.reviews.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Text('No reviews found'),
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundImage: Image.network(
+                  reviewProvider.reviews[0].avatar,
+                ).image,
+              ),
+              const SizedBox(width: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    reviewProvider.reviews[0].username,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    DateFormat('dd MMM yyyy').format(
+                      DateTime.parse(reviewProvider.reviews[0].date.toString()),
+                    ),
+                    style: const TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              RatingBar.builder(
+                initialRating: reviewProvider.reviews[0].rating!.toDouble(),
+                itemCount: 5,
+                glow: false,
+                itemSize: 20,
+                ignoreGestures: true,
+                itemBuilder: (context, index) =>
+                    const Icon(Icons.star_rounded, color: Colors.amber),
+                onRatingUpdate: (value) {},
+              ),
+            ],
+          ),
+          reviewProvider.reviews[0].comment != null
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 8),
+                    Text(
+                      reviewProvider.reviews[0].comment!,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      textAlign: TextAlign.justify,
+                      maxLines: 4,
+                    ),
+                  ],
+                )
+              : const SizedBox.shrink(),
+        ],
+      ),
     );
   }
 

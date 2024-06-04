@@ -7,6 +7,7 @@ import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
+import 'package:tugas_akhir_app/provider/review_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 
@@ -35,6 +36,9 @@ void init() {
   );
   locator.registerLazySingleton<ServiceProvider>(
     () => ServiceProvider(apiService: locator(), authRepository: locator()),
+  );
+  locator.registerLazySingleton<ReviewProvider>(
+    () => ReviewProvider(apiService: locator(), authRepository: locator()),
   );
 
   locator.registerLazySingleton<ApiService>(() => ApiService());

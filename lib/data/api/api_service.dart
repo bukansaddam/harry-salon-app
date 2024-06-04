@@ -13,6 +13,7 @@ import 'package:tugas_akhir_app/model/hairstyle.dart';
 import 'package:tugas_akhir_app/model/login.dart';
 import 'package:tugas_akhir_app/model/payslip.dart';
 import 'package:tugas_akhir_app/model/register.dart';
+import 'package:tugas_akhir_app/model/review.dart';
 import 'package:tugas_akhir_app/model/service.dart';
 import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
@@ -28,6 +29,7 @@ class ApiService {
   static const String _payslip = '/payslips';
   static const String _commodity = '/commodity';
   static const String _service = '/services';
+  static const String _review = '/reviews';
 
   Future<RegisterResponse> register({
     required String email,
@@ -566,6 +568,28 @@ class ApiService {
       return UploadResponse.fromJson(jsonDecode(response.body));
     } else {
       return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<ReviewResponse> getAllReview({
+    required String token,
+    required String storeId,
+    required String rating,
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse(
+          '$baseUrl$_review/store/$storeId?rating=$rating&page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return ReviewResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return ReviewResponse.fromJson(jsonDecode(response.body));
     }
   }
 }

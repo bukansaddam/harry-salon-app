@@ -7,6 +7,7 @@ import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
+import 'package:tugas_akhir_app/provider/review_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
@@ -22,6 +23,7 @@ import 'package:tugas_akhir_app/screen/payslip/add_earning_screen.dart';
 import 'package:tugas_akhir_app/screen/payslip/add_payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/payslip/detail_payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/payslip/payslip_screen.dart';
+import 'package:tugas_akhir_app/screen/review/review_screen.dart';
 import 'package:tugas_akhir_app/screen/service/add_service_screen.dart';
 import 'package:tugas_akhir_app/screen/service/service_screen.dart';
 import 'package:tugas_akhir_app/screen/store/add_store_screen.dart';
@@ -121,22 +123,31 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
             },
           ),
           GoRoute(
-              path: 'more-service',
-              name: 'more_service',
-              builder: (context, state) {
-                final storeId = state.pathParameters['id'];
-                return ServiceScreen(storeId: storeId!);
-              },
-              routes: [
-                GoRoute(
-                  path: 'add-service',
-                  name: 'add_service',
-                  builder: (context, state) {
-                    final storeId = state.pathParameters['id'];
-                    return AddServiceScreen(storeId: storeId!);
-                  },
-                )
-              ])
+            path: 'more-service',
+            name: 'more_service',
+            builder: (context, state) {
+              final storeId = state.pathParameters['id'];
+              return ServiceScreen(storeId: storeId!);
+            },
+            routes: [
+              GoRoute(
+                path: 'add-service',
+                name: 'add_service',
+                builder: (context, state) {
+                  final storeId = state.pathParameters['id'];
+                  return AddServiceScreen(storeId: storeId!);
+                },
+              )
+            ],
+          ),
+          GoRoute(
+            path: 'more-review',
+            name: 'more_review',
+            builder: (context, state) {
+              final storeId = state.pathParameters['id'];
+              return ReviewScreen(storeId: storeId!);
+            },
+          )
         ],
       ),
       GoRoute(
@@ -239,6 +250,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<ServiceProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<ReviewProvider>(),
         ),
       ],
       child: MaterialApp.router(
