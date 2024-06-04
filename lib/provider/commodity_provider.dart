@@ -39,6 +39,7 @@ class CommodityProvider extends ChangeNotifier {
       commodityResponse = await apiService.getCommodity(
         token: token,
         storeId: storeId,
+        name: searchValue!,
       );
 
       if (commodityResponse!.success) {
@@ -59,9 +60,12 @@ class CommodityProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> refreshCommodity({required String storeId}) async {
+  Future<void> refreshCommodity({
+    required String storeId,
+    String searchValue = '',
+  }) async {
     pageItems = 1;
     commodities.clear();
-    await getAllCommodity(storeId: storeId);
+    await getAllCommodity(storeId: storeId, searchValue: searchValue);
   }
 }
