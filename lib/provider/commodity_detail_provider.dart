@@ -67,7 +67,7 @@ class DetailCommodityProvider extends ChangeNotifier {
     return Future.value();
   }
 
-  Future<void> updateStock({required int stock}) async {
+  Future<void> updateStock() async {
     try {
       loadingState = const LoadingState.loading();
       notifyListeners();
@@ -78,11 +78,12 @@ class DetailCommodityProvider extends ChangeNotifier {
       final response = await apiService.updateCommodityStock(
         token: token!,
         id: id,
-        stock: stock,
+        stock: commodityStock!,
       );
 
       if (response.success) {
         loadingState = const LoadingState.loaded();
+        currentStock = commodityStock;
         notifyListeners();
       } else {
         loadingState = LoadingState.error(response.message);

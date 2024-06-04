@@ -561,26 +561,34 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.only(right: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  '${ApiService.baseUrl}/${commodityProvider.commodities[index].image}',
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
+          child: InkWell(
+            onTap: () {
+              context.goNamed('detail_commodity_2', pathParameters: {
+                'id': widget.id,
+                'commodityId': commodityProvider.commodities[index].id,
+              });
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    '${ApiService.baseUrl}/${commodityProvider.commodities[index].image}',
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                commodityProvider.commodities[index].name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+                const SizedBox(height: 4),
+                Text(
+                  commodityProvider.commodities[index].name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

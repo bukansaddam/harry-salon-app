@@ -175,9 +175,10 @@ class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
           Text(
             detailCommodity.name,
             style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF293869)),
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF293869),
+            ),
           ),
           const SizedBox(height: 8),
           const Text('Current Stock'),
@@ -185,17 +186,56 @@ class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
           _buildStockSection(context, provider),
           const SizedBox(height: 80),
           provider.commodityStock != provider.currentStock
-              ? CustomButton(
-                  function: () {
-                    //do something
-                  },
-                  text: 'Update Stock',
+              ? provider.loadingState.when(
+                  initial: () => const SizedBox.shrink(),
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  loaded: () => CustomButton(
+                    function: () {
+                      showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                            title: const Text('Update Stock'),
+                            content: const Text(
+                                'Are you sure want to update this item stock?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('No'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  context.pop();
+                                  _updateStock(provider);
+                                },
+                                child: const Text('Yes'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    text: 'Update Stock',
+                  ),
+                  error: (message) => Text(message),
                 )
               : const SizedBox.shrink(),
           const SizedBox(height: 16),
         ],
       ),
     );
+  }
+
+  Future<void> _updateStock(DetailCommodityProvider provider) async {
+    await provider.updateStock();
+    if (mounted) {
+      ToastMessage.show(context, 'Stock Updated');
+      // context.goNamed('more_commodity', pathParameters: {'id': widget.storeId});
+    }
   }
 
   Widget _buildStockSection(
@@ -224,7 +264,7 @@ class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
             ),
           ),
           Text(
-            context.watch<DetailCommodityProvider>().commodityStock.toString(),
+            provider.commodityStock.toString(),
             style: const TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,

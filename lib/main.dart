@@ -107,7 +107,16 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
                 },
               ),
             ],
-          )
+          ),
+          GoRoute(
+            path: 'detail-commodity/:commodityId',
+            name: 'detail_commodity_2',
+            builder: (context, state) {
+              final id = state.pathParameters['commodityId'];
+              final storeId = state.pathParameters['id'];
+              return DetailCommodityScreen(id: id!, storeId: storeId!);
+            },
+          ),
         ],
       ),
       GoRoute(
