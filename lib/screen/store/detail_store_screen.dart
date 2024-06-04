@@ -11,6 +11,7 @@ import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
+import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_detail_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/bar_graph/bar_graph.dart';
 import 'package:tugas_akhir_app/screen/widgets/tab_item.dart';
@@ -31,6 +32,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
   final ScrollController _scrollController = ScrollController();
 
   CommodityProvider? commodityProvider;
+  ServiceProvider? serviceProvider;
   bool _isDataFetched = false;
 
   @override
@@ -45,9 +47,11 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
 
     if (!_isDataFetched) {
       commodityProvider = Provider.of<CommodityProvider>(context);
+      serviceProvider = Provider.of<ServiceProvider>(context);
 
       Future.microtask(() {
         commodityProvider!.refreshCommodity(storeId: widget.id);
+        serviceProvider!.refreshService(storeId: widget.id);
       });
 
       _isDataFetched = true;
@@ -79,8 +83,9 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           authRepository: AuthRepository(),
           apiService: ApiService(),
           id: widget.id),
-      child: Consumer2<StoreDetailProvider, CommodityProvider>(
-        builder: (context, detailProvider, commodityProvider, child) {
+      child: Consumer3<StoreDetailProvider, CommodityProvider, ServiceProvider>(
+        builder: (context, detailProvider, commodityProvider, serviceProvider,
+            child) {
           final state = detailProvider.loadingState;
 
           return state.when(
@@ -92,8 +97,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
             ),
             loaded: () {
               final detailStore = detailProvider.detailStoreResponse!.data;
-              return _buildBody(
-                  context, detailStore, detailProvider, commodityProvider);
+              return _buildBody(context, detailStore, detailProvider,
+                  commodityProvider, serviceProvider);
             },
             error: (message) => Center(
               child: Text(message),
@@ -104,8 +109,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildBody(BuildContext context, DetailStore detailStore,
-      StoreDetailProvider detailProvider, CommodityProvider commodityProvider) {
+  Widget _buildBody(
+      BuildContext context,
+      DetailStore detailStore,
+      StoreDetailProvider detailProvider,
+      CommodityProvider commodityProvider,
+      ServiceProvider serviceProvider) {
     return Scaffold(
       body: Stack(
         children: [
@@ -313,7 +322,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                             physics: const NeverScrollableScrollPhysics(),
                             children: [
                               _buildDetail(detailStore, detailProvider,
-                                  commodityProvider),
+                                  commodityProvider, serviceProvider),
                               _buildReport(detailStore),
                             ],
                           ),
@@ -330,8 +339,11 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildDetail(DetailStore detailStore,
-      StoreDetailProvider detailProvider, CommodityProvider commodityProvider) {
+  Widget _buildDetail(
+      DetailStore detailStore,
+      StoreDetailProvider detailProvider,
+      CommodityProvider commodityProvider,
+      ServiceProvider serviceProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -345,7 +357,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           textAlign: TextAlign.justify,
         ),
         const SizedBox(height: 12),
-        _buildServiceSection(detailStore),
+        _buildServiceSection(detailStore, serviceProvider),
         const SizedBox(height: 12),
         _buildEmployeeSection(detailStore, detailProvider),
         const SizedBox(height: 12),
@@ -377,21 +389,71 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildServiceSection(DetailStore detailStore) {
-    return const Column(
+  Widget _buildServiceSection(
+      DetailStore detailStore, ServiceProvider serviceProvider) {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Services',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Services',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: const Text(
+                'see more',
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+          ],
         ),
-        SizedBox(height: 4),
-        ListTile(
-          title: Text('Potong Rambut'),
-          trailing: Text('Rp 50.000'),
-          leading: Icon(Icons.abc),
-        ),
+        const SizedBox(height: 4),
+        _buildListService(detailStore, serviceProvider),
       ],
+    );
+  }
+
+  Widget _buildListService(
+      DetailStore detailStore, ServiceProvider serviceProvider) {
+    if (serviceProvider.services.isEmpty) {
+      return const Center(child: Text('No services found'));
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: serviceProvider.services.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8, right: 16, left: 16),
+          child: Row(
+            children: [
+              Image.network(
+                '${ApiService.baseUrl}/${serviceProvider.services[index].image}',
+                width: 16,
+                height: 16,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(width: 8),
+              Text(serviceProvider.services[index].name),
+              const Spacer(),
+              Text(
+                NumberFormat.currency(
+                  locale: 'id',
+                  symbol: 'Rp ',
+                  decimalDigits: 0,
+                ).format(serviceProvider.services[index].price),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

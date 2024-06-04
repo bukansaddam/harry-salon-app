@@ -7,6 +7,7 @@ import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
+import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 
 final locator = GetIt.instance;
@@ -31,6 +32,9 @@ void init() {
   );
   locator.registerLazySingleton<CommodityProvider>(
     () => CommodityProvider(apiService: locator(), authRepository: locator()),
+  );
+  locator.registerLazySingleton<ServiceProvider>(
+    () => ServiceProvider(apiService: locator(), authRepository: locator()),
   );
 
   locator.registerLazySingleton<ApiService>(() => ApiService());

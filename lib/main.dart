@@ -7,6 +7,7 @@ import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
+import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/detail_commodity_screen.dart';
@@ -216,6 +217,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<CommodityProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<ServiceProvider>(),
         ),
       ],
       child: MaterialApp.router(
