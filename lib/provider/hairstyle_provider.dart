@@ -48,6 +48,12 @@ class HairstyleProvider extends ChangeNotifier {
         name: searchValue ?? '',
       );
 
+      if (hairstyleResponse == null) {
+        loadingState = const LoadingState.error('Payslip not found');
+        notifyListeners();
+        return;
+      }
+
       if (hairstyleResponse!.success) {
         if (pageItems == 1) {
           hairstyles.clear();
