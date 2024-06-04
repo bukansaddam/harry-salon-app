@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:contentsize_tabbarview/contentsize_tabbarview.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -401,7 +401,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                         ),
                         const SizedBox(height: 20),
                         SizedBox(
-                          child: AutoScaleTabBarView(
+                          child: ContentSizeTabBarView(
                             controller: _tabController,
                             physics: const NeverScrollableScrollPhysics(),
                             children: [

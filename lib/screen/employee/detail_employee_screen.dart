@@ -1,4 +1,4 @@
-import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
+import 'package:contentsize_tabbarview/contentsize_tabbarview.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -184,7 +184,7 @@ class _DetailEmployeeScreenState extends State<DetailEmployeeScreen>
             ),
             const SizedBox(height: 8),
             SizedBox(
-              child: AutoScaleTabBarView(
+              child: ContentSizeTabBarView(
                 controller: _tabController,
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
