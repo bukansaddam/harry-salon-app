@@ -836,6 +836,14 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                   commodityProvider.commodities[index].name,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  maxLines: 2,
+                ),
+                Text(
+                  'stock : ${commodityProvider.commodities[index].stock}',
+                  style: const TextStyle(
+                    color: Colors.grey,
                   ),
                 ),
               ],

@@ -24,19 +24,19 @@ class _CommodityScreenState extends State<CommodityScreen> {
   @override
   void initState() {
     super.initState();
-    final employeeProvider = context.read<CommodityProvider>();
+    final commodityProvider = context.read<CommodityProvider>();
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        if (employeeProvider.pageItems != null) {
-          employeeProvider.getAllCommodity(storeId: widget.storeId);
+        if (commodityProvider.pageItems != null) {
+          commodityProvider.getAllCommodity(storeId: widget.storeId);
         }
       }
     });
 
     Future.microtask(() async {
-      employeeProvider.refreshCommodity(storeId: widget.storeId);
+      commodityProvider.refreshCommodity(storeId: widget.storeId);
     });
   }
 
@@ -105,7 +105,9 @@ class _CommodityScreenState extends State<CommodityScreen> {
       ),
       child: FloatingActionButton(
         onPressed: () {
-          // do something
+          context.goNamed('add_commodity', pathParameters: {
+            'id': widget.storeId,
+          });
         },
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -133,7 +135,7 @@ class _CommodityScreenState extends State<CommodityScreen> {
                 crossAxisCount: 2,
                 mainAxisSpacing: 8,
                 crossAxisSpacing: 8,
-                childAspectRatio: 0.8,
+                childAspectRatio: 0.7,
               ),
               itemBuilder: (context, index) {
                 final commodities = provider.commodities[index];
@@ -157,12 +159,25 @@ class _CommodityScreenState extends State<CommodityScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          commodities.name,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              commodities.name,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'stock : ${commodities.stock}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],

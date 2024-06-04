@@ -21,23 +21,25 @@ class _ServiceScreenState extends State<ServiceScreen> {
   final _scrollController = ScrollController();
   Timer? _debounce;
 
+  ServiceProvider? serviceProvider;
+
   @override
   void initState() {
     super.initState();
-    final employeeProvider = context.read<ServiceProvider>();
+    serviceProvider = context.read<ServiceProvider>();
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        if (employeeProvider.pageItems != null) {
-          employeeProvider.getAllService(
-              storeId: widget.storeId, searchValue: '');
+        if (serviceProvider!.pageItems != null) {
+          serviceProvider!
+              .getAllService(storeId: widget.storeId, searchValue: '');
         }
       }
     });
 
     Future.microtask(() async {
-      employeeProvider.refreshService(storeId: widget.storeId);
+      serviceProvider!.refreshService(storeId: widget.storeId);
     });
   }
 
@@ -46,6 +48,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
     _searchController.dispose();
     _scrollController.dispose();
     _debounce?.cancel();
+    serviceProvider!.clearImage();
     super.dispose();
   }
 

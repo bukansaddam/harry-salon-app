@@ -6,6 +6,7 @@ import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/detail_commodity.dart';
 import 'package:tugas_akhir_app/provider/commodity_detail_provider.dart';
+import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
@@ -21,6 +22,15 @@ class DetailCommodityScreen extends StatefulWidget {
 }
 
 class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
+  late CommodityProvider _commodityProvider;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _commodityProvider = Provider.of<CommodityProvider>(context, listen: false);
+  }
+
   void _onSelected(value) {
     switch (value) {
       case 'Edit':
@@ -96,6 +106,7 @@ class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
       children: [
         IconButton(
           onPressed: () {
+            _commodityProvider.refreshCommodity(storeId: widget.storeId);
             context.pop();
           },
           icon: const Icon(

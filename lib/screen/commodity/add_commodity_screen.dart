@@ -5,38 +5,38 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:tugas_akhir_app/provider/service_provider.dart';
+import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
 import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
-class AddServiceScreen extends StatefulWidget {
-  const AddServiceScreen({super.key, required this.storeId});
+class AddCommodityScreen extends StatefulWidget {
+  const AddCommodityScreen({super.key, required this.storeId});
 
   final String storeId;
 
   @override
-  State<AddServiceScreen> createState() => _AddServiceScreenState();
+  State<AddCommodityScreen> createState() => _AddCommodityScreenState();
 }
 
-class _AddServiceScreenState extends State<AddServiceScreen> {
+class _AddCommodityScreenState extends State<AddCommodityScreen> {
   final _nameController = TextEditingController();
-  final _priceController = TextEditingController();
+  final _stockController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  late ServiceProvider _serviceProvider;
+  late CommodityProvider _commodityProvider;
 
   @override
   void didChangeDependencies() {
-    _serviceProvider = Provider.of<ServiceProvider>(context, listen: false);
+    _commodityProvider = Provider.of<CommodityProvider>(context, listen: false);
     super.didChangeDependencies();
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _priceController.dispose();
-    _serviceProvider.clearImage();
+    _stockController.dispose();
+    _commodityProvider.clearImage();
     super.dispose();
   }
 
@@ -44,7 +44,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Service'),
+        title: const Text('Add Commodity'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -62,7 +62,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                _buildImage(context),
+                _buildImage(),
                 const SizedBox(height: 12),
                 const Text(
                   'Name',
@@ -74,12 +74,12 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 const SizedBox(height: 4),
                 CustomTextField(
                   controller: _nameController,
-                  hintText: 'Input service name here',
+                  hintText: 'Input commodity name here',
                   labelText: 'Name',
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  'Price',
+                  'Stock',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -87,12 +87,12 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                 ),
                 const SizedBox(height: 4),
                 CustomTextField(
-                  controller: _priceController,
-                  hintText: 'Input service price here',
-                  labelText: 'Price',
+                  controller: _stockController,
+                  hintText: 'Input commodity stock here',
+                  labelText: 'Stock',
                 ),
                 const SizedBox(height: 60),
-                context.watch<ServiceProvider>().loadingState.when(
+                context.watch<CommodityProvider>().loadingState.when(
                       initial: () => CustomButton(
                         function: _onSubmit,
                         text: 'Submit',
@@ -117,8 +117,8 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     );
   }
 
-  Widget _buildImage(BuildContext context) {
-    final provider = context.watch<ServiceProvider>();
+  Widget _buildImage() {
+    final provider = context.watch<CommodityProvider>();
     return provider.imageUrl != null
         ? Padding(
             padding: const EdgeInsets.only(right: 8),
@@ -223,7 +223,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   void _onCameraView() async {
-    final provider = context.read<ServiceProvider>();
+    final provider = context.read<CommodityProvider>();
 
     final isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
     final isLinux = defaultTargetPlatform == TargetPlatform.linux;
@@ -242,7 +242,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   void _onGalleryView() async {
-    final provider = context.read<ServiceProvider>();
+    final provider = context.read<CommodityProvider>();
 
     final isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
     final isLinux = defaultTargetPlatform == TargetPlatform.linux;
@@ -264,21 +264,21 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   void _onSubmit() async {
-    final provider = context.read<ServiceProvider>();
+    final provider = context.read<CommodityProvider>();
     if (_formKey.currentState!.validate()) {
       final name = _nameController.text;
-      final price = _priceController.text;
+      final stock = _stockController.text;
       final storeId = widget.storeId;
 
-      await provider.createService(
-        name: name,
-        price: price,
+      await provider.createCommodity(
         storeId: storeId,
+        name: name,
+        stock: stock.toString(),
       );
 
       if (mounted) {
         if (provider.uploadResponse!.success) {
-          provider.refreshService(storeId: storeId);
+          provider.refreshCommodity(storeId: storeId);
           context.pop();
           ToastMessage.show(context, 'Service added');
         } else {

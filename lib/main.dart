@@ -10,6 +10,7 @@ import 'package:tugas_akhir_app/provider/payslip_provider.dart';
 import 'package:tugas_akhir_app/provider/review_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
+import 'package:tugas_akhir_app/screen/commodity/add_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/detail_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/add_employee_screen.dart';
@@ -111,6 +112,14 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
                   return DetailCommodityScreen(id: id!, storeId: storeId!);
                 },
               ),
+              GoRoute(
+                path: 'add-commodity',
+                name: 'add_commodity',
+                builder: (context, state) {
+                  final storeId = state.pathParameters['id'];
+                  return AddCommodityScreen(storeId: storeId!);
+                },
+              )
             ],
           ),
           GoRoute(
