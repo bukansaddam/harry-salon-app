@@ -22,6 +22,7 @@ import 'package:tugas_akhir_app/screen/payslip/add_earning_screen.dart';
 import 'package:tugas_akhir_app/screen/payslip/add_payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/payslip/detail_payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/payslip/payslip_screen.dart';
+import 'package:tugas_akhir_app/screen/service/add_service_screen.dart';
 import 'package:tugas_akhir_app/screen/service/service_screen.dart';
 import 'package:tugas_akhir_app/screen/store/add_store_screen.dart';
 import 'package:tugas_akhir_app/screen/store/dashboard_screen.dart';
@@ -120,13 +121,22 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
             },
           ),
           GoRoute(
-            path: 'more-service',
-            name: 'more_service',
-            builder: (context, state) {
-              final storeId = state.pathParameters['id'];
-              return ServiceScreen(storeId: storeId!);
-            },
-          )
+              path: 'more-service',
+              name: 'more_service',
+              builder: (context, state) {
+                final storeId = state.pathParameters['id'];
+                return ServiceScreen(storeId: storeId!);
+              },
+              routes: [
+                GoRoute(
+                  path: 'add-service',
+                  name: 'add_service',
+                  builder: (context, state) {
+                    final storeId = state.pathParameters['id'];
+                    return AddServiceScreen(storeId: storeId!);
+                  },
+                )
+              ])
         ],
       ),
       GoRoute(

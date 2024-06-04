@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
@@ -113,7 +114,8 @@ class _ServiceScreenState extends State<ServiceScreen> {
       ),
       child: FloatingActionButton(
         onPressed: () {
-          // do something
+          context
+              .goNamed('add_service', pathParameters: {'id': widget.storeId});
         },
         backgroundColor: Colors.transparent,
         elevation: 0,

@@ -505,4 +505,44 @@ class ApiService {
       return ServiceResponse.fromJson(jsonDecode(response.body));
     }
   }
+
+  Future<UploadResponse> createService(
+    String token,
+    List<int> images,
+    String filenames,
+    String name,
+    String price,
+    String storeId,
+  ) async {
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('$baseUrl$_service'),
+    );
+
+    var multipartFile = http.MultipartFile.fromBytes(
+      'image',
+      images,
+      filename: filenames,
+    );
+    request.files.add(multipartFile);
+
+    request.fields.addAll({
+      'name': name,
+      'price': price,
+      'storeId': storeId,
+    });
+
+    request.headers.addAll({
+      'Authorization': 'Bearer $token',
+    });
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
 }
