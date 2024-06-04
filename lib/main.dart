@@ -9,6 +9,7 @@ import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
+import 'package:tugas_akhir_app/screen/commodity/detail_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/add_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/detail_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/employee_screen.dart';
@@ -95,6 +96,17 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
               final storeId = state.pathParameters['id'];
               return CommodityScreen(storeId: storeId!);
             },
+            routes: [
+              GoRoute(
+                path: 'detail-commodity/:commodityId',
+                name: 'detail_commodity',
+                builder: (context, state) {
+                  final id = state.pathParameters['commodityId'];
+                  final storeId = state.pathParameters['id'];
+                  return DetailCommodityScreen(id: id!, storeId: storeId!);
+                },
+              ),
+            ],
           )
         ],
       ),

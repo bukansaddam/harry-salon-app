@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
@@ -138,7 +139,10 @@ class _CommodityScreenState extends State<CommodityScreen> {
                 final commodities = provider.commodities[index];
                 return InkWell(
                   onTap: () {
-                    //do something
+                    context.goNamed('detail_commodity', pathParameters: {
+                      'id': widget.storeId,
+                      'commodityId': commodities.id,
+                    });
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
