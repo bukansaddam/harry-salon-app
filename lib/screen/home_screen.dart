@@ -33,10 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     DashboardScreen(),
     EmployeeScreen(),
-    Text(
-      'Service',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
     PayslipScreen(),
     HairstyleScreen(),
     Text(
@@ -78,42 +74,32 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
                 ItemDrawer(
-                  icon: Iconsax.scissor_1,
-                  title: _expanded ? 'Services' : null,
-                  selected: _selectedIndex == 2,
-                  onTap: () {
-                    _title = 'Service';
-                    _onItemTapped(2);
-                    // context.pop();
-                  },
-                ),
-                ItemDrawer(
                   icon: Iconsax.wallet_1,
                   title: _expanded ? 'Payslips' : null,
-                  selected: _selectedIndex == 3,
+                  selected: _selectedIndex == 2,
                   onTap: () {
                     _title = 'Payslip';
-                    _onItemTapped(3);
+                    _onItemTapped(2);
                     // context.pop();
                   },
                 ),
                 ItemDrawer(
                   icon: Icons.face,
                   title: _expanded ? 'Hairstyles' : null,
-                  selected: _selectedIndex == 4,
+                  selected: _selectedIndex == 3,
                   onTap: () {
                     _title = 'Hairstyle';
-                    _onItemTapped(4);
+                    _onItemTapped(3);
                     // context.pop();
                   },
                 ),
                 ItemDrawer(
                   icon: Icons.person_outline,
                   title: _expanded ? 'Profile' : null,
-                  selected: _selectedIndex == 5,
+                  selected: _selectedIndex == 4,
                   onTap: () {
                     _title = 'Profile';
-                    _onItemTapped(5);
+                    _onItemTapped(4);
                     // context.pop();
                   },
                 ),
@@ -121,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon:
                       _expanded ? Iconsax.arrow_left_2 : Iconsax.arrow_right_3,
                   title: '',
-                  selected: _selectedIndex == 6,
+                  selected: _selectedIndex == 5,
                   onTap: () {
                     setState(() {
                       _expanded = !_expanded;
