@@ -13,6 +13,7 @@ import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_detail_provider.dart';
+import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/bar_graph/bar_graph.dart';
 import 'package:tugas_akhir_app/screen/widgets/tab_item.dart';
 import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
@@ -65,13 +66,69 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     super.dispose();
   }
 
-  void _onSelected(value) {
+  void _onSelected(BuildContext context, value) {
     switch (value) {
       case 'Edit':
-        ToastMessage.show(context, 'Edit');
+        ToastMessage.show(context, value);
+        break;
+      case 'Deactivate':
+        showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              title: const Text('Deactivate Store'),
+              content: const Text('Are you sure to deactivate this store?'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    context.pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Provider.of<StoreDetailProvider>(context, listen: false)
+                        .deactivateStore();
+                    context.pop();
+                    ToastMessage.show(context, 'Store deactivated');
+                  },
+                  child: const Text('Deactivate'),
+                ),
+              ],
+            );
+          },
+        );
+        break;
+      case 'Activate':
+        showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              title: const Text('Activate Store'),
+              content: const Text('Are you sure to activate this store?'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    context.pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Provider.of<StoreDetailProvider>(context, listen: false)
+                        .activateStore();
+                    context.pop();
+                    ToastMessage.show(context, 'Store activated');
+                  },
+                  child: const Text('Activate'),
+                ),
+              ],
+            );
+          },
+        );
         break;
       case 'Delete':
-        ToastMessage.show(context, 'Delete');
+        ToastMessage.show(context, value);
         break;
     }
   }
@@ -83,9 +140,10 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           authRepository: AuthRepository(),
           apiService: ApiService(),
           id: widget.id),
-      child: Consumer3<StoreDetailProvider, CommodityProvider, ServiceProvider>(
+      child: Consumer4<StoreDetailProvider, CommodityProvider, ServiceProvider,
+          StoreProvider>(
         builder: (context, detailProvider, commodityProvider, serviceProvider,
-            child) {
+            storeProvider, child) {
           final state = detailProvider.loadingState;
 
           return state.when(
@@ -97,8 +155,14 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
             ),
             loaded: () {
               final detailStore = detailProvider.detailStoreResponse!.data;
-              return _buildBody(context, detailStore, detailProvider,
-                  commodityProvider, serviceProvider);
+              return _buildBody(
+                context,
+                detailStore,
+                detailProvider,
+                commodityProvider,
+                serviceProvider,
+                storeProvider,
+              );
             },
             error: (message) => Center(
               child: Text(message),
@@ -110,11 +174,13 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
   }
 
   Widget _buildBody(
-      BuildContext context,
-      DetailStore detailStore,
-      StoreDetailProvider detailProvider,
-      CommodityProvider commodityProvider,
-      ServiceProvider serviceProvider) {
+    BuildContext context,
+    DetailStore detailStore,
+    StoreDetailProvider detailProvider,
+    CommodityProvider commodityProvider,
+    ServiceProvider serviceProvider,
+    StoreProvider storeProvider,
+  ) {
     return Scaffold(
       body: Stack(
         children: [
@@ -166,6 +232,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                     IconButton(
                       onPressed: () {
                         context.pop();
+                        storeProvider.refreshStore();
                       },
                       icon: const Icon(
                         Icons.arrow_back,
@@ -181,16 +248,30 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                       ),
                     ),
                     PopupMenuButton(
-                      onSelected: _onSelected,
+                      onSelected: (value) {
+                        _onSelected(context, value);
+                      },
                       itemBuilder: (BuildContext context) {
                         return [
                           const PopupMenuItem(
                             value: 'Edit',
                             child: Text('Edit'),
                           ),
+                          detailProvider.isActive == true
+                              ? const PopupMenuItem(
+                                  value: 'Deactivate',
+                                  child: Text('Deactivate'),
+                                )
+                              : const PopupMenuItem(
+                                  value: 'Activate',
+                                  child: Text('Activate'),
+                                ),
                           const PopupMenuItem(
                             value: 'Delete',
-                            child: Text('Delete'),
+                            child: Text(
+                              'Delete',
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ),
                         ];
                       },
@@ -220,7 +301,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                               width: 12,
                               height: 12,
                               decoration: BoxDecoration(
-                                color: detailStore.isActive
+                                color: detailProvider.isActive == true
                                     ? Colors.green
                                     : Colors.red,
                                 shape: BoxShape.circle,
@@ -228,7 +309,10 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              detailStore.isActive ? 'Active' : 'Inactive',
+                              context.watch<StoreDetailProvider>().isActive ==
+                                      true
+                                  ? 'Active'
+                                  : 'Inactive',
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 16,

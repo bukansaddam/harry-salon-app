@@ -30,6 +30,8 @@ class StoreDetailProvider extends ChangeNotifier {
 
   List<Employee> employees = [];
 
+  bool? isActive = true;
+
   Future<void> getDetailStore(String id) async {
     try {
       loadingState = const LoadingState.loading();
@@ -43,6 +45,7 @@ class StoreDetailProvider extends ChangeNotifier {
 
       if (detailStoreResponse!.success) {
         loadingState = const LoadingState.loaded();
+        isActive = detailStoreResponse!.data.isActive;
         notifyListeners();
       } else {
         loadingState = LoadingState.error(detailStoreResponse!.message);
@@ -92,6 +95,58 @@ class StoreDetailProvider extends ChangeNotifier {
       }
     } catch (e) {
       employeeLoadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
+  Future<void> activateStore() async {
+    try {
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      final response = await apiService.updateStatusStore(
+        token: token!,
+        id: id,
+        isActive: true,
+      );
+
+      isActive = true;
+
+      if (response.success) {
+        isActive = true;
+        notifyListeners();
+      } else {
+        _message = response.message;
+        notifyListeners();
+      }
+    } catch (e) {
+      _message = e.toString();
+      notifyListeners();
+    }
+  }
+
+  Future<void> deactivateStore() async {
+    try {
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      final response = await apiService.updateStatusStore(
+        token: token!,
+        id: id,
+        isActive: false,
+      );
+
+      isActive = false;
+
+      if (response.success) {
+        isActive = false;
+        notifyListeners();
+      } else {
+        _message = response.message;
+        notifyListeners();
+      }
+    } catch (e) {
+      _message = e.toString();
       notifyListeners();
     }
   }

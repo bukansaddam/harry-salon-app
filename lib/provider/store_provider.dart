@@ -37,6 +37,8 @@ class StoreProvider extends ChangeNotifier {
   int _activeStoreCount = 0;
   int get activeStoreCount => _activeStoreCount;
 
+  bool? isActive = true;
+
   Future<void> getAllStore() async {
     try {
       if (pageItems == 1) {

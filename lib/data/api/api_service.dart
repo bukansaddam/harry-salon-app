@@ -545,4 +545,27 @@ class ApiService {
       return UploadResponse.fromJson(jsonDecode(response.body));
     }
   }
+
+  Future<UploadResponse> updateStatusStore({
+    required String token,
+    required String id,
+    required bool isActive,
+  }) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl$_store/$id'),
+      body: jsonEncode(<String, String>{
+        'status': isActive.toString(),
+      }),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
 }
