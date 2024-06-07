@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
-import 'package:tugas_akhir_app/screen/employee/employee_screen.dart';
+import 'package:tugas_akhir_app/screen/owner/employee/employee_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
-import 'package:tugas_akhir_app/screen/payslip/payslip_screen.dart';
-import 'package:tugas_akhir_app/screen/store/dashboard_screen.dart';
+import 'package:tugas_akhir_app/screen/owner/payslip/payslip_screen.dart';
+import 'package:tugas_akhir_app/screen/owner/store/dashboard_screen.dart';
 import 'package:tugas_akhir_app/screen/widgets/item_drawer.dart';
 
 class HomeScreen extends StatefulWidget {

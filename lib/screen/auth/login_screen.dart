@@ -22,6 +22,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final formKey = GlobalKey<FormState>();
 
+  final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
+
   @override
   void dispose() {
     _emailController.dispose();

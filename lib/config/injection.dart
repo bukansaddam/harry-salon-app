@@ -15,7 +15,8 @@ final locator = GetIt.instance;
 
 void init() {
   locator.registerLazySingleton<AuthProvider>(
-      () => AuthProvider(apiService: locator(), authRepository: locator()));
+    () => AuthProvider(apiService: locator(), authRepository: locator()),
+  );
   locator.registerLazySingleton<HomeProvider>(
     () => HomeProvider(apiService: locator(), authRepository: locator()),
   );

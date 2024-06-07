@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "tugas_akhir_app (owner)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main/owner_main.dart",
+      "args": ["--dart-define=actor=owner", "--flavor", "owner", "--target", "lib/main/owner_main.dart"]
+    },
+    {
+      "name": "tugas_akhir_app (employee)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main/employee_main.dart",
+      "args": ["--dart-define=actor=employee", "--flavor", "employee", "--target", "lib/main/employee_main.dart"]
+    },
+    {
+      "name": "tugas_akhir_app (customer)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main/customer_main.dart",
+      "args": ["--dart-define=actor=customer", "--flavor", "customer", "--target", "lib/main/customer_main.dart"]
+    },
+  ]
+}
