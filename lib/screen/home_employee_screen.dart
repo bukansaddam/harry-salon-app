@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tugas_akhir_app/screen/employee/dashboard_employee_screen.dart';
+import 'package:tugas_akhir_app/screen/employee/payslip_employee_screen.dart';
 
 class HomeEmployeeScreen extends StatefulWidget {
   const HomeEmployeeScreen({super.key});
@@ -37,12 +38,7 @@ class _HomeEmployeeScreenState extends State<HomeEmployeeScreen> {
       'Scan',
       style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
     ),
-    SafeArea(
-      child: Text(
-        'Payslip',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-      ),
-    ),
+    PayslipEmployeeScreen(),
     SafeArea(
       child: Text(
         'Profile',

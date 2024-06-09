@@ -13,6 +13,7 @@ class CustomTextField extends StatefulWidget {
   final bool counter;
   final Icon? prefixIcon;
   final String? text;
+  final Color? fillColor;
 
   const CustomTextField({
     super.key,
@@ -27,6 +28,7 @@ class CustomTextField extends StatefulWidget {
     this.counter = false,
     this.prefixIcon,
     this.text,
+    this.fillColor,
   });
 
   @override
@@ -148,7 +150,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               counterText: _counterText(),
               counterStyle: _counterColor(),
               filled: true,
-              fillColor: Colors.grey[200],
+              fillColor: widget.fillColor ?? Colors.grey[200],
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
               ),

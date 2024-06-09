@@ -19,6 +19,11 @@ class _DetailPayslipScreenState extends State<DetailPayslipScreen> {
   final _scrollController = ScrollController();
   final _dateController = TextEditingController();
 
+  final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
+
+  bool get isOwner => actor == 'owner';
+  bool get isEmployee => actor == 'employee';
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<DetailPayslipProvider>(
@@ -70,31 +75,39 @@ class _DetailPayslipScreenState extends State<DetailPayslipScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage: Image.network(
-                                  provider.detailPayslipResponse!.data.avatar)
-                              .image,
-                        ),
-                        const SizedBox(width: 24),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              provider.detailPayslipResponse!.data.employeeName,
-                              style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF354A98)),
-                            ),
-                            const Text('Employee'),
-                          ],
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 16),
+                    isOwner
+                        ? Column(
+                            children: [
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: Image.network(provider
+                                            .detailPayslipResponse!.data.avatar)
+                                        .image,
+                                  ),
+                                  const SizedBox(width: 24),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        provider.detailPayslipResponse!.data
+                                            .employeeName,
+                                        style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF354A98)),
+                                      ),
+                                      const Text('Employee'),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+                          )
+                        : const SizedBox.shrink(),
                     const Text(
                       'Date',
                       style: TextStyle(
@@ -110,6 +123,7 @@ class _DetailPayslipScreenState extends State<DetailPayslipScreen> {
                       text: DateFormat('dd MMMM yyyy').format(
                         provider.detailPayslipResponse!.data.date,
                       ),
+                      fillColor: const Color(0xFFC9DBF4),
                     ),
                     const SizedBox(height: 16),
                     const Text(

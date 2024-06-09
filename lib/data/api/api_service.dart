@@ -32,6 +32,12 @@ class ApiService {
   static const String _review = '/reviews';
   static const String _loginEmployee = '/auth/employees/signin';
 
+  final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
+
+  bool get isOwner => actor == 'owner';
+  bool get isEmployee => actor == 'employee';
+  bool get isCustomer => actor == 'customer';
+
   Future<RegisterResponse> register({
     required String email,
     required String password,
@@ -369,7 +375,10 @@ class ApiService {
     int size = 10,
   }) async {
     final response = await http.get(
-      Uri.parse('$baseUrl$_payslip?page=$page&pageSize=$size'),
+      isOwner
+          ? Uri.parse('$baseUrl$_payslip?name=$name&page=$page&pageSize=$size')
+          : Uri.parse(
+              '$baseUrl$_payslip/employee?name=$name&page=$page&pageSize=$size'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },

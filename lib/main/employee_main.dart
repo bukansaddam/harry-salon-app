@@ -4,11 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
+import 'package:tugas_akhir_app/provider/payslip_provider.dart';
 import 'package:tugas_akhir_app/screen/auth/login_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/add_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/detail_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/home_employee_screen.dart';
+import 'package:tugas_akhir_app/screen/owner/payslip/detail_payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
 import '../config/injection.dart' as di;
 
@@ -33,6 +35,9 @@ class EmployeeApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => di.locator<CommodityProvider>(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<PayslipProvider>(),
+        ),
       ],
       child: MaterialApp.router(
         theme: ThemeData(
@@ -56,17 +61,19 @@ class EmployeeApp extends StatelessWidget {
   }
 }
 
-final GoRouter _router = GoRouter(initialLocation: '/', routes: [
-  GoRoute(
-    path: '/',
-    builder: (context, state) => const SplashScreen(),
-  ),
-  GoRoute(
-    path: '/login',
-    name: 'login',
-    builder: (context, state) => const LoginScreen(),
-  ),
-  GoRoute(
+final GoRouter _router = GoRouter(
+  initialLocation: '/',
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const SplashScreen(),
+    ),
+    GoRoute(
+      path: '/login',
+      name: 'login',
+      builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
       path: '/home',
       name: 'home',
       builder: (context, state) => const HomeEmployeeScreen(),
@@ -107,5 +114,15 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
             return DetailCommodityScreen(id: id!, storeId: storeId!);
           },
         ),
-      ]),
-]);
+        GoRoute(
+          path: 'detail-payslip/:id',
+          name: 'detail_payslip',
+          builder: (context, state) {
+            final id = state.pathParameters['id'];
+            return DetailPayslipScreen(id: id!);
+          },
+        )
+      ],
+    ),
+  ],
+);
