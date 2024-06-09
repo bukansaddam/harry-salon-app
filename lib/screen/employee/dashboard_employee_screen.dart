@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
+import 'package:tugas_akhir_app/model/user.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_task.dart';
 import 'package:tugas_akhir_app/screen/widgets/timeline_tile.dart';
@@ -19,6 +21,7 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
   CommodityProvider? commodityProvider;
   bool _isDataFetched = false;
   AuthRepository auth = AuthRepository();
+  User? user;
 
   @override
   void didChangeDependencies() {
@@ -28,9 +31,9 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
       commodityProvider = Provider.of<CommodityProvider>(context);
 
       Future.microtask(() async {
-        final user = await auth.getUser();
+        user = await auth.getUser();
         if (user != null) {
-          commodityProvider!.refreshCommodity(storeId: user.storeId!);
+          commodityProvider!.refreshCommodity(storeId: user!.storeId!);
         }
       });
 
@@ -165,7 +168,10 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
             ),
             TextButton(
               onPressed: () {
-                // do something
+                context.goNamed(
+                  'more_commodity',
+                  extra: user!.storeId,
+                );
               },
               child: const Text(
                 'see more',
@@ -181,7 +187,7 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
             builder: (context, commodityProvider, child) {
               final state = commodityProvider.loadingState;
               return state.when(
-                initial: () => const SizedBox.shrink(),
+                initial: () => const Center(child: CircularProgressIndicator()),
                 loading: () => const Center(child: CircularProgressIndicator()),
                 loaded: () => _buildListCommodity(commodityProvider),
                 error: (error) => Text(error.toString()),

@@ -5,6 +5,9 @@ import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/screen/auth/login_screen.dart';
+import 'package:tugas_akhir_app/screen/commodity/add_commodity_screen.dart';
+import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
+import 'package:tugas_akhir_app/screen/commodity/detail_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/home_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
 import '../config/injection.dart' as di;
@@ -67,5 +70,43 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
     path: '/home',
     name: 'home',
     builder: (context, state) => const HomeEmployeeScreen(),
+    routes: [
+      GoRoute(
+          path: 'more-commodity',
+          name: 'more_commodity',
+          builder: (context, state) {
+            final storeId = state.extra as String;
+            return CommodityScreen(storeId: storeId);
+          },
+          routes: [
+            GoRoute(
+              path: 'detail-commodity/:commodityId',
+              name: 'detail_commodity',
+              builder: (context, state) {
+                final id = state.pathParameters['commodityId'];
+                final storeId = state.pathParameters['id'];
+                return DetailCommodityScreen(id: id!, storeId: storeId!);
+              },
+            ),
+            GoRoute(
+              path: 'add-commodity',
+              name: 'add_commodity',
+              builder: (context, state) {
+                final storeId = state.pathParameters['id'];
+                return AddCommodityScreen(storeId: storeId!);
+              },
+            )
+          ],
+        ),
+        GoRoute(
+          path: 'detail-commodity/:commodityId',
+          name: 'detail_commodity_2',
+          builder: (context, state) {
+            final id = state.pathParameters['commodityId'];
+            final storeId = state.pathParameters['id'];
+            return DetailCommodityScreen(id: id!, storeId: storeId!);
+          },
+        ),
+    ]
   ),
 ]);
