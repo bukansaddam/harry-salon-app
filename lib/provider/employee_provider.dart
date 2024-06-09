@@ -3,7 +3,6 @@ import 'package:tugas_akhir_app/common/loading_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/employee.dart';
-import 'package:tugas_akhir_app/model/login.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 
 class EmployeeProvider extends ChangeNotifier {
