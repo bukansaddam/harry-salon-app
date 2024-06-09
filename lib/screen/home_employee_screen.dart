@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_akhir_app/screen/employee/dashboard_employee_screen.dart';
 
 class HomeEmployeeScreen extends StatefulWidget {
   const HomeEmployeeScreen({super.key});
@@ -25,12 +26,7 @@ class _HomeEmployeeScreenState extends State<HomeEmployeeScreen> {
   }
 
   static const List<Widget> _screens = <Widget>[
-    SafeArea(
-      child: Text(
-        'Home',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-      ),
-    ),
+    DashboardEmployeeScreen(),
     SafeArea(
       child: Text(
         'Activity',
@@ -66,52 +62,68 @@ class _HomeEmployeeScreenState extends State<HomeEmployeeScreen> {
   }
 
   Widget _buildNavBar(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: _selectedIndex,
-      showUnselectedLabels: true,
-      unselectedItemColor: Colors.black,
-      selectedItemColor: const Color(0xFF3B59BA),
-      type: BottomNavigationBarType.fixed,
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(
-            _selectedIndex == 0 ? Icons.home_rounded : Icons.home_outlined,
-            color: _selectedIndex == 0 ? const Color(0xFF3B59BA) : Colors.black,
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 20,
+          )
+        ],
+      ),
+      child: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        backgroundColor: Colors.white,
+        showUnselectedLabels: true,
+        unselectedItemColor: Colors.black,
+        selectedItemColor: const Color(0xFF3B59BA),
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              _selectedIndex == 0 ? Icons.home_rounded : Icons.home_outlined,
+              color:
+                  _selectedIndex == 0 ? const Color(0xFF3B59BA) : Colors.black,
+            ),
+            label: 'Home',
           ),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.insights_rounded,
-            color: _selectedIndex == 1 ? const Color(0xFF3B59BA) : Colors.black,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.insights_rounded,
+              color:
+                  _selectedIndex == 1 ? const Color(0xFF3B59BA) : Colors.black,
+            ),
+            label: 'Activity',
           ),
-          label: 'Activity',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.add,
-            color: _selectedIndex == 2 ? const Color(0xFF3B59BA) : Colors.black,
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.add,
+              color:
+                  _selectedIndex == 2 ? const Color(0xFF3B59BA) : Colors.black,
+            ),
+            label: 'Scan',
           ),
-          label: 'Scan',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            _selectedIndex == 3
-                ? Icons.payments_rounded
-                : Icons.payments_outlined,
-            color: _selectedIndex == 3 ? const Color(0xFF3B59BA) : Colors.black,
+          BottomNavigationBarItem(
+            icon: Icon(
+              _selectedIndex == 3
+                  ? Icons.payments_rounded
+                  : Icons.payments_outlined,
+              color:
+                  _selectedIndex == 3 ? const Color(0xFF3B59BA) : Colors.black,
+            ),
+            label: 'Payslip',
           ),
-          label: 'Payslip',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            _selectedIndex == 4 ? Icons.person_rounded : Icons.person_outline,
-            color: _selectedIndex == 4 ? const Color(0xFF3B59BA) : Colors.black,
+          BottomNavigationBarItem(
+            icon: Icon(
+              _selectedIndex == 4 ? Icons.person_rounded : Icons.person_outline,
+              color:
+                  _selectedIndex == 4 ? const Color(0xFF3B59BA) : Colors.black,
+            ),
+            label: 'Profile',
           ),
-          label: 'Profile',
-        ),
-      ],
-      onTap: _onItemTapped,
+        ],
+        onTap: _onItemTapped,
+      ),
     );
   }
 

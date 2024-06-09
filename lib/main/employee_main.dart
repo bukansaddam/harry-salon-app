@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
+import 'package:tugas_akhir_app/provider/commodity_provider.dart';
+import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/screen/auth/login_screen.dart';
 import 'package:tugas_akhir_app/screen/home_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
@@ -21,6 +23,12 @@ class EmployeeApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => di.locator<AuthProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<EmployeeProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<CommodityProvider>(),
         ),
       ],
       child: MaterialApp.router(
