@@ -110,9 +110,13 @@ class _CommodityScreenState extends State<CommodityScreen> {
       ),
       child: FloatingActionButton(
         onPressed: () {
-          context.goNamed('add_commodity', pathParameters: {
-            'id': widget.storeId,
-          });
+          if (isOwner) {
+            context.goNamed('add_commodity', pathParameters: {
+              'id': widget.storeId,
+            });
+          } else {
+            context.goNamed('add_commodity', extra: widget.storeId);
+          }
         },
         backgroundColor: Colors.transparent,
         elevation: 0,

@@ -92,8 +92,8 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
               path: 'add-commodity',
               name: 'add_commodity',
               builder: (context, state) {
-                final storeId = state.pathParameters['id'];
-                return AddCommodityScreen(storeId: storeId!);
+                final storeId = state.extra as String;
+                return AddCommodityScreen(storeId: storeId);
               },
             )
           ],

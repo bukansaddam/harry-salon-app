@@ -78,7 +78,39 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
             height: 16,
           )),
           SliverToBoxAdapter(
-            child: _buildCommoditySection(),
+            child: Consumer<CommodityProvider>(
+              builder: (context, commodityProvider, child) {
+                final state = commodityProvider.loadingState;
+                return state.when(
+                  initial: () => const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10),
+                      Text(
+                        'Commodity',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
+                      Center(child: CircularProgressIndicator()),
+                    ],
+                  ),
+                  loading: () => const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10),
+                      Text(
+                        'Commodity',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
+                      Center(child: CircularProgressIndicator()),
+                    ],
+                  ),
+                  loaded: () => _buildCommoditySection(commodityProvider),
+                  error: (error) => Text(error.toString()),
+                );
+              },
+            ),
           ),
           const SliverToBoxAdapter(
               child: SizedBox(
@@ -155,7 +187,7 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
     );
   }
 
-  Widget _buildCommoditySection() {
+  Widget _buildCommoditySection(CommodityProvider commodityProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -183,17 +215,7 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
         const SizedBox(height: 4),
         SizedBox(
           height: 150,
-          child: Consumer<CommodityProvider>(
-            builder: (context, commodityProvider, child) {
-              final state = commodityProvider.loadingState;
-              return state.when(
-                initial: () => const Center(child: CircularProgressIndicator()),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                loaded: () => _buildListCommodity(commodityProvider),
-                error: (error) => Text(error.toString()),
-              );
-            },
-          ),
+          child: _buildListCommodity(commodityProvider),
         ),
       ],
     );
