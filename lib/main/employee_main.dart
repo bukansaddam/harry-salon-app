@@ -67,11 +67,11 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
     builder: (context, state) => const LoginScreen(),
   ),
   GoRoute(
-    path: '/home',
-    name: 'home',
-    builder: (context, state) => const HomeEmployeeScreen(),
-    routes: [
-      GoRoute(
+      path: '/home',
+      name: 'home',
+      builder: (context, state) => const HomeEmployeeScreen(),
+      routes: [
+        GoRoute(
           path: 'more-commodity',
           name: 'more_commodity',
           builder: (context, state) {
@@ -84,8 +84,8 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
               name: 'detail_commodity',
               builder: (context, state) {
                 final id = state.pathParameters['commodityId'];
-                final storeId = state.pathParameters['id'];
-                return DetailCommodityScreen(id: id!, storeId: storeId!);
+                final storeId = state.extra as String;
+                return DetailCommodityScreen(id: id!, storeId: storeId);
               },
             ),
             GoRoute(
@@ -107,6 +107,5 @@ final GoRouter _router = GoRouter(initialLocation: '/', routes: [
             return DetailCommodityScreen(id: id!, storeId: storeId!);
           },
         ),
-    ]
-  ),
+      ]),
 ]);

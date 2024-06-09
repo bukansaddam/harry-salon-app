@@ -21,6 +21,11 @@ class _CommodityScreenState extends State<CommodityScreen> {
   final _scrollController = ScrollController();
   Timer? _debounce;
 
+  final actor = const String.fromEnvironment('actor', defaultValue: 'owner');
+
+  bool get isOwner => actor == 'owner';
+  bool get isEmployee => actor == 'employee';
+
   @override
   void initState() {
     super.initState();
@@ -141,10 +146,18 @@ class _CommodityScreenState extends State<CommodityScreen> {
                 final commodities = provider.commodities[index];
                 return InkWell(
                   onTap: () {
-                    context.goNamed('detail_commodity', pathParameters: {
-                      'id': widget.storeId,
-                      'commodityId': commodities.id,
-                    });
+                    if (isOwner) {
+                      context.goNamed('detail_commodity', pathParameters: {
+                        'id': widget.storeId,
+                        'commodityId': commodities.id,
+                      });
+                    } else {
+                      context.goNamed('detail_commodity',
+                          pathParameters: {
+                            'commodityId': commodities.id,
+                          },
+                          extra: widget.storeId);
+                    }
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
