@@ -8,14 +8,14 @@ import 'package:tugas_akhir_app/screen/owner/payslip/payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/store/dashboard_screen.dart';
 import 'package:tugas_akhir_app/screen/widgets/item_drawer.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeOwnerScreen extends StatefulWidget {
+  const HomeOwnerScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeOwnerScreen> createState() => _HomeOwnerScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeOwnerScreenState extends State<HomeOwnerScreen> {
   late int _selectedIndex;
   String _title = 'Dashboard';
   bool _expanded = true;

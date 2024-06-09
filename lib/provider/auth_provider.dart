@@ -110,4 +110,46 @@ class AuthProvider extends ChangeNotifier {
     await authRepository.deleteUser();
     notifyListeners();
   }
+
+  Future<bool> loginEmployee({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
+      final LoginResponse loginResponse = await apiService.loginEmployee(
+        email: email,
+        password: password,
+      );
+
+      if (loginResponse.success) {
+        loadingState = const LoadingState.loaded();
+        _message = loginResponse.message;
+
+        final User user = User(
+          email: email,
+          token: loginResponse.token,
+          storeId: loginResponse.storeId,
+        );
+
+        await authRepository.saveUser(user);
+        await authRepository.saveState(true);
+
+        notifyListeners();
+        return true;
+      } else {
+        _message = loginResponse.message;
+        loadingState = LoadingState.error(loginResponse.message);
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      _message = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
 }

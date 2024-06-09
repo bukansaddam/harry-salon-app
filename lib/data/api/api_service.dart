@@ -30,6 +30,7 @@ class ApiService {
   static const String _commodity = '/commodity';
   static const String _service = '/services';
   static const String _review = '/reviews';
+  static const String _loginEmployee = '/auth/employees/signin';
 
   Future<RegisterResponse> register({
     required String email,
@@ -65,6 +66,28 @@ class ApiService {
   }) async {
     final response = await http.post(
       Uri.parse('$baseUrl$_login'),
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'password': password,
+      }),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return LoginResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return LoginResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<LoginResponse> loginEmployee({
+    required String email,
+    required String password,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl$_loginEmployee'),
       body: jsonEncode(<String, String>{
         'email': email,
         'password': password,

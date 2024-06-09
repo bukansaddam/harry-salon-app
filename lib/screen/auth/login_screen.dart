@@ -24,6 +24,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
 
+  bool get isOwner => actor == 'owner';
+  bool get isEmployee => actor == 'employee';
+  bool get isCustomer => actor == 'customer';
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -82,24 +86,32 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
-                Center(
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        const TextSpan(
-                          text: 'Dont have an account ? ',
-                        ),
-                        TextSpan(
-                          text: 'Sign Up',
-                          style: const TextStyle(color: Color(0xFF3B59BA)),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => context.goNamed('register'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                isCustomer
+                    ? Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          Center(
+                            child: Text.rich(
+                              TextSpan(
+                                children: [
+                                  const TextSpan(
+                                    text: 'Dont have an account ? ',
+                                  ),
+                                  TextSpan(
+                                    text: 'Sign Up',
+                                    style: const TextStyle(
+                                        color: Color(0xFF3B59BA)),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap =
+                                          () => context.goNamed('register'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : const SizedBox.shrink(),
               ],
             ),
           ),
@@ -111,10 +123,24 @@ class _LoginScreenState extends State<LoginScreen> {
   void _onSubmit() async {
     final provider = context.read<AuthProvider>();
     if (formKey.currentState!.validate()) {
-      final result = await provider.login(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
+      bool result = false;
+
+      if (isOwner) {
+        result = await provider.login(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+      } else if (isEmployee) {
+        result = await provider.loginEmployee(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+      } else {
+        // result = await provider.loginCustomer(
+        //   email: _emailController.text,
+        //   password: _passwordController.text,
+        // );
+      }
 
       if (result && mounted) {
         _showMessage(context, 'Login Success');

@@ -9,6 +9,7 @@ class LoginResponse with _$LoginResponse {
     required bool success,
     required String message,
     required String token,
+    String? storeId,
   }) = _LoginResponse;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>

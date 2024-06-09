@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/screen/auth/login_screen.dart';
+import 'package:tugas_akhir_app/screen/home_employee_screen.dart';
+import 'package:tugas_akhir_app/screen/splash_screen.dart';
 import '../config/injection.dart' as di;
 
 void main() {
@@ -46,6 +48,16 @@ class EmployeeApp extends StatelessWidget {
 final GoRouter _router = GoRouter(initialLocation: '/', routes: [
   GoRoute(
     path: '/',
+    builder: (context, state) => const SplashScreen(),
+  ),
+  GoRoute(
+    path: '/login',
+    name: 'login',
     builder: (context, state) => const LoginScreen(),
+  ),
+  GoRoute(
+    path: '/home',
+    name: 'home',
+    builder: (context, state) => const HomeEmployeeScreen(),
   ),
 ]);

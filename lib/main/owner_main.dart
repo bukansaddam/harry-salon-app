@@ -21,7 +21,7 @@ import 'package:tugas_akhir_app/screen/owner/employee/employee_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/add_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/detail_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
-import 'package:tugas_akhir_app/screen/home_screen.dart';
+import 'package:tugas_akhir_app/screen/home_owner_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/payslip/add_deduction_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/payslip/add_earning_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/payslip/add_payslip_screen.dart';
@@ -121,7 +121,7 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/home',
       name: 'home',
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) => const HomeOwnerScreen(),
       routes: [
         GoRoute(
           path: 'dashboard',

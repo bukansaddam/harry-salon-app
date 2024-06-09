@@ -23,6 +23,7 @@ mixin _$LoginResponse {
   bool get success => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
   String get token => throw _privateConstructorUsedError;
+  String? get storeId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +37,7 @@ abstract class $LoginResponseCopyWith<$Res> {
           LoginResponse value, $Res Function(LoginResponse) then) =
       _$LoginResponseCopyWithImpl<$Res, LoginResponse>;
   @useResult
-  $Res call({bool success, String message, String token});
+  $Res call({bool success, String message, String token, String? storeId});
 }
 
 /// @nodoc
@@ -55,6 +56,7 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
     Object? success = null,
     Object? message = null,
     Object? token = null,
+    Object? storeId = freezed,
   }) {
     return _then(_value.copyWith(
       success: null == success
@@ -69,6 +71,10 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
           ? _value.token
           : token // ignore: cast_nullable_to_non_nullable
               as String,
+      storeId: freezed == storeId
+          ? _value.storeId
+          : storeId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -81,7 +87,7 @@ abstract class _$$LoginResponseImplCopyWith<$Res>
       __$$LoginResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool success, String message, String token});
+  $Res call({bool success, String message, String token, String? storeId});
 }
 
 /// @nodoc
@@ -98,6 +104,7 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
     Object? success = null,
     Object? message = null,
     Object? token = null,
+    Object? storeId = freezed,
   }) {
     return _then(_$LoginResponseImpl(
       success: null == success
@@ -112,6 +119,10 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
           ? _value.token
           : token // ignore: cast_nullable_to_non_nullable
               as String,
+      storeId: freezed == storeId
+          ? _value.storeId
+          : storeId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -120,7 +131,10 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$LoginResponseImpl implements _LoginResponse {
   const _$LoginResponseImpl(
-      {required this.success, required this.message, required this.token});
+      {required this.success,
+      required this.message,
+      required this.token,
+      this.storeId});
 
   factory _$LoginResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$LoginResponseImplFromJson(json);
@@ -131,10 +145,12 @@ class _$LoginResponseImpl implements _LoginResponse {
   final String message;
   @override
   final String token;
+  @override
+  final String? storeId;
 
   @override
   String toString() {
-    return 'LoginResponse(success: $success, message: $message, token: $token)';
+    return 'LoginResponse(success: $success, message: $message, token: $token, storeId: $storeId)';
   }
 
   @override
@@ -144,12 +160,14 @@ class _$LoginResponseImpl implements _LoginResponse {
             other is _$LoginResponseImpl &&
             (identical(other.success, success) || other.success == success) &&
             (identical(other.message, message) || other.message == message) &&
-            (identical(other.token, token) || other.token == token));
+            (identical(other.token, token) || other.token == token) &&
+            (identical(other.storeId, storeId) || other.storeId == storeId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, success, message, token);
+  int get hashCode =>
+      Object.hash(runtimeType, success, message, token, storeId);
 
   @JsonKey(ignore: true)
   @override
@@ -169,7 +187,8 @@ abstract class _LoginResponse implements LoginResponse {
   const factory _LoginResponse(
       {required final bool success,
       required final String message,
-      required final String token}) = _$LoginResponseImpl;
+      required final String token,
+      final String? storeId}) = _$LoginResponseImpl;
 
   factory _LoginResponse.fromJson(Map<String, dynamic> json) =
       _$LoginResponseImpl.fromJson;
@@ -180,6 +199,8 @@ abstract class _LoginResponse implements LoginResponse {
   String get message;
   @override
   String get token;
+  @override
+  String? get storeId;
   @override
   @JsonKey(ignore: true)
   _$$LoginResponseImplCopyWith<_$LoginResponseImpl> get copyWith =>
