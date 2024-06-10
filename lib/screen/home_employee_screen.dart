@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_akhir_app/screen/employee/activity_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/dashboard_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/payslip_employee_screen.dart';
 
@@ -28,12 +29,7 @@ class _HomeEmployeeScreenState extends State<HomeEmployeeScreen> {
 
   static const List<Widget> _screens = <Widget>[
     DashboardEmployeeScreen(),
-    SafeArea(
-      child: Text(
-        'Activity',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-      ),
-    ),
+    ActivityScreen(),
     Text(
       'Scan',
       style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
