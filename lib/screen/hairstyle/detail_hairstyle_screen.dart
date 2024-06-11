@@ -19,6 +19,10 @@ class DetailHairstyleScreen extends StatefulWidget {
 }
 
 class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
+  final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
+
+  bool get isOwner => actor == 'owner';
+
   void _onSelected(value) {
     switch (value) {
       case 'Edit':
@@ -183,25 +187,29 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        PopupMenuButton(
-          onSelected: _onSelected,
-          itemBuilder: (BuildContext context) {
-            return [
-              const PopupMenuItem(
-                value: 'Edit',
-                child: Text('Edit'),
+        isOwner
+            ? PopupMenuButton(
+                onSelected: _onSelected,
+                itemBuilder: (BuildContext context) {
+                  return [
+                    const PopupMenuItem(
+                      value: 'Edit',
+                      child: Text('Edit'),
+                    ),
+                    const PopupMenuItem(
+                      value: 'Delete',
+                      child: Text('Delete'),
+                    ),
+                  ];
+                },
+                icon: const Icon(
+                  Icons.more_vert,
+                  color: Colors.white,
+                ),
+              )
+            : const SizedBox(
+                width: 30,
               ),
-              const PopupMenuItem(
-                value: 'Delete',
-                child: Text('Delete'),
-              ),
-            ];
-          },
-          icon: const Icon(
-            Icons.more_vert,
-            color: Colors.white,
-          ),
-        ),
       ],
     );
   }

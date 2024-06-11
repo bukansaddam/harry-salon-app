@@ -394,7 +394,8 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                 return CardHairstyle(
                   index: index,
                   onTap: () {
-                    // do something
+                    context.goNamed('detail_hairstyle',
+                        pathParameters: {'id': hairstyle.id});
                   },
                   hairstyle: hairstyle,
                 );

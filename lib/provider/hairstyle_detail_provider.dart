@@ -25,11 +25,7 @@ class HairstyleDetailProvider extends ChangeNotifier {
       loadingState = const LoadingState.loading();
       notifyListeners();
 
-      final repository = await authRepository.getUser();
-      final token = repository?.token;
-
       detailHairstyleResponse = await apiService.getDetailHairstyle(
-        token: token!,
         id: id,
       );
 

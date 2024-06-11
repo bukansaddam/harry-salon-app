@@ -307,14 +307,10 @@ class ApiService {
   }
 
   Future<DetailHairstyleResponse> getDetailHairstyle({
-    required String token,
     required String id,
   }) async {
     final response = await http.get(
       Uri.parse('$baseUrl$_hairstyle/$id'),
-      headers: <String, String>{
-        'Authorization': 'Bearer $token',
-      },
     );
 
     if (response.statusCode == 200) {

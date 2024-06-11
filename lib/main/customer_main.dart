@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
+import 'package:tugas_akhir_app/screen/hairstyle/detail_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/home_customer_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
@@ -65,7 +66,15 @@ final GoRouter _router = GoRouter(
             path: 'all/hairstyle',
             name: 'more_hairstyle',
             builder: (context, state) => const HairstyleScreen(),
-          )
+          ),
+          GoRoute(
+            path: 'detail-hairstyle/:id',
+            name: 'detail_hairstyle',
+            builder: (context, state) {
+              final id = state.pathParameters['id'];
+              return DetailHairstyleScreen(id: id!);
+            },
+          ),
         ]),
   ],
 );
