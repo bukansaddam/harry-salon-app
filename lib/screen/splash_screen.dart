@@ -11,9 +11,17 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
+
+  bool get isCustomer => actor == 'customer';
+
   delayscreen() async {
     await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
+      if (isCustomer) {
+        context.goNamed('home');
+        return;
+      }
       final authRepository = context.read<AuthProvider>().authRepository;
       final isLoggedIn = await authRepository.getState();
       if (!isLoggedIn && mounted) {

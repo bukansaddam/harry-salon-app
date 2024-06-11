@@ -38,11 +38,7 @@ class HairstyleProvider extends ChangeNotifier {
         notifyListeners();
       }
 
-      final repository = await authRepository.getUser();
-      final token = repository?.token;
-
       hairstyleResponse = await apiService.getAllHairstyle(
-        token: token!,
         page: pageItems!,
         size: sizeItems,
         name: searchValue ?? '',

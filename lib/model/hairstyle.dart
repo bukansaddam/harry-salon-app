@@ -18,8 +18,8 @@ class HairstyleResponse with _$HairstyleResponse {
 @freezed
 class HairstyleResult with _$HairstyleResult {
   const factory HairstyleResult({
-    required int? totalCount,
-    required int? totalPages,
+    @JsonKey(name: 'total_count') required int? totalCount,
+    @JsonKey(name: 'total_pages') required int? totalPages,
     required List<Hairstyle> data,
   }) = _HairstyleResult;
 

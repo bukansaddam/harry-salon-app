@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tugas_akhir_app/data/api/api_service.dart';
-import 'package:tugas_akhir_app/model/hairstyle.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
+import 'package:tugas_akhir_app/screen/widgets/card_hairstyle.dart';
 import 'package:tugas_akhir_app/screen/widgets/search_bar.dart';
 
 class HairstyleScreen extends StatefulWidget {
@@ -110,7 +109,14 @@ class _HairstyleScreenState extends State<HairstyleScreen> {
                     provider.hairstyles.length,
                     (index) {
                       final hairstyle = provider.hairstyles[index];
-                      return _buildListItem(context, hairstyle, index);
+                      return CardHairstyle(
+                        index: index,
+                        onTap: () {
+                          context.goNamed('detail_hairstyle',
+                              pathParameters: {'id': hairstyle.id});
+                        },
+                        hairstyle: hairstyle,
+                      );
                     },
                   ),
                 ),
@@ -144,48 +150,6 @@ class _HairstyleScreenState extends State<HairstyleScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         child: const Icon(Icons.add, color: Colors.white),
-      ),
-    );
-  }
-
-  Widget _buildListItem(BuildContext context, Hairstyle hairstyle, int index) {
-    return InkWell(
-      onTap: () {
-        context
-            .goNamed('detail_hairstyle', pathParameters: {'id': hairstyle.id});
-      },
-      child: Container(
-        height: index == 1 ? 300 : 400,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  '${ApiService.baseUrl}/${hairstyle.image}',
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                hairstyle.name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-          ],
-        ),
       ),
     );
   }
