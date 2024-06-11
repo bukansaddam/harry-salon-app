@@ -20,6 +20,11 @@ class _HairstyleScreenState extends State<HairstyleScreen> {
   Timer? _debounce;
   String searchValue = '';
 
+  final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
+
+  bool get isCustomer => actor == 'customer';
+  bool get isOwner => actor == 'owner';
+
   @override
   void initState() {
     super.initState();
@@ -57,6 +62,11 @@ class _HairstyleScreenState extends State<HairstyleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: isCustomer
+          ? AppBar(
+              title: const Text('Hairstyle'),
+            )
+          : null,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -80,7 +90,7 @@ class _HairstyleScreenState extends State<HairstyleScreen> {
           ),
         ],
       ),
-      floatingActionButton: _buildFAB(context),
+      floatingActionButton: isOwner ? _buildFAB(context) : null,
     );
   }
 

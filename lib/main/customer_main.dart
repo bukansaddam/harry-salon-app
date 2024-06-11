@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
+import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/home_customer_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
 import '../config/injection.dart' as di;
@@ -56,9 +57,15 @@ final GoRouter _router = GoRouter(
       builder: (context, state) => const SplashScreen(),
     ),
     GoRoute(
-      path: '/home',
-      name: 'home',
-      builder: (context, state) => const HomeCustomerScreen(),
-    ),
+        path: '/home',
+        name: 'home',
+        builder: (context, state) => const HomeCustomerScreen(),
+        routes: [
+          GoRoute(
+            path: 'all/hairstyle',
+            name: 'more_hairstyle',
+            builder: (context, state) => const HairstyleScreen(),
+          )
+        ]),
   ],
 );
