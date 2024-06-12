@@ -18,12 +18,14 @@ class _SplashScreenState extends State<SplashScreen> {
   delayscreen() async {
     await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
-      if (isCustomer) {
+      final authRepository = context.read<AuthProvider>();
+      final isLoggedIn = await authRepository.authRepository.getState();
+
+      if (isCustomer && mounted) {
+        authRepository.checkIsLoggedIn();
         context.goNamed('home');
         return;
       }
-      final authRepository = context.read<AuthProvider>().authRepository;
-      final isLoggedIn = await authRepository.getState();
       if (!isLoggedIn && mounted) {
         context.goNamed('login');
       } else if (isLoggedIn && mounted) {

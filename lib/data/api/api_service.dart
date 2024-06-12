@@ -33,7 +33,7 @@ class ApiService {
   static const String _review = '/reviews';
   static const String _loginEmployee = '/auth/employees/signin';
   static const String _loginCustomer = '/auth/users/signin';
-  static const String _detailUser = '/users/detail';
+  static const String _detailUser = '/users';
 
   final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
 
@@ -668,7 +668,7 @@ class ApiService {
     required String token,
   }) async {
     final response = await http.get(
-      Uri.parse('$baseUrl$_detailUser'),
+      Uri.parse('$baseUrl$_detailUser/detail'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },
@@ -678,6 +678,68 @@ class ApiService {
       return DetailUserResponse.fromJson(jsonDecode(response.body));
     } else {
       throw DetailUserResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<UploadResponse> updateImageProfile({
+    required String token,
+    required List<int> images,
+    required String filename,
+  }) async {
+    var request =
+        http.MultipartRequest('PUT', Uri.parse('$baseUrl$_detailUser'));
+
+    if (images.isNotEmpty) {
+      var multipartFile = http.MultipartFile.fromBytes(
+        'avatar',
+        images,
+        filename: filename,
+      );
+      request.files.add(multipartFile);
+    }
+
+    request.headers.addAll({
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer $token',
+    });
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<UploadResponse> updateProfile({
+    required String token,
+    String? name,
+    String? email,
+    String? address,
+    String? phoneNumber,
+  }) async {
+    var request =
+        http.MultipartRequest('PUT', Uri.parse('$baseUrl$_detailUser'));
+
+    if (name != null) request.fields['name'] = name;
+    if (email != null) request.fields['email'] = email;
+    if (address != null) request.fields['address'] = address;
+    if (phoneNumber != null) request.fields['phone'] = phoneNumber;
+
+    request.headers.addAll({
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer $token',
+    });
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
     }
   }
 }

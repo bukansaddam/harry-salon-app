@@ -5,10 +5,7 @@ import 'package:tugas_akhir_app/screen/customer/profile_screen.dart';
 class HomeCustomerScreen extends StatefulWidget {
   const HomeCustomerScreen({
     super.key,
-    this.index = 0,
   });
-
-  final int index;
 
   @override
   State<HomeCustomerScreen> createState() => _HomeCustomerScreenState();
@@ -20,7 +17,7 @@ class _HomeCustomerScreenState extends State<HomeCustomerScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _selectedIndex = widget.index;
+    _selectedIndex = 0;
   }
 
   void _onItemTapped(int index) {

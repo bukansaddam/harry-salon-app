@@ -1,10 +1,14 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/model/detail_user.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/user_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/item_profile.dart';
+import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -15,14 +19,15 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final _scrollController = ScrollController();
-  late AuthProvider authProvider;
+  late UserProvider userProvider;
 
   @override
   void initState() {
     super.initState();
-    authProvider = Provider.of<AuthProvider>(context, listen: false);
+    userProvider = Provider.of<UserProvider>(context, listen: false);
+
     Future.microtask(() async {
-      await authProvider.checkIsLoggedIn();
+      await userProvider.getDetailUser();
     });
   }
 
@@ -33,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _refreshData() async {
-    await authProvider.checkIsLoggedIn();
+    await userProvider.getDetailUser();
     setState(() {});
   }
 
@@ -43,29 +48,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: context.watch<AuthProvider>().loadingState.when(
-            initial: () => const Center(child: CircularProgressIndicator()),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            loaded: () => context.watch<AuthProvider>().isLoggedIn
-                ? Consumer<UserProvider>(
-                    builder: (context, userProvider, child) {
-                      final state = userProvider.loadingState;
-                      return state.when(
-                        initial: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        loaded: () {
-                          final user = userProvider.userDetailResponse!.data;
-                          return _buildBody(user);
-                        },
-                        error: (error) => Center(child: Text(error)),
-                      );
-                    },
-                  )
-                : _buildDialogLogin(),
-            error: (error) => Center(child: Text(error)),
-          ),
+      body: context.watch<AuthProvider>().isLoggedIn
+          ? Consumer<UserProvider>(
+              builder: (context, userProvider, child) {
+                final state = userProvider.loadingState;
+                return state.when(
+                  initial: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  loaded: () {
+                    final user = userProvider.userDetailResponse!.data;
+                    return _buildBody(user);
+                  },
+                  error: (error) => Center(child: Text(error)),
+                );
+              },
+            )
+          : _buildDialogLogin(),
     );
   }
 
@@ -80,12 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: Image.network(
-                      'https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&q=70&fm=webp',
-                    ).image,
-                  ),
+                  _buildAvatar(user),
                   const SizedBox(height: 16),
                   Text(
                     user.name,
@@ -112,24 +107,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 8),
                   ItemProfile(
-                    onTap: () {},
+                    onTap: () {
+                      context.goNamed('edit_profile', extra: {
+                        'user': user.name,
+                        'title': 'Full Name',
+                      });
+                    },
                     title: 'Full Name',
                     subtitle: user.name,
                   ),
+                  const Divider(
+                    height: 0,
+                  ),
                   ItemProfile(
-                    onTap: () {},
+                    onTap: () {
+                      context.goNamed('edit_profile', extra: {
+                        'user': user.email,
+                        'title': 'Email',
+                      });
+                    },
                     title: 'Email',
                     subtitle: user.email,
                   ),
+                  const Divider(
+                    height: 0,
+                  ),
                   ItemProfile(
-                    onTap: () {},
+                    onTap: () {
+                      context.goNamed('edit_profile', extra: {
+                        'user': user.address,
+                        'title': 'Address',
+                      });
+                    },
                     title: 'Address',
                     subtitle: user.address,
                   ),
+                  const Divider(
+                    height: 0,
+                  ),
                   ItemProfile(
-                    onTap: () {},
+                    onTap: () {
+                      context.goNamed('edit_profile', extra: {
+                        'user': user.phone.toString(),
+                        'title': 'Phone',
+                      });
+                    },
                     title: 'Phone',
                     subtitle: user.phone.toString(),
+                  ),
+                  const Divider(
+                    height: 0,
                   ),
                 ],
               ),
@@ -215,5 +242,117 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: const Text('Login'),
       ),
     );
+  }
+
+  Widget _buildAvatar(DetailUser user) {
+    return Stack(
+      children: [
+        CircleAvatar(
+          radius: 50,
+          backgroundImage: Image.network(
+            user.avatar.contains('http')
+                ? user.avatar
+                : '${ApiService.baseUrl}/${user.avatar}',
+          ).image,
+        ),
+        Positioned(
+            bottom: 0,
+            right: 0,
+            child: InkWell(
+              onTap: () => _buildBottomSheet(context),
+              child: ClipOval(
+                child: Container(
+                  decoration: const BoxDecoration(color: Color(0xFF293869)),
+                  padding: const EdgeInsets.all(8),
+                  child: const Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                ),
+              ),
+            ))
+      ],
+    );
+  }
+
+  Future<void> _buildBottomSheet(BuildContext context) {
+    return showModalBottomSheet<void>(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: 200,
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 16.0, top: 16),
+                child: Text(
+                  'Edit Image',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera),
+                title: const Text('Camera'),
+                onTap: () {
+                  _onCameraView();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: const Text('Gallery'),
+                onTap: () {
+                  _onGalleryView();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _onCameraView() async {
+    final provider = context.read<UserProvider>();
+
+    final isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
+    final isLinux = defaultTargetPlatform == TargetPlatform.linux;
+    if (isMacOS || isLinux) return;
+
+    final ImagePicker picker = ImagePicker();
+
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      if (!mounted) return;
+      provider.setImage(pickedFile);
+      ToastMessage.show(context, 'Image updated');
+    }
+  }
+
+  void _onGalleryView() async {
+    final provider = context.read<UserProvider>();
+
+    final isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
+    final isLinux = defaultTargetPlatform == TargetPlatform.linux;
+    if (isMacOS || isLinux) return;
+
+    final ImagePicker picker = ImagePicker();
+
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null && mounted) {
+      provider.setImage(pickedFile);
+      ToastMessage.show(context, 'Image updated');
+    }
+
+    if (mounted) {
+      context.pop();
+    }
   }
 }

@@ -10,7 +10,9 @@ class AuthProvider extends ChangeNotifier {
   final ApiService apiService;
   final AuthRepository authRepository;
 
-  AuthProvider({required this.apiService, required this.authRepository});
+  AuthProvider({required this.apiService, required this.authRepository}) {
+    checkIsLoggedIn();
+  }
 
   LoadingState loadingState = const LoadingState.initial();
 
