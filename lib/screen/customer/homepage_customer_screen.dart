@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir_app/data/api/api_service.dart';
+import 'package:tugas_akhir_app/model/detail_user.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
+import 'package:tugas_akhir_app/provider/user_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_hairstyle.dart';
 
@@ -23,13 +26,17 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
   late AnimationController _animationController;
   late Animation<BorderRadius?> _borderRadiusAnimation;
 
+  late UserProvider userProvider;
+
   @override
   void initState() {
     super.initState();
     final hairstyleProvider = context.read<HairstyleProvider>();
+    userProvider = Provider.of<UserProvider>(context, listen: false);
 
     Future.microtask(() async {
       hairstyleProvider.refreshHairstyle();
+      userProvider.getDetailUser();
     });
 
     _animationController = AnimationController(
@@ -178,35 +185,19 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
-                children: [
-                  // CircleAvatar(
-                  //   radius: 30,
-                  //   backgroundImage: AssetImage(
-                  //     'assets/customer.png',
-                  //   ),
-                  // ),
-                  Icon(Icons.person, color: Colors.white, size: 30),
-                  SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Hi there,',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          )),
-                      Text(
-                        'Customer Name',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              Consumer<UserProvider>(
+                builder: (context, provider, child) {
+                  final state = provider.loadingState;
+                  return state.when(
+                    initial: () => _buildProfileSection(),
+                    loading: () => _buildProfileSection(),
+                    loaded: () {
+                      final user = provider.userDetailResponse?.data;
+                      return _buildProfileSection(user: user);
+                    },
+                    error: (e) => _buildProfileSection(),
+                  );
+                },
               ),
               const SizedBox(height: 16),
               Row(
@@ -410,6 +401,54 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
           )
         ],
       ),
+    );
+  }
+
+  Widget _buildProfileSection({
+    DetailUser? user,
+  }) {
+    final isLoggedIn = user != null;
+    return Row(
+      children: [
+        isLoggedIn
+            ? CircleAvatar(
+                radius: 25,
+                backgroundImage: Image.network(
+                  user.avatar.contains('http')
+                      ? user.avatar
+                      : '${ApiService.baseUrl}/${user.avatar}',
+                ).image,
+              )
+            : const Icon(Icons.person, color: Colors.white, size: 30),
+        const SizedBox(width: 16),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Hi there,',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                )),
+            isLoggedIn
+                ? Text(
+                    user.name,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : const Text(
+                    'Annonymous',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+          ],
+        ),
+      ],
     );
   }
 }
