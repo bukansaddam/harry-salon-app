@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tugas_akhir_app/screen/customer/homepage_customer_screen.dart';
+import 'package:tugas_akhir_app/screen/customer/profile_screen.dart';
 
 class HomeCustomerScreen extends StatefulWidget {
-  const HomeCustomerScreen({super.key});
+  const HomeCustomerScreen({
+    super.key,
+    this.index = 0,
+  });
+
+  final int index;
 
   @override
   State<HomeCustomerScreen> createState() => _HomeCustomerScreenState();
@@ -14,7 +20,7 @@ class _HomeCustomerScreenState extends State<HomeCustomerScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _selectedIndex = 0;
+    _selectedIndex = widget.index;
   }
 
   void _onItemTapped(int index) {
@@ -37,12 +43,7 @@ class _HomeCustomerScreenState extends State<HomeCustomerScreen> {
         style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
       ),
     ),
-    SafeArea(
-      child: Text(
-        'Profile',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-      ),
-    ),
+    ProfileScreen(),
   ];
 
   @override

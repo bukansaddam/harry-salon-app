@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
+import 'package:tugas_akhir_app/provider/user_provider.dart';
+import 'package:tugas_akhir_app/screen/auth/login_screen.dart';
+import 'package:tugas_akhir_app/screen/auth/register_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/detail_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/home_customer_screen.dart';
@@ -26,6 +29,9 @@ class CustomerApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<HairstyleProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<UserProvider>(),
         ),
       ],
       child: MaterialApp.router(
@@ -58,9 +64,22 @@ final GoRouter _router = GoRouter(
       builder: (context, state) => const SplashScreen(),
     ),
     GoRoute(
+      path: '/login',
+      name: 'login',
+      builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      name: 'register',
+      builder: (context, state) => const RegisterScreen(),
+    ),
+    GoRoute(
         path: '/home',
         name: 'home',
-        builder: (context, state) => const HomeCustomerScreen(),
+        builder: (context, state) {
+          final index = state.extra != null ? state.extra as int : 0;
+          return HomeCustomerScreen(index: index);
+        },
         routes: [
           GoRoute(
             path: 'all/hairstyle',

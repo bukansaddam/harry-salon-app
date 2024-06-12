@@ -8,6 +8,7 @@ import 'package:tugas_akhir_app/model/detail_employee.dart';
 import 'package:tugas_akhir_app/model/detail_hairstyle.dart';
 import 'package:tugas_akhir_app/model/detail_payslip.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
+import 'package:tugas_akhir_app/model/detail_user.dart';
 import 'package:tugas_akhir_app/model/employee.dart';
 import 'package:tugas_akhir_app/model/hairstyle.dart';
 import 'package:tugas_akhir_app/model/login.dart';
@@ -21,7 +22,7 @@ import 'package:tugas_akhir_app/model/upload.dart';
 class ApiService {
   static const String baseUrl = 'http://localhost:3000';
   static const String _login = '/auth/owners/signin';
-  static const String _register = '/auth/owners/signup';
+  static const String _register = '/auth/customers/signup';
   // static const String _logout = '/auth/owners/signout';
   static const String _store = '/stores';
   static const String _employee = '/employees';
@@ -31,6 +32,8 @@ class ApiService {
   static const String _service = '/services';
   static const String _review = '/reviews';
   static const String _loginEmployee = '/auth/employees/signin';
+  static const String _loginCustomer = '/auth/users/signin';
+  static const String _detailUser = '/users/detail';
 
   final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
 
@@ -71,7 +74,11 @@ class ApiService {
     required String password,
   }) async {
     final response = await http.post(
-      Uri.parse('$baseUrl$_login'),
+      isOwner
+          ? Uri.parse('$baseUrl$_login')
+          : isCustomer
+              ? Uri.parse('$baseUrl$_loginCustomer')
+              : Uri.parse('$baseUrl$_loginEmployee'),
       body: jsonEncode(<String, String>{
         'email': email,
         'password': password,
@@ -654,6 +661,23 @@ class ApiService {
       return ReviewResponse.fromJson(jsonDecode(response.body));
     } else {
       return ReviewResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<DetailUserResponse> getDetailUser({
+    required String token,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_detailUser'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return DetailUserResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw DetailUserResponse.fromJson(jsonDecode(response.body));
     }
   }
 }

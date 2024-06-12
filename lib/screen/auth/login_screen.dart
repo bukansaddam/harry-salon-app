@@ -136,10 +136,10 @@ class _LoginScreenState extends State<LoginScreen> {
           password: _passwordController.text,
         );
       } else {
-        // result = await provider.loginCustomer(
-        //   email: _emailController.text,
-        //   password: _passwordController.text,
-        // );
+        result = await provider.login(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
       }
 
       if (result && mounted) {

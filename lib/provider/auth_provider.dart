@@ -17,6 +17,24 @@ class AuthProvider extends ChangeNotifier {
   String? _message;
   String? get message => _message;
 
+  bool isLoggedIn = false;
+
+  Future<bool> checkIsLoggedIn() async {
+    loadingState = const LoadingState.loading();
+    notifyListeners();
+
+    try {
+      isLoggedIn = await authRepository.getState();
+      loadingState = const LoadingState.loaded();
+      notifyListeners();
+      return isLoggedIn;
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+      return false;
+    }
+  }
+
   Future<bool> register({
     required String email,
     required String password,
@@ -94,11 +112,13 @@ class AuthProvider extends ChangeNotifier {
       } else {
         _message = loginResponse.message;
         loadingState = LoadingState.error(loginResponse.message);
+        debugPrint(loginResponse.message);
         notifyListeners();
         return false;
       }
     } catch (e) {
       loadingState = LoadingState.error(e.toString());
+      debugPrint(e.toString());
       _message = e.toString();
       notifyListeners();
       return false;

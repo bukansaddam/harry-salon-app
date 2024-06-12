@@ -10,6 +10,7 @@ import 'package:tugas_akhir_app/provider/payslip_provider.dart';
 import 'package:tugas_akhir_app/provider/review_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
+import 'package:tugas_akhir_app/provider/user_provider.dart';
 
 final locator = GetIt.instance;
 
@@ -40,6 +41,9 @@ void init() {
   );
   locator.registerLazySingleton<ReviewProvider>(
     () => ReviewProvider(apiService: locator(), authRepository: locator()),
+  );
+  locator.registerLazySingleton<UserProvider>(
+    () => UserProvider(apiService: locator(), authRepository: locator()),
   );
 
   locator.registerLazySingleton<ApiService>(() => ApiService());

@@ -94,10 +94,13 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 10),
-                    Text(
-                      'Popular Hairstyle',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    Padding(
+                      padding: EdgeInsets.only(left: 16),
+                      child: Text(
+                        'Popular Hairstyle',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
                     ),
                     Center(child: CircularProgressIndicator()),
                   ],
@@ -106,10 +109,13 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 10),
-                    Text(
-                      'Popular Hairstyle',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    Padding(
+                      padding: EdgeInsets.only(left: 16),
+                      child: Text(
+                        'Popular Hairstyle',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
                     ),
                     SizedBox(height: 10),
                     Center(child: CircularProgressIndicator()),
