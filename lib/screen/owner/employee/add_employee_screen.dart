@@ -33,7 +33,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
     super.didChangeDependencies();
 
     Future.microtask(() {
-      context.read<StoreProvider>().getAllStore();
+      context.read<StoreProvider>().getAllOwnerStore();
     });
 
     if (context.watch<StoreProvider>().stores.isNotEmpty) {

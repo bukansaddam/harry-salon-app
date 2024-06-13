@@ -239,7 +239,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                     IconButton(
                       onPressed: () {
                         context.pop();
-                        storeProvider.refreshStore();
+                        storeProvider.refreshOwnerStore();
                       },
                       icon: const Icon(
                         Icons.arrow_back,

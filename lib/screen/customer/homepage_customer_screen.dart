@@ -4,10 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/model/detail_user.dart';
+import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
+import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/provider/user_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_hairstyle.dart';
+import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
 
 class HomepageCustomerScreen extends StatefulWidget {
   const HomepageCustomerScreen({super.key});
@@ -21,22 +24,31 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
   final ScrollController _scrollController = ScrollController();
   bool _isExpanded = true;
   static const kExpandedHeight = 190.0;
-  String dropdownValue = 'Surabaya';
+  String dropdownValue = '';
+
+  final _locationController = TextEditingController();
 
   late AnimationController _animationController;
   late Animation<BorderRadius?> _borderRadiusAnimation;
 
   late UserProvider userProvider;
+  late StoreProvider storeProvider;
 
   @override
   void initState() {
     super.initState();
     final hairstyleProvider = context.read<HairstyleProvider>();
     userProvider = Provider.of<UserProvider>(context, listen: false);
+    storeProvider = Provider.of<StoreProvider>(context, listen: false);
 
     Future.microtask(() async {
-      hairstyleProvider.refreshHairstyle();
-      userProvider.getDetailUser();
+      await hairstyleProvider.refreshHairstyle();
+      await userProvider.getDetailUser();
+      await storeProvider.refreshStore();
+      setState(() {
+        dropdownValue = storeProvider.stores.first.name;
+        _locationController.text = dropdownValue;
+      });
     });
 
     _animationController = AnimationController(
@@ -73,6 +85,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
   void dispose() {
     _scrollController.dispose();
     _animationController.dispose();
+    _locationController.dispose();
     super.dispose();
   }
 
@@ -199,35 +212,29 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                   );
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          bottomLeft: Radius.circular(15),
+                    child: InkWell(
+                      onTap: () => _buildBottomSheet(context),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            bottomLeft: Radius.circular(15),
+                          ),
+                          color: Colors.grey[200],
                         ),
-                        color: Colors.grey[200],
-                      ),
-                      child: DropdownButton<String>(
-                        value: dropdownValue,
-                        isExpanded: true,
-                        underline: const SizedBox(),
-                        items: _locations.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownValue = newValue!;
-                          });
-                        },
+                        child: SizedBox(
+                          height: 56,
+                          child: CustomTextField(
+                            text: 'Choose Location',
+                            controller: _locationController,
+                            suffixIcon: const Icon(Icons.arrow_drop_down),
+                            enabled: false,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -449,6 +456,158 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
           ],
         ),
       ],
+    );
+  }
+
+  Future<void> _buildBottomSheet(BuildContext context) {
+    return showModalBottomSheet<void>(
+      useSafeArea: true,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, top: 16),
+                child: Row(
+                  children: [
+                    const Expanded(
+                      child: Center(
+                        child: Text(
+                          'Select Location',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.close, size: 20),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Consumer<StoreProvider>(
+                    builder: (context, value, child) {
+                      final state = value.loadingState;
+                      return state.when(
+                        initial: () => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        loading: () => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        loaded: () => ListView.builder(
+                          itemCount: value.stores.length,
+                          itemBuilder: (context, index) {
+                            final store = value.stores[index];
+                            return _buildItemStore(store);
+                          },
+                        ),
+                        error: (error) => Center(child: Text(error)),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildItemStore(Store store) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          dropdownValue = '${store.name}, ${store.location}';
+          _locationController.text = dropdownValue;
+          context.pop();
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: store.name == dropdownValue
+                ? Border.all(color: Colors.blue, width: 2)
+                : null,
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 20,
+                offset: Offset(0, 5),
+              ),
+            ]),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Card(
+                color: Colors.blue[100],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  child: Text(
+                    '123 M',
+                    style: TextStyle(
+                      color: Colors.blue[700],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                store.name,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                store.location,
+                style: const TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 16),
+              InkWell(
+                onTap: () {
+                  // do something
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Detail',
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue),
+                    ),
+                    SizedBox(width: 8),
+                    Icon(Icons.arrow_forward_ios, size: 14, color: Colors.blue),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

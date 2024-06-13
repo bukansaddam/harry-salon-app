@@ -39,7 +39,9 @@ class StoreProvider extends ChangeNotifier {
 
   bool? isActive = true;
 
-  Future<void> getAllStore() async {
+  Future<void> getAllStore({
+    String searchValue = '',
+  }) async {
     try {
       if (pageItems == 1) {
         loadingState = const LoadingState.loading();
@@ -50,6 +52,52 @@ class StoreProvider extends ChangeNotifier {
       final token = repository?.token;
 
       storeResponse = await apiService.getAllStore(
+        name: searchValue,
+        token: token!,
+        page: pageItems!,
+        size: sizeItems,
+      );
+
+      if (storeResponse!.success) {
+        stores.addAll(storeResponse!.result.data);
+
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+
+        if (storeResponse!.result.data.length < sizeItems) {
+          pageItems = null;
+        } else {
+          pageItems = pageItems! + 1;
+        }
+      } else {
+        loadingState = LoadingState.error(storeResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
+  Future<void> refreshStore({
+    String searchValue = '',
+  }) async {
+    pageItems = 1;
+    stores.clear();
+    await getAllStore(searchValue: searchValue);
+  }
+
+  Future<void> getAllOwnerStore() async {
+    try {
+      if (pageItems == 1) {
+        loadingState = const LoadingState.loading();
+        notifyListeners();
+      }
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      storeResponse = await apiService.getAllOwnerStore(
           token: token!, page: pageItems!, size: sizeItems);
 
       if (storeResponse!.success) {
@@ -77,10 +125,10 @@ class StoreProvider extends ChangeNotifier {
     _activeStoreCount = stores.where((store) => store.isActive).length;
   }
 
-  Future<void> refreshStore() async {
+  Future<void> refreshOwnerStore() async {
     pageItems = 1;
     stores.clear();
-    await getAllStore();
+    await getAllOwnerStore();
     await getTotalActiveStore();
   }
 

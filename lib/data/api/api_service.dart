@@ -169,6 +169,26 @@ class ApiService {
 
   Future<StoreResponse> getAllStore({
     required String token,
+    String name = '',
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_store?name=$name&page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return StoreResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load store');
+    }
+  }
+
+  Future<StoreResponse> getAllOwnerStore({
+    required String token,
     int page = 1,
     int size = 10,
   }) async {

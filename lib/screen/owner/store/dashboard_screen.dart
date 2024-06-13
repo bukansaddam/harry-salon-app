@@ -24,13 +24,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         if (storeProvider.pageItems != null) {
-          storeProvider.getAllStore();
+          storeProvider.getAllOwnerStore();
         }
       }
     });
 
     Future.microtask(() async {
-      storeProvider.refreshStore();
+      storeProvider.refreshOwnerStore();
     });
   }
 

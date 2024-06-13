@@ -11,7 +11,7 @@ class CustomTextField extends StatefulWidget {
   final int minLines;
   final bool enabled;
   final bool counter;
-  final Icon? prefixIcon;
+  final Icon? prefixIcon, suffixIcon;
   final String? text;
   final Color? fillColor;
 
@@ -29,6 +29,7 @@ class CustomTextField extends StatefulWidget {
     this.prefixIcon,
     this.text,
     this.fillColor,
+    this.suffixIcon,
   });
 
   @override
@@ -132,62 +133,66 @@ class _CustomTextFieldState extends State<CustomTextField> {
             color: Colors.black,
           ),
           decoration: InputDecoration(
-              labelText: widget.labelText != null && widget.hintText != null
-                  ? null
-                  : widget.labelText,
-              hintText: widget.hintText,
-              hintStyle: const TextStyle(
-                color: Colors.grey,
+            labelText: widget.labelText != null && widget.hintText != null
+                ? null
+                : widget.labelText,
+            hintText: widget.hintText,
+            hintStyle: const TextStyle(
+              color: Colors.grey,
+            ),
+            floatingLabelBehavior:
+                widget.labelText != null && widget.hintText != null
+                    ? FloatingLabelBehavior.never
+                    : FloatingLabelBehavior.auto,
+            floatingLabelStyle: const TextStyle(
+              color: Color(0xFF3B59BA),
+            ),
+            prefixIcon: widget.prefixIcon,
+            counterText: _counterText(),
+            counterStyle: _counterColor(),
+            filled: true,
+            fillColor: widget.fillColor ?? Colors.grey[200],
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide(
+                color: widget.labelText != null && widget.hintText != null
+                    ? Colors.transparent
+                    : widget.controller.text.isEmpty
+                        ? Colors.transparent
+                        : const Color(0xFF3B59BA),
               ),
-              floatingLabelBehavior:
-                  widget.labelText != null && widget.hintText != null
-                      ? FloatingLabelBehavior.never
-                      : FloatingLabelBehavior.auto,
-              floatingLabelStyle: const TextStyle(
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: const BorderSide(
+                color: Colors.transparent,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: const BorderSide(
                 color: Color(0xFF3B59BA),
               ),
-              prefixIcon: widget.prefixIcon,
-              counterText: _counterText(),
-              counterStyle: _counterColor(),
-              filled: true,
-              fillColor: widget.fillColor ?? Colors.grey[200],
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide(
-                  color: widget.labelText != null && widget.hintText != null
-                      ? Colors.transparent
-                      : widget.controller.text.isEmpty
-                          ? Colors.transparent
-                          : const Color(0xFF3B59BA),
-                ),
-              ),
-              disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(
-                  color: Colors.transparent,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(
-                  color: Color(0xFF3B59BA),
-                ),
-              ),
-              suffixIcon: widget.isObscureText
-                  ? IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
-                      },
-                      icon: Icon(
-                        _obscureText ? Icons.visibility_off : Icons.visibility,
-                      ),
-                    )
-                  : null),
+            ),
+            suffixIcon: widget.suffixIcon ??
+                (widget.isObscureText
+                    ? IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                      )
+                    : null),
+          ),
           keyboardType: widget.keyboardType,
           inputFormatters: widget.inputFormatters,
           validator: (value) {
