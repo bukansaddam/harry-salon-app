@@ -89,8 +89,6 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
     super.dispose();
   }
 
-  final List<String> _locations = ['Surabaya', 'Sidoarjo', 'Gresik', 'Malang'];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

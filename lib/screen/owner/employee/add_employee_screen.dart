@@ -28,17 +28,23 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
 
   Store? dropdownValue;
 
+  bool _isInitialLoad = true;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    Future.microtask(() {
-      context.read<StoreProvider>().getAllOwnerStore();
-    });
+    if (_isInitialLoad) {
+      Future.microtask(() {
+        context.read<StoreProvider>().getAllOwnerStore();
+      });
 
-    if (context.watch<StoreProvider>().stores.isNotEmpty) {
-      dropdownValue = context.watch<StoreProvider>().stores.first;
+      if (context.watch<StoreProvider>().stores.isNotEmpty) {
+        dropdownValue = context.watch<StoreProvider>().stores.first;
+      }
     }
+
+    _isInitialLoad = false;
   }
 
   @override
