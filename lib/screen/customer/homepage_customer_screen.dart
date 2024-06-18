@@ -46,7 +46,8 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
       await userProvider.getDetailUser();
       await storeProvider.refreshStore();
       setState(() {
-        dropdownValue = storeProvider.stores.first.name;
+        dropdownValue =
+            "${storeProvider.stores.first.name}, ${storeProvider.stores.first.location}";
         _locationController.text = dropdownValue;
       });
     });
@@ -236,35 +237,40 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                       ),
                     ),
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    height: 56,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(15),
-                        bottomRight: Radius.circular(15),
+                  InkWell(
+                    onTap: () {
+                      context.goNamed('order', extra: "toko bunga");
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 56,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 4),
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(15),
+                          bottomRight: Radius.circular(15),
+                        ),
+                        color: Colors.blue[500],
                       ),
-                      color: Colors.blue[500],
-                    ),
-                    child: const Row(
-                      children: [
-                        Text(
-                          'Order',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                      child: const Row(
+                        children: [
+                          Text(
+                            'Order',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 8),
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: 16,
-                          color: Colors.white,
-                        ),
-                      ],
+                          SizedBox(width: 8),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 16,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 ],
@@ -537,7 +543,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
-            border: store.name == dropdownValue
+            border: "${store.name}, ${store.location}" == dropdownValue
                 ? Border.all(color: Colors.blue, width: 2)
                 : null,
             boxShadow: const [

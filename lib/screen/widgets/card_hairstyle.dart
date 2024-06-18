@@ -5,7 +5,7 @@ import 'package:tugas_akhir_app/model/hairstyle.dart';
 class CardHairstyle extends StatefulWidget {
   const CardHairstyle({
     super.key,
-    required this.index,
+    this.index = 0,
     required this.onTap,
     required this.hairstyle,
   });

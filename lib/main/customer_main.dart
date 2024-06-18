@@ -3,10 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
+import 'package:tugas_akhir_app/provider/order_provider.dart';
+import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/provider/user_provider.dart';
 import 'package:tugas_akhir_app/screen/auth/login_screen.dart';
 import 'package:tugas_akhir_app/screen/auth/register_screen.dart';
+import 'package:tugas_akhir_app/screen/customer/add_order_screen.dart';
 import 'package:tugas_akhir_app/screen/customer/edit_profile_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/detail_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
@@ -37,6 +40,12 @@ class CustomerApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<StoreProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<OrderProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<ServiceProvider>(),
         ),
       ],
       child: MaterialApp.router(
@@ -109,6 +118,14 @@ final GoRouter _router = GoRouter(
               return EditProfileScreen(title: title, user: user);
             },
           ),
+          GoRoute(
+            path: 'order',
+            name: 'order',
+            builder: (context, state) {
+              final String extra = state.extra as String;
+              return AddOrderScreen(location: extra);
+            },
+          )
         ]),
   ],
 );
