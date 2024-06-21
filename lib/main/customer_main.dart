@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/provider/order_provider.dart';
@@ -122,7 +123,7 @@ final GoRouter _router = GoRouter(
             path: 'order',
             name: 'order',
             builder: (context, state) {
-              final String extra = state.extra as String;
+              final Store extra = state.extra as Store;
               return AddOrderScreen(location: extra);
             },
           )

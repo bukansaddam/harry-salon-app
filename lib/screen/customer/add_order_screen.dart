@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/model/hairstyle.dart';
 import 'package:tugas_akhir_app/model/service.dart';
+import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
@@ -17,7 +18,7 @@ import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
 class AddOrderScreen extends StatefulWidget {
   const AddOrderScreen({super.key, required this.location});
 
-  final String location;
+  final Store location;
 
   @override
   State<AddOrderScreen> createState() => _AddOrderScreenState();
@@ -53,15 +54,17 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
 
     Future.microtask(() async {
       await hairstyleProvider.refreshHairstyle(searchValue: searchValue);
-      await serviceProvider.refreshService(storeId: 'PECGtmWRRx');
-      setState(() {
-        dropdownValue = serviceProvider.services.isNotEmpty
-            ? serviceProvider.services.first
-            : null;
-        totalPrice = (serviceProvider.services.isNotEmpty
-            ? serviceProvider.services.first.price
-            : 0)!;
-      });
+      await serviceProvider.refreshService(storeId: widget.location.id);
+      if (mounted) {
+        setState(() {
+          dropdownValue = serviceProvider.services.isNotEmpty
+              ? serviceProvider.services.first
+              : null;
+          totalPrice = (serviceProvider.services.isNotEmpty
+              ? serviceProvider.services.first.price
+              : 0)!;
+        });
+      }
     });
   }
 
@@ -85,7 +88,16 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Order"),
+        title: Column(
+          children: [
+            const Text("Order"),
+            Text(
+              '${widget.location.name}, ${widget.location.location}',
+              style:
+                  const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+            ),
+          ],
+        ),
       ),
       body: _buildBody(),
     );

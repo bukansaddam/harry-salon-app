@@ -11,6 +11,7 @@ import 'package:tugas_akhir_app/provider/user_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_hairstyle.dart';
 import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
+import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class HomepageCustomerScreen extends StatefulWidget {
   const HomepageCustomerScreen({super.key});
@@ -24,7 +25,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
   final ScrollController _scrollController = ScrollController();
   bool _isExpanded = true;
   static const kExpandedHeight = 190.0;
-  String dropdownValue = '';
+  Store? dropdownValue;
 
   final _locationController = TextEditingController();
 
@@ -38,36 +39,25 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
   void initState() {
     super.initState();
     final hairstyleProvider = context.read<HairstyleProvider>();
-    userProvider = Provider.of<UserProvider>(context, listen: false);
-    storeProvider = Provider.of<StoreProvider>(context, listen: false);
+    userProvider = context.read<UserProvider>();
+    storeProvider = context.read<StoreProvider>();
 
     Future.microtask(() async {
       await hairstyleProvider.refreshHairstyle();
       await userProvider.getDetailUser();
       await storeProvider.refreshStore();
-      setState(() {
-        dropdownValue =
-            "${storeProvider.stores.first.name}, ${storeProvider.stores.first.location}";
-        _locationController.text = dropdownValue;
-      });
+      if (mounted) {
+        setState(() {
+          dropdownValue = storeProvider.stores.isNotEmpty
+              ? storeProvider.stores.first
+              : null;
+          _locationController.text =
+              "${storeProvider.stores.first.name}, ${storeProvider.stores.first.location}";
+        });
+      }
     });
 
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-
-    _borderRadiusAnimation = BorderRadiusTween(
-      begin: const BorderRadius.vertical(
-        bottom: Radius.circular(20),
-      ),
-      end: const BorderRadius.vertical(
-        bottom: Radius.circular(0),
-      ),
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    initAnimation();
 
     _scrollController.addListener(() {
       final offset = _scrollController.offset;
@@ -90,69 +80,95 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
     super.dispose();
   }
 
+  void initAnimation() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+
+    _borderRadiusAnimation = BorderRadiusTween(
+      begin: const BorderRadius.vertical(
+        bottom: Radius.circular(20),
+      ),
+      end: const BorderRadius.vertical(
+        bottom: Radius.circular(0),
+      ),
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildBody(context),
+      body: Consumer3<UserProvider, HairstyleProvider, StoreProvider>(
+        builder:
+            (context, userProvider, hairstyleProvider, storeProvider, child) {
+          return _buildBody(
+              context, userProvider, hairstyleProvider, storeProvider);
+        },
+      ),
     );
   }
 
-  Widget _buildBody(BuildContext context) {
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        _buildAppBar(context),
-        _buildCurrentActivitySection(),
-        SliverToBoxAdapter(
-          child: Consumer<HairstyleProvider>(
-            builder: (context, hairstyleProvider, child) {
-              final state = hairstyleProvider.loadingState;
-
-              return state.when(
-                initial: () => const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: EdgeInsets.only(left: 16),
-                      child: Text(
-                        'Popular Hairstyle',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
+  Widget _buildBody(BuildContext context, UserProvider userProvider,
+      HairstyleProvider hairstyleProvider, StoreProvider storeProvider) {
+    final state = hairstyleProvider.loadingState;
+    return RefreshIndicator(
+      onRefresh: () async {
+        await hairstyleProvider.refreshHairstyle();
+      },
+      child: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          _buildAppBar(context, userProvider),
+          _buildCurrentActivitySection(),
+          SliverToBoxAdapter(
+            child: state.when(
+              initial: () => const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10),
+                  Padding(
+                    padding: EdgeInsets.only(left: 16),
+                    child: Text(
+                      'Popular Hairstyle',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
-                    Center(child: CircularProgressIndicator()),
-                  ],
-                ),
-                loading: () => const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: EdgeInsets.only(left: 16),
-                      child: Text(
-                        'Popular Hairstyle',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
-                      ),
+                  ),
+                  Center(child: CircularProgressIndicator()),
+                ],
+              ),
+              loading: () => const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10),
+                  Padding(
+                    padding: EdgeInsets.only(left: 16),
+                    child: Text(
+                      'Popular Hairstyle',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
-                    SizedBox(height: 10),
-                    Center(child: CircularProgressIndicator()),
-                  ],
-                ),
-                loaded: () => _buildHairstyleSection(hairstyleProvider),
-                error: (error) => Center(
-                  child: Text(error),
-                ),
-              );
-            },
+                  ),
+                  SizedBox(height: 10),
+                  Center(child: CircularProgressIndicator()),
+                ],
+              ),
+              loaded: () => _buildHairstyleSection(hairstyleProvider),
+              error: (error) => Center(
+                child: Text(error),
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context, UserProvider userProvider) {
     return SliverAppBar(
       title: AnimatedOpacity(
         opacity: _isExpanded ? 0.0 : 1.0,
@@ -180,7 +196,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                   end: Alignment.centerRight,
                 ),
               ),
-              child: _buildContentAppBar(context),
+              child: _buildContentAppBar(context, userProvider, storeProvider),
             ),
           );
         },
@@ -188,7 +204,9 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
     );
   }
 
-  Widget _buildContentAppBar(BuildContext context) {
+  Widget _buildContentAppBar(BuildContext context, UserProvider userProvider,
+      StoreProvider storeProvider) {
+    final state = userProvider.loadingState;
     return FlexibleSpaceBar(
       collapseMode: CollapseMode.parallax,
       background: Padding(
@@ -197,26 +215,21 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Consumer<UserProvider>(
-                builder: (context, provider, child) {
-                  final state = provider.loadingState;
-                  return state.when(
-                    initial: () => _buildProfileSection(),
-                    loading: () => _buildProfileSection(),
-                    loaded: () {
-                      final user = provider.userDetailResponse?.data;
-                      return _buildProfileSection(user: user);
-                    },
-                    error: (e) => _buildProfileSection(),
-                  );
+              state.when(
+                initial: () => _buildProfileSection(),
+                loading: () => _buildProfileSection(),
+                loaded: () {
+                  final user = userProvider.userDetailResponse?.data;
+                  return _buildProfileSection(user: user);
                 },
+                error: (e) => _buildProfileSection(),
               ),
               const SizedBox(height: 24),
               Row(
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: () => _buildBottomSheet(context),
+                      onTap: () => _buildBottomSheet(context, storeProvider),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: const BorderRadius.only(
@@ -239,7 +252,12 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                   ),
                   InkWell(
                     onTap: () {
-                      context.goNamed('order', extra: "toko bunga");
+                      if (dropdownValue != null) {
+                        context.goNamed('order', extra: dropdownValue);
+                      } else {
+                        ToastMessage.show(
+                            context, 'Please choose location first');
+                      }
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -463,7 +481,9 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
     );
   }
 
-  Future<void> _buildBottomSheet(BuildContext context) {
+  Future<void> _buildBottomSheet(
+      BuildContext context, StoreProvider storeProvider) {
+    final state = storeProvider.loadingState;
     return showModalBottomSheet<void>(
       useSafeArea: true,
       isScrollControlled: true,
@@ -499,26 +519,21 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Consumer<StoreProvider>(
-                    builder: (context, value, child) {
-                      final state = value.loadingState;
-                      return state.when(
-                        initial: () => const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        loading: () => const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        loaded: () => ListView.builder(
-                          itemCount: value.stores.length,
-                          itemBuilder: (context, index) {
-                            final store = value.stores[index];
-                            return _buildItemStore(store);
-                          },
-                        ),
-                        error: (error) => Center(child: Text(error)),
-                      );
-                    },
+                  child: state.when(
+                    initial: () => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    loading: () => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    loaded: () => ListView.builder(
+                      itemCount: storeProvider.stores.length,
+                      itemBuilder: (context, index) {
+                        final store = storeProvider.stores[index];
+                        return _buildItemStore(store);
+                      },
+                    ),
+                    error: (error) => Center(child: Text(error)),
                   ),
                 ),
               ),
@@ -533,8 +548,8 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
     return InkWell(
       onTap: () {
         setState(() {
-          dropdownValue = '${store.name}, ${store.location}';
-          _locationController.text = dropdownValue;
+          dropdownValue = store;
+          _locationController.text = '${store.name}, ${store.location}';
           context.pop();
         });
       },
@@ -543,7 +558,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
-            border: "${store.name}, ${store.location}" == dropdownValue
+            border: store == dropdownValue
                 ? Border.all(color: Colors.blue, width: 2)
                 : null,
             boxShadow: const [
