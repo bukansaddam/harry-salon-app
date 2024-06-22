@@ -6,6 +6,7 @@ import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/model/detail_user.dart';
 import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
+import 'package:tugas_akhir_app/provider/order_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/provider/user_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
@@ -34,6 +35,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
 
   late UserProvider userProvider;
   late StoreProvider storeProvider;
+  late OrderProvider orderProvider;
 
   @override
   void initState() {
@@ -41,12 +43,14 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
     final hairstyleProvider = context.read<HairstyleProvider>();
     userProvider = context.read<UserProvider>();
     storeProvider = context.read<StoreProvider>();
+    orderProvider = context.read<OrderProvider>();
 
     Future.microtask(() async {
       await hairstyleProvider.refreshHairstyle();
       await userProvider.getDetailUser();
       await storeProvider.refreshStore();
-      if (mounted) {
+      await orderProvider.refreshOrder();
+      if (mounted && storeProvider.stores.isNotEmpty) {
         setState(() {
           dropdownValue = storeProvider.stores.isNotEmpty
               ? storeProvider.stores.first
@@ -102,18 +106,23 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer3<UserProvider, HairstyleProvider, StoreProvider>(
-        builder:
-            (context, userProvider, hairstyleProvider, storeProvider, child) {
-          return _buildBody(
-              context, userProvider, hairstyleProvider, storeProvider);
+      body: Consumer4<UserProvider, HairstyleProvider, StoreProvider,
+          OrderProvider>(
+        builder: (context, userProvider, hairstyleProvider, storeProvider,
+            orderProvider, child) {
+          return _buildBody(context, userProvider, hairstyleProvider,
+              storeProvider, orderProvider);
         },
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context, UserProvider userProvider,
-      HairstyleProvider hairstyleProvider, StoreProvider storeProvider) {
+  Widget _buildBody(
+      BuildContext context,
+      UserProvider userProvider,
+      HairstyleProvider hairstyleProvider,
+      StoreProvider storeProvider,
+      OrderProvider orderProvider) {
     final state = hairstyleProvider.loadingState;
     return RefreshIndicator(
       onRefresh: () async {
@@ -122,8 +131,8 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
       child: CustomScrollView(
         controller: _scrollController,
         slivers: [
-          _buildAppBar(context, userProvider),
-          _buildCurrentActivitySection(),
+          _buildAppBar(context, userProvider, orderProvider),
+          _buildCurrentActivitySection(orderProvider),
           SliverToBoxAdapter(
             child: state.when(
               initial: () => const Column(
@@ -168,7 +177,8 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
     );
   }
 
-  Widget _buildAppBar(BuildContext context, UserProvider userProvider) {
+  Widget _buildAppBar(BuildContext context, UserProvider userProvider,
+      OrderProvider orderProvider) {
     return SliverAppBar(
       title: AnimatedOpacity(
         opacity: _isExpanded ? 0.0 : 1.0,
@@ -196,7 +206,8 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                   end: Alignment.centerRight,
                 ),
               ),
-              child: _buildContentAppBar(context, userProvider, storeProvider),
+              child: _buildContentAppBar(
+                  context, userProvider, storeProvider, orderProvider),
             ),
           );
         },
@@ -205,7 +216,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
   }
 
   Widget _buildContentAppBar(BuildContext context, UserProvider userProvider,
-      StoreProvider storeProvider) {
+      StoreProvider storeProvider, OrderProvider orderProvider) {
     final state = userProvider.loadingState;
     return FlexibleSpaceBar(
       collapseMode: CollapseMode.parallax,
@@ -252,7 +263,9 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                   ),
                   InkWell(
                     onTap: () {
-                      if (dropdownValue != null) {
+                      if (orderProvider.orderResponse?.result != null) {
+                        ToastMessage.show(context, 'You already ordered');
+                      } else if (dropdownValue != null) {
                         context.goNamed('order', extra: dropdownValue);
                       } else {
                         ToastMessage.show(
@@ -300,7 +313,9 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
     );
   }
 
-  Widget _buildCurrentActivitySection() {
+  Widget _buildCurrentActivitySection(OrderProvider orderProvider) {
+    final state = orderProvider.loadingState;
+
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -315,62 +330,98 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
               ),
             ),
             const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.grey[200],
+            state!.when(
+              initial: () => Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Row(
-                    children: [
-                      Icon(
-                        Icons.location_on,
-                        size: 16,
-                      ),
-                      SizedBox(width: 4),
-                      Text('Surabaya'),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Potong Rambut',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text('Description'),
-                  const SizedBox(height: 8),
-                  const Row(
-                    children: [
-                      Icon(
-                        Icons.attach_file,
-                        size: 16,
-                      ),
-                      SizedBox(width: 4),
-                      Text('1 Reference',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Waiting estimate'),
-                      Text('5 min'),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  CustomButton(
-                    function: () {},
-                    text: 'Detail',
-                    height: 35,
-                    radius: 5,
-                    gradient: false,
-                  ),
-                ],
+              loading: () => Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              loaded: () {
+                final order = orderProvider.orderResponse?.result.data.first;
+                if (order == null) {
+                  return Container();
+                } else {
+                  return Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.grey[200],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.location_on,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 4),
+                            Text('${order.storeName}, ${order.storeLocation}'),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          order.serviceName,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(order.description),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.attach_file,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              order.reference != null
+                                  ? '1 references'
+                                  : 'No reference',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Waiting estimate'),
+                            Text('5 min'),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        CustomButton(
+                          function: () {},
+                          text: 'Detail',
+                          height: 35,
+                          radius: 5,
+                          gradient: false,
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+              error: (e) => Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                child: Center(
+                  child: Text(e),
+                ),
               ),
             )
           ],

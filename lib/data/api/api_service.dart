@@ -12,6 +12,7 @@ import 'package:tugas_akhir_app/model/detail_user.dart';
 import 'package:tugas_akhir_app/model/employee.dart';
 import 'package:tugas_akhir_app/model/hairstyle.dart';
 import 'package:tugas_akhir_app/model/login.dart';
+import 'package:tugas_akhir_app/model/order.dart';
 import 'package:tugas_akhir_app/model/payslip.dart';
 import 'package:tugas_akhir_app/model/register.dart';
 import 'package:tugas_akhir_app/model/review.dart';
@@ -34,6 +35,7 @@ class ApiService {
   static const String _loginEmployee = '/auth/employees/signin';
   static const String _loginCustomer = '/auth/users/signin';
   static const String _detailUser = '/users';
+  static const String _order = '/orders';
 
   final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
 
@@ -760,6 +762,25 @@ class ApiService {
       return UploadResponse.fromJson(jsonDecode(response.body));
     } else {
       return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<OrderResponse> getCurrentOrder({
+    required String token,
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_order?current=true&page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return OrderResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return OrderResponse.fromJson(jsonDecode(response.body));
     }
   }
 }
