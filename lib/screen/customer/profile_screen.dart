@@ -18,16 +18,16 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   late UserProvider userProvider;
 
   @override
   void initState() {
     super.initState();
-    userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider = context.read<UserProvider>();
 
     Future.microtask(() async {
-      await userProvider.getDetailUser();
+      await _refreshData();
     });
   }
 
@@ -39,41 +39,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _refreshData() async {
     await userProvider.getDetailUser();
-    setState(() {});
+    if(mounted){
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-      ),
-      body: context.watch<AuthProvider>().isLoggedIn
-          ? Consumer<UserProvider>(
-              builder: (context, userProvider, child) {
-                final state = userProvider.loadingState;
-                return state.when(
-                  initial: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  loaded: () {
-                    final user = userProvider.userDetailResponse!.data;
-                    return _buildBody(user);
-                  },
-                  error: (error) => Center(child: Text(error)),
-                );
+        appBar: AppBar(
+          title: const Text('Profile'),
+        ),
+        body: Consumer<UserProvider>(
+          builder: (context, userProvider, child) {
+            final state = userProvider.loadingState;
+            return state.when(
+              initial: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              loaded: () {
+                final user = userProvider.userDetailResponse!.data;
+                return _buildBody(user);
               },
-            )
-          : _buildDialogLogin(),
-    );
+              error: (error) => _buildDialogLogin(),
+            );
+          },
+        ));
   }
 
   Widget _buildBody(DetailUser user) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: RefreshIndicator(
-        onRefresh: _refreshData,
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
         child: CustomScrollView(
           controller: _scrollController,
           slivers: [
@@ -106,58 +103,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 8),
-                  ItemProfile(
-                    onTap: () {
-                      context.goNamed('edit_profile', extra: {
-                        'user': user.name,
-                        'title': 'Full Name',
-                      });
-                    },
-                    title: 'Full Name',
-                    subtitle: user.name,
-                  ),
-                  const Divider(
-                    height: 0,
-                  ),
-                  ItemProfile(
-                    onTap: () {
-                      context.goNamed('edit_profile', extra: {
-                        'user': user.email,
-                        'title': 'Email',
-                      });
-                    },
-                    title: 'Email',
-                    subtitle: user.email,
-                  ),
-                  const Divider(
-                    height: 0,
-                  ),
-                  ItemProfile(
-                    onTap: () {
-                      context.goNamed('edit_profile', extra: {
-                        'user': user.address,
-                        'title': 'Address',
-                      });
-                    },
-                    title: 'Address',
-                    subtitle: user.address,
-                  ),
-                  const Divider(
-                    height: 0,
-                  ),
-                  ItemProfile(
-                    onTap: () {
-                      context.goNamed('edit_profile', extra: {
-                        'user': user.phone.toString(),
-                        'title': 'Phone',
-                      });
-                    },
-                    title: 'Phone',
-                    subtitle: user.phone.toString(),
-                  ),
-                  const Divider(
-                    height: 0,
-                  ),
+                  _buildProfileItem('Full Name', user.name, () {
+                    _navigateToEditProfile(user.name, 'Full Name');
+                  }),
+                  _buildDivider(),
+                  _buildProfileItem('Email', user.email, () {
+                    _navigateToEditProfile(user.email, 'Email');
+                  }),
+                  _buildDivider(),
+                  _buildProfileItem('Address', user.address, () {
+                    _navigateToEditProfile(user.address, 'Address');
+                  }),
+                  _buildDivider(),
+                  _buildProfileItem('Phone', user.phone.toString(), () {
+                    _navigateToEditProfile(user.phone.toString(), 'Phone');
+                  }),
+                  _buildDivider(),
                 ],
               ),
             ),
@@ -173,56 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const SizedBox(height: 8),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.red[100],
-                    ),
-                    child: ListTile(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (_) {
-                            return AlertDialog(
-                              title: const Text('Logout'),
-                              content: const Text(
-                                  'Are you sure you want to logout?'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    context.pop();
-                                  },
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    context.read<AuthProvider>().logout();
-                                    context.pop();
-                                    _refreshData();
-                                  },
-                                  child: const Text('Logout'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-                      title: const Text(
-                        'Logout',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        ),
-                      ),
-                      trailing: const Icon(
-                        Icons.arrow_forward_ios,
-                        size: 16,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
+                  _buildLogoutItem(),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -230,6 +142,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildProfileItem(String title, String subtitle, VoidCallback onTap) {
+    return ItemProfile(
+      onTap: onTap,
+      title: title,
+      subtitle: subtitle,
+    );
+  }
+
+  Widget _buildDivider() {
+    return const Divider(
+      height: 0,
+    );
+  }
+
+  Widget _buildLogoutItem() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.red[100],
+      ),
+      child: ListTile(
+        onTap: _showLogoutDialog,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+        title: const Text(
+          'Logout',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
+        ),
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          size: 16,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
+
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: const Text('Logout'),
+          content: const Text('Are you sure you want to logout?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                context.read<AuthProvider>().logout();
+                context.pop();
+                setState(() {
+                  _refreshData();
+                });
+              },
+              child: const Text('Logout'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -256,22 +236,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ).image,
         ),
         Positioned(
-            bottom: 0,
-            right: 0,
-            child: InkWell(
-              onTap: () => _buildBottomSheet(context),
-              child: ClipOval(
-                child: Container(
-                  decoration: const BoxDecoration(color: Color(0xFF293869)),
-                  padding: const EdgeInsets.all(8),
-                  child: const Icon(
-                    Icons.camera_alt,
-                    color: Colors.white,
-                    size: 16,
-                  ),
+          bottom: 0,
+          right: 0,
+          child: InkWell(
+            onTap: () => _buildBottomSheet(context),
+            child: ClipOval(
+              child: Container(
+                decoration: const BoxDecoration(color: Color(0xFF293869)),
+                padding: const EdgeInsets.all(8),
+                child: const Icon(
+                  Icons.camera_alt,
+                  color: Colors.white,
+                  size: 16,
                 ),
               ),
-            ))
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -352,7 +333,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     if (mounted) {
-      context.pop();
+      Navigator.pop(context);
     }
+  }
+
+  void _navigateToEditProfile(String initialValue, String title) {
+    context.goNamed('edit_profile', extra: {
+      'user': initialValue,
+      'title': title,
+    });
   }
 }
