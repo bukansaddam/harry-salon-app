@@ -8,7 +8,7 @@ class OrderResponse with _$OrderResponse {
   const factory OrderResponse({
     required bool success,
     required String message,
-    required OrderResult result,
+    required OrderResult? result,
   }) = _OrderResponse;
 
   factory OrderResponse.fromJson(Map<String, dynamic> json) =>

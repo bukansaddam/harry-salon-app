@@ -10,7 +10,9 @@ _$OrderResponseImpl _$$OrderResponseImplFromJson(Map<String, dynamic> json) =>
     _$OrderResponseImpl(
       success: json['success'] as bool,
       message: json['message'] as String,
-      result: OrderResult.fromJson(json['result'] as Map<String, dynamic>),
+      result: json['result'] == null
+          ? null
+          : OrderResult.fromJson(json['result'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$OrderResponseImplToJson(_$OrderResponseImpl instance) =>

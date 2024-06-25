@@ -3,6 +3,7 @@ import 'package:tugas_akhir_app/common/loading_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/order.dart';
+import 'package:tugas_akhir_app/model/upload.dart';
 
 class OrderProvider extends ChangeNotifier {
   OrderProvider({
@@ -13,6 +14,7 @@ class OrderProvider extends ChangeNotifier {
   final ApiService apiService;
   final AuthRepository authRepository;
   OrderResponse? orderResponse;
+  UploadResponse? uploadResponse;
 
   LoadingState? loadingState = const LoadingState.initial();
 
@@ -43,7 +45,7 @@ class OrderProvider extends ChangeNotifier {
 
       if (orderResponse!.success) {
         orders.addAll(
-            orderResponse!.result.data.where((order) => order.isMe == true));
+            orderResponse!.result!.data.where((order) => order.isMe == true));
         waitingTime =
             orders.isNotEmpty ? (orders.first.orderNumber! - 1) * 15 : 0;
         loadingState = const LoadingState.loaded();
@@ -62,5 +64,43 @@ class OrderProvider extends ChangeNotifier {
     pageItems = 1;
     orders = [];
     await getOrder();
+  }
+
+  Future<void> updateStatusOrder(
+      {required String id,
+      String? status,
+      bool? isOnLocation,
+      bool? isAccepted}) async {
+    try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        loadingState = const LoadingState.error('You are not logged in');
+        notifyListeners();
+        return;
+      }
+
+      final response = await apiService.updateStatusOrder(
+          token: token,
+          id: id,
+          status: status,
+          isOnLocation: isOnLocation,
+          isAccepted: isAccepted);
+
+      if (response.success) {
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(response.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
   }
 }

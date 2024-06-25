@@ -126,7 +126,9 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
     final state = hairstyleProvider.loadingState;
     return RefreshIndicator(
       onRefresh: () async {
+        await storeProvider.refreshStore();
         await hairstyleProvider.refreshHairstyle();
+        await orderProvider.refreshOrder();
       },
       child: CustomScrollView(
         controller: _scrollController,
@@ -411,7 +413,11 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                         ),
                         const SizedBox(height: 8),
                         CustomButton(
-                          function: () {},
+                          function: () {
+                            context.goNamed('detail_order',
+                                pathParameters: {'id': myOrder.id},
+                                extra: waitingTime);
+                          },
                           text: 'Detail',
                           height: 35,
                           radius: 5,

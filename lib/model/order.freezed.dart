@@ -22,7 +22,7 @@ OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) {
 mixin _$OrderResponse {
   bool get success => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
-  OrderResult get result => throw _privateConstructorUsedError;
+  OrderResult? get result => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,9 +36,9 @@ abstract class $OrderResponseCopyWith<$Res> {
           OrderResponse value, $Res Function(OrderResponse) then) =
       _$OrderResponseCopyWithImpl<$Res, OrderResponse>;
   @useResult
-  $Res call({bool success, String message, OrderResult result});
+  $Res call({bool success, String message, OrderResult? result});
 
-  $OrderResultCopyWith<$Res> get result;
+  $OrderResultCopyWith<$Res>? get result;
 }
 
 /// @nodoc
@@ -56,7 +56,7 @@ class _$OrderResponseCopyWithImpl<$Res, $Val extends OrderResponse>
   $Res call({
     Object? success = null,
     Object? message = null,
-    Object? result = null,
+    Object? result = freezed,
   }) {
     return _then(_value.copyWith(
       success: null == success
@@ -67,17 +67,21 @@ class _$OrderResponseCopyWithImpl<$Res, $Val extends OrderResponse>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      result: null == result
+      result: freezed == result
           ? _value.result
           : result // ignore: cast_nullable_to_non_nullable
-              as OrderResult,
+              as OrderResult?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $OrderResultCopyWith<$Res> get result {
-    return $OrderResultCopyWith<$Res>(_value.result, (value) {
+  $OrderResultCopyWith<$Res>? get result {
+    if (_value.result == null) {
+      return null;
+    }
+
+    return $OrderResultCopyWith<$Res>(_value.result!, (value) {
       return _then(_value.copyWith(result: value) as $Val);
     });
   }
@@ -91,10 +95,10 @@ abstract class _$$OrderResponseImplCopyWith<$Res>
       __$$OrderResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool success, String message, OrderResult result});
+  $Res call({bool success, String message, OrderResult? result});
 
   @override
-  $OrderResultCopyWith<$Res> get result;
+  $OrderResultCopyWith<$Res>? get result;
 }
 
 /// @nodoc
@@ -110,7 +114,7 @@ class __$$OrderResponseImplCopyWithImpl<$Res>
   $Res call({
     Object? success = null,
     Object? message = null,
-    Object? result = null,
+    Object? result = freezed,
   }) {
     return _then(_$OrderResponseImpl(
       success: null == success
@@ -121,10 +125,10 @@ class __$$OrderResponseImplCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      result: null == result
+      result: freezed == result
           ? _value.result
           : result // ignore: cast_nullable_to_non_nullable
-              as OrderResult,
+              as OrderResult?,
     ));
   }
 }
@@ -143,7 +147,7 @@ class _$OrderResponseImpl implements _OrderResponse {
   @override
   final String message;
   @override
-  final OrderResult result;
+  final OrderResult? result;
 
   @override
   String toString() {
@@ -182,7 +186,7 @@ abstract class _OrderResponse implements OrderResponse {
   const factory _OrderResponse(
       {required final bool success,
       required final String message,
-      required final OrderResult result}) = _$OrderResponseImpl;
+      required final OrderResult? result}) = _$OrderResponseImpl;
 
   factory _OrderResponse.fromJson(Map<String, dynamic> json) =
       _$OrderResponseImpl.fromJson;
@@ -192,7 +196,7 @@ abstract class _OrderResponse implements OrderResponse {
   @override
   String get message;
   @override
-  OrderResult get result;
+  OrderResult? get result;
   @override
   @JsonKey(ignore: true)
   _$$OrderResponseImplCopyWith<_$OrderResponseImpl> get copyWith =>

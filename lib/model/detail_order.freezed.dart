@@ -22,7 +22,7 @@ DetailOrderResponse _$DetailOrderResponseFromJson(Map<String, dynamic> json) {
 mixin _$DetailOrderResponse {
   bool get success => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
-  DetailOrder? get result => throw _privateConstructorUsedError;
+  DetailOrder get data => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,9 +36,9 @@ abstract class $DetailOrderResponseCopyWith<$Res> {
           DetailOrderResponse value, $Res Function(DetailOrderResponse) then) =
       _$DetailOrderResponseCopyWithImpl<$Res, DetailOrderResponse>;
   @useResult
-  $Res call({bool success, String message, DetailOrder? result});
+  $Res call({bool success, String message, DetailOrder data});
 
-  $DetailOrderCopyWith<$Res>? get result;
+  $DetailOrderCopyWith<$Res> get data;
 }
 
 /// @nodoc
@@ -56,7 +56,7 @@ class _$DetailOrderResponseCopyWithImpl<$Res, $Val extends DetailOrderResponse>
   $Res call({
     Object? success = null,
     Object? message = null,
-    Object? result = freezed,
+    Object? data = null,
   }) {
     return _then(_value.copyWith(
       success: null == success
@@ -67,22 +67,18 @@ class _$DetailOrderResponseCopyWithImpl<$Res, $Val extends DetailOrderResponse>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      result: freezed == result
-          ? _value.result
-          : result // ignore: cast_nullable_to_non_nullable
-              as DetailOrder?,
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as DetailOrder,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $DetailOrderCopyWith<$Res>? get result {
-    if (_value.result == null) {
-      return null;
-    }
-
-    return $DetailOrderCopyWith<$Res>(_value.result!, (value) {
-      return _then(_value.copyWith(result: value) as $Val);
+  $DetailOrderCopyWith<$Res> get data {
+    return $DetailOrderCopyWith<$Res>(_value.data, (value) {
+      return _then(_value.copyWith(data: value) as $Val);
     });
   }
 }
@@ -95,10 +91,10 @@ abstract class _$$DetailOrderResponseImplCopyWith<$Res>
       __$$DetailOrderResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool success, String message, DetailOrder? result});
+  $Res call({bool success, String message, DetailOrder data});
 
   @override
-  $DetailOrderCopyWith<$Res>? get result;
+  $DetailOrderCopyWith<$Res> get data;
 }
 
 /// @nodoc
@@ -114,7 +110,7 @@ class __$$DetailOrderResponseImplCopyWithImpl<$Res>
   $Res call({
     Object? success = null,
     Object? message = null,
-    Object? result = freezed,
+    Object? data = null,
   }) {
     return _then(_$DetailOrderResponseImpl(
       success: null == success
@@ -125,10 +121,10 @@ class __$$DetailOrderResponseImplCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      result: freezed == result
-          ? _value.result
-          : result // ignore: cast_nullable_to_non_nullable
-              as DetailOrder?,
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as DetailOrder,
     ));
   }
 }
@@ -137,7 +133,7 @@ class __$$DetailOrderResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$DetailOrderResponseImpl implements _DetailOrderResponse {
   const _$DetailOrderResponseImpl(
-      {required this.success, required this.message, required this.result});
+      {required this.success, required this.message, required this.data});
 
   factory _$DetailOrderResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$DetailOrderResponseImplFromJson(json);
@@ -147,11 +143,11 @@ class _$DetailOrderResponseImpl implements _DetailOrderResponse {
   @override
   final String message;
   @override
-  final DetailOrder? result;
+  final DetailOrder data;
 
   @override
   String toString() {
-    return 'DetailOrderResponse(success: $success, message: $message, result: $result)';
+    return 'DetailOrderResponse(success: $success, message: $message, data: $data)';
   }
 
   @override
@@ -161,12 +157,12 @@ class _$DetailOrderResponseImpl implements _DetailOrderResponse {
             other is _$DetailOrderResponseImpl &&
             (identical(other.success, success) || other.success == success) &&
             (identical(other.message, message) || other.message == message) &&
-            (identical(other.result, result) || other.result == result));
+            (identical(other.data, data) || other.data == data));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, success, message, result);
+  int get hashCode => Object.hash(runtimeType, success, message, data);
 
   @JsonKey(ignore: true)
   @override
@@ -187,7 +183,7 @@ abstract class _DetailOrderResponse implements DetailOrderResponse {
   const factory _DetailOrderResponse(
       {required final bool success,
       required final String message,
-      required final DetailOrder? result}) = _$DetailOrderResponseImpl;
+      required final DetailOrder data}) = _$DetailOrderResponseImpl;
 
   factory _DetailOrderResponse.fromJson(Map<String, dynamic> json) =
       _$DetailOrderResponseImpl.fromJson;
@@ -197,7 +193,7 @@ abstract class _DetailOrderResponse implements DetailOrderResponse {
   @override
   String get message;
   @override
-  DetailOrder? get result;
+  DetailOrder get data;
   @override
   @JsonKey(ignore: true)
   _$$DetailOrderResponseImplCopyWith<_$DetailOrderResponseImpl> get copyWith =>
@@ -211,11 +207,19 @@ DetailOrder _$DetailOrderFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$DetailOrder {
   String get id => throw _privateConstructorUsedError;
+  int get orderNumber => throw _privateConstructorUsedError;
+  DateTime get endTime => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
+  bool get isOnLocation => throw _privateConstructorUsedError;
+  bool get isAccepted => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
   String get storeLocation => throw _privateConstructorUsedError;
+  String get serviceImage => throw _privateConstructorUsedError;
   String get serviceName => throw _privateConstructorUsedError;
   int get servicePrice => throw _privateConstructorUsedError;
+  String? get employeeAvatar => throw _privateConstructorUsedError;
+  String? get employeeName => throw _privateConstructorUsedError;
   Reference? get reference => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -232,11 +236,19 @@ abstract class $DetailOrderCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      int orderNumber,
+      DateTime endTime,
       String description,
+      bool isOnLocation,
+      bool isAccepted,
+      String status,
       String storeName,
       String storeLocation,
+      String serviceImage,
       String serviceName,
       int servicePrice,
+      String? employeeAvatar,
+      String? employeeName,
       Reference? reference});
 
   $ReferenceCopyWith<$Res>? get reference;
@@ -256,11 +268,19 @@ class _$DetailOrderCopyWithImpl<$Res, $Val extends DetailOrder>
   @override
   $Res call({
     Object? id = null,
+    Object? orderNumber = null,
+    Object? endTime = null,
     Object? description = null,
+    Object? isOnLocation = null,
+    Object? isAccepted = null,
+    Object? status = null,
     Object? storeName = null,
     Object? storeLocation = null,
+    Object? serviceImage = null,
     Object? serviceName = null,
     Object? servicePrice = null,
+    Object? employeeAvatar = freezed,
+    Object? employeeName = freezed,
     Object? reference = freezed,
   }) {
     return _then(_value.copyWith(
@@ -268,9 +288,29 @@ class _$DetailOrderCopyWithImpl<$Res, $Val extends DetailOrder>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      orderNumber: null == orderNumber
+          ? _value.orderNumber
+          : orderNumber // ignore: cast_nullable_to_non_nullable
+              as int,
+      endTime: null == endTime
+          ? _value.endTime
+          : endTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      isOnLocation: null == isOnLocation
+          ? _value.isOnLocation
+          : isOnLocation // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isAccepted: null == isAccepted
+          ? _value.isAccepted
+          : isAccepted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
               as String,
       storeName: null == storeName
           ? _value.storeName
@@ -280,6 +320,10 @@ class _$DetailOrderCopyWithImpl<$Res, $Val extends DetailOrder>
           ? _value.storeLocation
           : storeLocation // ignore: cast_nullable_to_non_nullable
               as String,
+      serviceImage: null == serviceImage
+          ? _value.serviceImage
+          : serviceImage // ignore: cast_nullable_to_non_nullable
+              as String,
       serviceName: null == serviceName
           ? _value.serviceName
           : serviceName // ignore: cast_nullable_to_non_nullable
@@ -288,6 +332,14 @@ class _$DetailOrderCopyWithImpl<$Res, $Val extends DetailOrder>
           ? _value.servicePrice
           : servicePrice // ignore: cast_nullable_to_non_nullable
               as int,
+      employeeAvatar: freezed == employeeAvatar
+          ? _value.employeeAvatar
+          : employeeAvatar // ignore: cast_nullable_to_non_nullable
+              as String?,
+      employeeName: freezed == employeeName
+          ? _value.employeeName
+          : employeeName // ignore: cast_nullable_to_non_nullable
+              as String?,
       reference: freezed == reference
           ? _value.reference
           : reference // ignore: cast_nullable_to_non_nullable
@@ -318,11 +370,19 @@ abstract class _$$DetailOrderImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
+      int orderNumber,
+      DateTime endTime,
       String description,
+      bool isOnLocation,
+      bool isAccepted,
+      String status,
       String storeName,
       String storeLocation,
+      String serviceImage,
       String serviceName,
       int servicePrice,
+      String? employeeAvatar,
+      String? employeeName,
       Reference? reference});
 
   @override
@@ -341,11 +401,19 @@ class __$$DetailOrderImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? orderNumber = null,
+    Object? endTime = null,
     Object? description = null,
+    Object? isOnLocation = null,
+    Object? isAccepted = null,
+    Object? status = null,
     Object? storeName = null,
     Object? storeLocation = null,
+    Object? serviceImage = null,
     Object? serviceName = null,
     Object? servicePrice = null,
+    Object? employeeAvatar = freezed,
+    Object? employeeName = freezed,
     Object? reference = freezed,
   }) {
     return _then(_$DetailOrderImpl(
@@ -353,9 +421,29 @@ class __$$DetailOrderImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      orderNumber: null == orderNumber
+          ? _value.orderNumber
+          : orderNumber // ignore: cast_nullable_to_non_nullable
+              as int,
+      endTime: null == endTime
+          ? _value.endTime
+          : endTime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
+              as String,
+      isOnLocation: null == isOnLocation
+          ? _value.isOnLocation
+          : isOnLocation // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isAccepted: null == isAccepted
+          ? _value.isAccepted
+          : isAccepted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
               as String,
       storeName: null == storeName
           ? _value.storeName
@@ -365,6 +453,10 @@ class __$$DetailOrderImplCopyWithImpl<$Res>
           ? _value.storeLocation
           : storeLocation // ignore: cast_nullable_to_non_nullable
               as String,
+      serviceImage: null == serviceImage
+          ? _value.serviceImage
+          : serviceImage // ignore: cast_nullable_to_non_nullable
+              as String,
       serviceName: null == serviceName
           ? _value.serviceName
           : serviceName // ignore: cast_nullable_to_non_nullable
@@ -373,6 +465,14 @@ class __$$DetailOrderImplCopyWithImpl<$Res>
           ? _value.servicePrice
           : servicePrice // ignore: cast_nullable_to_non_nullable
               as int,
+      employeeAvatar: freezed == employeeAvatar
+          ? _value.employeeAvatar
+          : employeeAvatar // ignore: cast_nullable_to_non_nullable
+              as String?,
+      employeeName: freezed == employeeName
+          ? _value.employeeName
+          : employeeName // ignore: cast_nullable_to_non_nullable
+              as String?,
       reference: freezed == reference
           ? _value.reference
           : reference // ignore: cast_nullable_to_non_nullable
@@ -386,11 +486,19 @@ class __$$DetailOrderImplCopyWithImpl<$Res>
 class _$DetailOrderImpl implements _DetailOrder {
   const _$DetailOrderImpl(
       {required this.id,
+      required this.orderNumber,
+      required this.endTime,
       required this.description,
+      required this.isOnLocation,
+      required this.isAccepted,
+      required this.status,
       required this.storeName,
       required this.storeLocation,
+      required this.serviceImage,
       required this.serviceName,
       required this.servicePrice,
+      required this.employeeAvatar,
+      required this.employeeName,
       required this.reference});
 
   factory _$DetailOrderImpl.fromJson(Map<String, dynamic> json) =>
@@ -399,21 +507,37 @@ class _$DetailOrderImpl implements _DetailOrder {
   @override
   final String id;
   @override
+  final int orderNumber;
+  @override
+  final DateTime endTime;
+  @override
   final String description;
+  @override
+  final bool isOnLocation;
+  @override
+  final bool isAccepted;
+  @override
+  final String status;
   @override
   final String storeName;
   @override
   final String storeLocation;
   @override
+  final String serviceImage;
+  @override
   final String serviceName;
   @override
   final int servicePrice;
+  @override
+  final String? employeeAvatar;
+  @override
+  final String? employeeName;
   @override
   final Reference? reference;
 
   @override
   String toString() {
-    return 'DetailOrder(id: $id, description: $description, storeName: $storeName, storeLocation: $storeLocation, serviceName: $serviceName, servicePrice: $servicePrice, reference: $reference)';
+    return 'DetailOrder(id: $id, orderNumber: $orderNumber, endTime: $endTime, description: $description, isOnLocation: $isOnLocation, isAccepted: $isAccepted, status: $status, storeName: $storeName, storeLocation: $storeLocation, serviceImage: $serviceImage, serviceName: $serviceName, servicePrice: $servicePrice, employeeAvatar: $employeeAvatar, employeeName: $employeeName, reference: $reference)';
   }
 
   @override
@@ -422,24 +546,53 @@ class _$DetailOrderImpl implements _DetailOrder {
         (other.runtimeType == runtimeType &&
             other is _$DetailOrderImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.orderNumber, orderNumber) ||
+                other.orderNumber == orderNumber) &&
+            (identical(other.endTime, endTime) || other.endTime == endTime) &&
             (identical(other.description, description) ||
                 other.description == description) &&
+            (identical(other.isOnLocation, isOnLocation) ||
+                other.isOnLocation == isOnLocation) &&
+            (identical(other.isAccepted, isAccepted) ||
+                other.isAccepted == isAccepted) &&
+            (identical(other.status, status) || other.status == status) &&
             (identical(other.storeName, storeName) ||
                 other.storeName == storeName) &&
             (identical(other.storeLocation, storeLocation) ||
                 other.storeLocation == storeLocation) &&
+            (identical(other.serviceImage, serviceImage) ||
+                other.serviceImage == serviceImage) &&
             (identical(other.serviceName, serviceName) ||
                 other.serviceName == serviceName) &&
             (identical(other.servicePrice, servicePrice) ||
                 other.servicePrice == servicePrice) &&
+            (identical(other.employeeAvatar, employeeAvatar) ||
+                other.employeeAvatar == employeeAvatar) &&
+            (identical(other.employeeName, employeeName) ||
+                other.employeeName == employeeName) &&
             (identical(other.reference, reference) ||
                 other.reference == reference));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, description, storeName,
-      storeLocation, serviceName, servicePrice, reference);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      orderNumber,
+      endTime,
+      description,
+      isOnLocation,
+      isAccepted,
+      status,
+      storeName,
+      storeLocation,
+      serviceImage,
+      serviceName,
+      servicePrice,
+      employeeAvatar,
+      employeeName,
+      reference);
 
   @JsonKey(ignore: true)
   @override
@@ -458,11 +611,19 @@ class _$DetailOrderImpl implements _DetailOrder {
 abstract class _DetailOrder implements DetailOrder {
   const factory _DetailOrder(
       {required final String id,
+      required final int orderNumber,
+      required final DateTime endTime,
       required final String description,
+      required final bool isOnLocation,
+      required final bool isAccepted,
+      required final String status,
       required final String storeName,
       required final String storeLocation,
+      required final String serviceImage,
       required final String serviceName,
       required final int servicePrice,
+      required final String? employeeAvatar,
+      required final String? employeeName,
       required final Reference? reference}) = _$DetailOrderImpl;
 
   factory _DetailOrder.fromJson(Map<String, dynamic> json) =
@@ -471,15 +632,31 @@ abstract class _DetailOrder implements DetailOrder {
   @override
   String get id;
   @override
+  int get orderNumber;
+  @override
+  DateTime get endTime;
+  @override
   String get description;
+  @override
+  bool get isOnLocation;
+  @override
+  bool get isAccepted;
+  @override
+  String get status;
   @override
   String get storeName;
   @override
   String get storeLocation;
   @override
+  String get serviceImage;
+  @override
   String get serviceName;
   @override
   int get servicePrice;
+  @override
+  String? get employeeAvatar;
+  @override
+  String? get employeeName;
   @override
   Reference? get reference;
   @override
@@ -494,11 +671,10 @@ Reference _$ReferenceFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Reference {
-  String? get id => throw _privateConstructorUsedError;
-  String? get name => throw _privateConstructorUsedError;
-  String? get description => throw _privateConstructorUsedError;
-  DateTime? get createdAt => throw _privateConstructorUsedError;
-  DateTime? get updatedAt => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
+  String get image => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -511,12 +687,7 @@ abstract class $ReferenceCopyWith<$Res> {
   factory $ReferenceCopyWith(Reference value, $Res Function(Reference) then) =
       _$ReferenceCopyWithImpl<$Res, Reference>;
   @useResult
-  $Res call(
-      {String? id,
-      String? name,
-      String? description,
-      DateTime? createdAt,
-      DateTime? updatedAt});
+  $Res call({String id, String name, String description, String image});
 }
 
 /// @nodoc
@@ -532,33 +703,28 @@ class _$ReferenceCopyWithImpl<$Res, $Val extends Reference>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? name = freezed,
-    Object? description = freezed,
-    Object? createdAt = freezed,
-    Object? updatedAt = freezed,
+    Object? id = null,
+    Object? name = null,
+    Object? description = null,
+    Object? image = null,
   }) {
     return _then(_value.copyWith(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
-      name: freezed == name
+              as String,
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      description: freezed == description
+              as String,
+      description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String,
+      image: null == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -571,12 +737,7 @@ abstract class _$$ReferenceImplCopyWith<$Res>
       __$$ReferenceImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? id,
-      String? name,
-      String? description,
-      DateTime? createdAt,
-      DateTime? updatedAt});
+  $Res call({String id, String name, String description, String image});
 }
 
 /// @nodoc
@@ -590,33 +751,28 @@ class __$$ReferenceImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? name = freezed,
-    Object? description = freezed,
-    Object? createdAt = freezed,
-    Object? updatedAt = freezed,
+    Object? id = null,
+    Object? name = null,
+    Object? description = null,
+    Object? image = null,
   }) {
     return _then(_$ReferenceImpl(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
-      name: freezed == name
+              as String,
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      description: freezed == description
+              as String,
+      description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: freezed == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String,
+      image: null == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -625,25 +781,26 @@ class __$$ReferenceImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ReferenceImpl implements _Reference {
   const _$ReferenceImpl(
-      {this.id, this.name, this.description, this.createdAt, this.updatedAt});
+      {required this.id,
+      required this.name,
+      required this.description,
+      required this.image});
 
   factory _$ReferenceImpl.fromJson(Map<String, dynamic> json) =>
       _$$ReferenceImplFromJson(json);
 
   @override
-  final String? id;
+  final String id;
   @override
-  final String? name;
+  final String name;
   @override
-  final String? description;
+  final String description;
   @override
-  final DateTime? createdAt;
-  @override
-  final DateTime? updatedAt;
+  final String image;
 
   @override
   String toString() {
-    return 'Reference(id: $id, name: $name, description: $description, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Reference(id: $id, name: $name, description: $description, image: $image)';
   }
 
   @override
@@ -655,16 +812,12 @@ class _$ReferenceImpl implements _Reference {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+            (identical(other.image, image) || other.image == image));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, description, createdAt, updatedAt);
+  int get hashCode => Object.hash(runtimeType, id, name, description, image);
 
   @JsonKey(ignore: true)
   @override
@@ -682,25 +835,22 @@ class _$ReferenceImpl implements _Reference {
 
 abstract class _Reference implements Reference {
   const factory _Reference(
-      {final String? id,
-      final String? name,
-      final String? description,
-      final DateTime? createdAt,
-      final DateTime? updatedAt}) = _$ReferenceImpl;
+      {required final String id,
+      required final String name,
+      required final String description,
+      required final String image}) = _$ReferenceImpl;
 
   factory _Reference.fromJson(Map<String, dynamic> json) =
       _$ReferenceImpl.fromJson;
 
   @override
-  String? get id;
+  String get id;
   @override
-  String? get name;
+  String get name;
   @override
-  String? get description;
+  String get description;
   @override
-  DateTime? get createdAt;
-  @override
-  DateTime? get updatedAt;
+  String get image;
   @override
   @JsonKey(ignore: true)
   _$$ReferenceImplCopyWith<_$ReferenceImpl> get copyWith =>

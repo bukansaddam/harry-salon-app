@@ -11,6 +11,7 @@ import 'package:tugas_akhir_app/provider/user_provider.dart';
 import 'package:tugas_akhir_app/screen/auth/login_screen.dart';
 import 'package:tugas_akhir_app/screen/auth/register_screen.dart';
 import 'package:tugas_akhir_app/screen/customer/add_order_screen.dart';
+import 'package:tugas_akhir_app/screen/customer/detail_order_screen.dart';
 import 'package:tugas_akhir_app/screen/customer/edit_profile_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/detail_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
@@ -126,7 +127,19 @@ final GoRouter _router = GoRouter(
               final Store extra = state.extra as Store;
               return AddOrderScreen(location: extra);
             },
-          )
+          ),
+          GoRoute(
+            path: 'detail-order/:id',
+            name: 'detail_order',
+            builder: (context, state) {
+              final id = state.pathParameters['id'];
+              final time = state.extra as int;
+              return DetailOrderScreen(
+                id: id!,
+                time: time,
+              );
+            },
+          ),
         ]),
   ],
 );

@@ -8,6 +8,7 @@ environment:
   sdk: ">=3.4.0 <4.0.0"
 
 dependencies:
+  android_alarm_manager_plus: ^4.0.3
   carousel_slider: ^4.2.1
   contentsize_tabbarview: ^0.0.2
   cupertino_icons: ^1.0.6
@@ -32,6 +33,7 @@ dependencies:
   provider: ^6.1.2
   shared_preferences: ^2.2.3
   sidebarx: ^0.17.1
+  slide_countdown: ^1.6.1
   timelines: ^0.1.0
 
 dev_dependencies:

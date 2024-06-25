@@ -6,6 +6,7 @@ import 'package:tugas_akhir_app/model/commodity.dart';
 import 'package:tugas_akhir_app/model/detail_commodity.dart';
 import 'package:tugas_akhir_app/model/detail_employee.dart';
 import 'package:tugas_akhir_app/model/detail_hairstyle.dart';
+import 'package:tugas_akhir_app/model/detail_order.dart';
 import 'package:tugas_akhir_app/model/detail_payslip.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/model/detail_user.dart';
@@ -781,6 +782,58 @@ class ApiService {
       return OrderResponse.fromJson(jsonDecode(response.body));
     } else {
       return OrderResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<DetailOrderResponse> getDetailOrder({
+    required String token,
+    required String id,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_order/$id'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return DetailOrderResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return DetailOrderResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<UploadResponse> updateStatusOrder({
+    required String token,
+    required String id,
+    String? status,
+    bool? isOnLocation,
+    bool? isAccepted,
+    String? employeeId,
+  }) async {
+    Map<String, dynamic> body = {};
+    if (status != null) {
+      body['status'] = status;
+    } else if (isOnLocation != null) {
+      body['isOnLocation'] = isOnLocation;
+    } else if (isAccepted != null) {
+      body['isAccepted'] = isAccepted;
+      body['employeeId'] = employeeId;
+    }
+
+    final response = await http.put(
+      Uri.parse('$baseUrl$_order/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
     }
   }
 }
