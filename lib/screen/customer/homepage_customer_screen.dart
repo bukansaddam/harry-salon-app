@@ -346,8 +346,9 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                 ),
               ),
               loaded: () {
-                final order = orderProvider.orderResponse?.result.data.first;
-                if (order == null) {
+                final myOrder = orderProvider.orders.first;
+                final waitingTime = orderProvider.waitingTime;
+                if (myOrder.isMe == false) {
                   return Container();
                 } else {
                   return Container(
@@ -367,17 +368,18 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                               size: 16,
                             ),
                             const SizedBox(width: 4),
-                            Text('${order.storeName}, ${order.storeLocation}'),
+                            Text(
+                                '${myOrder.storeName}, ${myOrder.storeLocation}'),
                           ],
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          order.serviceName,
+                          myOrder.serviceName,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         const SizedBox(height: 8),
-                        Text(order.description),
+                        Text(myOrder.description),
                         const SizedBox(height: 8),
                         Row(
                           children: [
@@ -387,7 +389,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              order.reference != null
+                              myOrder.reference != null
                                   ? '1 references'
                                   : 'No reference',
                               style:
@@ -396,11 +398,15 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                           ],
                         ),
                         const SizedBox(height: 20),
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Waiting estimate'),
-                            Text('5 min'),
+                            const Text('Waiting estimate'),
+                            Text(waitingTime == 0
+                                ? 'Now'
+                                : waitingTime > 60
+                                    ? '${waitingTime ~/ 60} h'
+                                    : '$waitingTime min'),
                           ],
                         ),
                         const SizedBox(height: 8),

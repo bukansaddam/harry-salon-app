@@ -388,6 +388,8 @@ Order _$OrderFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Order {
+  int? get orderNumber => throw _privateConstructorUsedError;
+  bool? get isMe => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   String get userName => throw _privateConstructorUsedError;
@@ -411,7 +413,9 @@ abstract class $OrderCopyWith<$Res> {
       _$OrderCopyWithImpl<$Res, Order>;
   @useResult
   $Res call(
-      {String id,
+      {int? orderNumber,
+      bool? isMe,
+      String id,
       String description,
       String userName,
       String userAvatar,
@@ -439,6 +443,8 @@ class _$OrderCopyWithImpl<$Res, $Val extends Order>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? orderNumber = freezed,
+    Object? isMe = freezed,
     Object? id = null,
     Object? description = null,
     Object? userName = null,
@@ -452,6 +458,14 @@ class _$OrderCopyWithImpl<$Res, $Val extends Order>
     Object? reference = freezed,
   }) {
     return _then(_value.copyWith(
+      orderNumber: freezed == orderNumber
+          ? _value.orderNumber
+          : orderNumber // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isMe: freezed == isMe
+          ? _value.isMe
+          : isMe // ignore: cast_nullable_to_non_nullable
+              as bool?,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -520,7 +534,9 @@ abstract class _$$OrderImplCopyWith<$Res> implements $OrderCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String id,
+      {int? orderNumber,
+      bool? isMe,
+      String id,
       String description,
       String userName,
       String userAvatar,
@@ -547,6 +563,8 @@ class __$$OrderImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? orderNumber = freezed,
+    Object? isMe = freezed,
     Object? id = null,
     Object? description = null,
     Object? userName = null,
@@ -560,6 +578,14 @@ class __$$OrderImplCopyWithImpl<$Res>
     Object? reference = freezed,
   }) {
     return _then(_$OrderImpl(
+      orderNumber: freezed == orderNumber
+          ? _value.orderNumber
+          : orderNumber // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isMe: freezed == isMe
+          ? _value.isMe
+          : isMe // ignore: cast_nullable_to_non_nullable
+              as bool?,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -612,7 +638,9 @@ class __$$OrderImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$OrderImpl implements _Order {
   const _$OrderImpl(
-      {required this.id,
+      {required this.orderNumber,
+      required this.isMe,
+      required this.id,
       required this.description,
       required this.userName,
       required this.userAvatar,
@@ -627,6 +655,10 @@ class _$OrderImpl implements _Order {
   factory _$OrderImpl.fromJson(Map<String, dynamic> json) =>
       _$$OrderImplFromJson(json);
 
+  @override
+  final int? orderNumber;
+  @override
+  final bool? isMe;
   @override
   final String id;
   @override
@@ -652,7 +684,7 @@ class _$OrderImpl implements _Order {
 
   @override
   String toString() {
-    return 'Order(id: $id, description: $description, userName: $userName, userAvatar: $userAvatar, storeName: $storeName, storeLocation: $storeLocation, serviceName: $serviceName, servicePrice: $servicePrice, status: $status, date: $date, reference: $reference)';
+    return 'Order(orderNumber: $orderNumber, isMe: $isMe, id: $id, description: $description, userName: $userName, userAvatar: $userAvatar, storeName: $storeName, storeLocation: $storeLocation, serviceName: $serviceName, servicePrice: $servicePrice, status: $status, date: $date, reference: $reference)';
   }
 
   @override
@@ -660,6 +692,9 @@ class _$OrderImpl implements _Order {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$OrderImpl &&
+            (identical(other.orderNumber, orderNumber) ||
+                other.orderNumber == orderNumber) &&
+            (identical(other.isMe, isMe) || other.isMe == isMe) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.description, description) ||
                 other.description == description) &&
@@ -685,6 +720,8 @@ class _$OrderImpl implements _Order {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      orderNumber,
+      isMe,
       id,
       description,
       userName,
@@ -713,7 +750,9 @@ class _$OrderImpl implements _Order {
 
 abstract class _Order implements Order {
   const factory _Order(
-      {required final String id,
+      {required final int? orderNumber,
+      required final bool? isMe,
+      required final String id,
       required final String description,
       required final String userName,
       required final String userAvatar,
@@ -727,6 +766,10 @@ abstract class _Order implements Order {
 
   factory _Order.fromJson(Map<String, dynamic> json) = _$OrderImpl.fromJson;
 
+  @override
+  int? get orderNumber;
+  @override
+  bool? get isMe;
   @override
   String get id;
   @override

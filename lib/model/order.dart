@@ -30,6 +30,8 @@ class OrderResult with _$OrderResult {
 @freezed
 class Order with _$Order {
   const factory Order({
+    required int? orderNumber,
+    required bool? isMe,
     required String id,
     required String description,
     required String userName,

@@ -21,6 +21,7 @@ class OrderProvider extends ChangeNotifier {
   int pageItems = 1;
   int sizeItems = 10;
 
+  int waitingTime = 0;
   Future<void> getOrder() async {
     try {
       if (pageItems == 1) {
@@ -32,7 +33,7 @@ class OrderProvider extends ChangeNotifier {
       final token = repository?.token;
 
       if (token == null) {
-        loadingState = const LoadingState.error('Token is null');
+        loadingState = const LoadingState.error('You are not logged in');
         notifyListeners();
         return;
       }
@@ -41,6 +42,10 @@ class OrderProvider extends ChangeNotifier {
           token: token, page: pageItems, size: sizeItems);
 
       if (orderResponse!.success) {
+        orders.addAll(
+            orderResponse!.result.data.where((order) => order.isMe == true));
+        waitingTime =
+            orders.isNotEmpty ? (orders.first.orderNumber! - 1) * 15 : 0;
         loadingState = const LoadingState.loaded();
         notifyListeners();
       } else {

@@ -39,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _refreshData() async {
     await userProvider.getDetailUser();
-    if(mounted){
+    if (mounted) {
       setState(() {});
     }
   }
