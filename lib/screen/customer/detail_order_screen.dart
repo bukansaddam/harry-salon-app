@@ -134,7 +134,9 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
   }) {
     final status = provider.orderState;
     final order = provider.detailOrderResponse!.data;
-    final reference = Hairstyle.fromJson(order.reference!.toJson());
+    final reference = order.reference != null
+        ? Hairstyle.fromJson(order.reference!.toJson())
+        : null;
     final orderNumber = context.watch<OrderProvider>().waitingTime;
     final DateTime targetTime = order.endTime;
 
@@ -254,24 +256,33 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
           ),
         ),
         const SizedBox(height: 4),
-        const Text(
-          'Reference',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          width: 200,
-          height: 300,
-          child: CardHairstyle(
-            hairstyle: reference,
-            onTap: () {
-              // do something
-            },
-          ),
-        ),
+        reference != null
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Reference',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: 200,
+                    height: 300,
+                    child: CardHairstyle(
+                      hairstyle: reference,
+                      onTap: () {
+                        // do something
+                      },
+                    ),
+                  ),
+                ],
+              )
+            : provider.detailOrderResponse!.data.employeeAvatar != null
+                ? const SizedBox()
+                : const SizedBox(height: 350),
         const SizedBox(height: 12),
         provider.detailOrderResponse!.data.employeeAvatar != null
             ? Column(
@@ -298,6 +309,9 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                           : null,
                     ),
                   ),
+                  reference != null
+                      ? const SizedBox()
+                      : const SizedBox(height: 300),
                 ],
               )
             : const SizedBox(

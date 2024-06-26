@@ -836,4 +836,34 @@ class ApiService {
       return UploadResponse.fromJson(jsonDecode(response.body));
     }
   }
+
+  Future<UploadResponse> createOrder({
+    required String token,
+    required String storeId,
+    required String serviceId,
+    required String description,
+    required String hairstyleId,
+    required String date,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl$_order'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(<String, String>{
+        'storeId': storeId,
+        'serviceId': serviceId,
+        'description': description,
+        'hairstyleId': hairstyleId,
+        'date': date,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
 }

@@ -332,7 +332,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
               ),
             ),
             const SizedBox(height: 12),
-            state!.when(
+            state.when(
               initial: () => Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),

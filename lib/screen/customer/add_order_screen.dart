@@ -9,11 +9,13 @@ import 'package:tugas_akhir_app/model/hairstyle.dart';
 import 'package:tugas_akhir_app/model/service.dart';
 import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
+import 'package:tugas_akhir_app/provider/order_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_hairstyle.dart';
 import 'package:tugas_akhir_app/screen/widgets/search_bar.dart';
 import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
+import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class AddOrderScreen extends StatefulWidget {
   const AddOrderScreen({super.key, required this.location});
@@ -440,10 +442,39 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            CustomButton(function: () {}, text: 'Submit'),
+            context.watch<OrderProvider>().loadingState.when(
+                  initial: () => _submitOrder(),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  loaded: () => _submitOrder(),
+                  error: (error) => _submitOrder(),
+                ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _submitOrder() {
+    return CustomButton(
+        function: () async {
+          final provider = context.read<OrderProvider>();
+
+          if (totalPrice != 0 && formKey.currentState!.validate()) {
+            bool isSuccess = await provider.createOrder(
+              storeId: widget.location.id,
+              serviceId: dropdownValue!.id,
+              description: _descriptionController.text,
+              hairstyleId: referenceHairstyle?.id,
+            );
+
+            if (isSuccess && mounted) {
+              provider.refreshOrder();
+              ToastMessage.show(context, 'Order created');
+              context.pop();
+            }
+          }
+        },
+        text: 'Submit');
   }
 }

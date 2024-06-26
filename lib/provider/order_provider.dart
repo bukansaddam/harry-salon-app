@@ -16,7 +16,7 @@ class OrderProvider extends ChangeNotifier {
   OrderResponse? orderResponse;
   UploadResponse? uploadResponse;
 
-  LoadingState? loadingState = const LoadingState.initial();
+  LoadingState loadingState = const LoadingState.initial();
 
   List<Order> orders = [];
 
@@ -101,6 +101,44 @@ class OrderProvider extends ChangeNotifier {
     } catch (e) {
       loadingState = LoadingState.error(e.toString());
       notifyListeners();
+    }
+  }
+
+  Future<bool> createOrder({
+    required String storeId,
+    required String serviceId,
+    required String description,
+    String? hairstyleId,
+  }) async {
+    try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      uploadResponse = await apiService.createOrder(
+        token: token!,
+        storeId: storeId,
+        serviceId: serviceId,
+        description: description,
+        hairstyleId: hairstyleId ?? '',
+        date: DateTime.now().toString(),
+      );
+
+      if (uploadResponse!.success) {
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+        return true;
+      } else {
+        loadingState = LoadingState.error(uploadResponse!.message);
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+      return false;
     }
   }
 }
