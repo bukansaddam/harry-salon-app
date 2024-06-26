@@ -613,24 +613,25 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
         setState(() {
           dropdownValue = store;
           _locationController.text = '${store.name}, ${store.location}';
-          context.pop();
         });
+        context.pop();
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: store == dropdownValue
-                ? Border.all(color: Colors.blue, width: 2)
-                : null,
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.grey,
-                blurRadius: 20,
-                offset: Offset(0, 5),
-              ),
-            ]),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: store == dropdownValue
+              ? Border.all(color: Colors.blue, width: 2)
+              : null,
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.grey,
+              blurRadius: 20,
+              offset: Offset(0, 5),
+            ),
+          ],
+        ),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -669,7 +670,8 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
               const SizedBox(height: 16),
               InkWell(
                 onTap: () {
-                  // do something
+                  context.goNamed('detail_store',
+                      pathParameters: {'id': store.id});
                 },
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -677,12 +679,17 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                     Text(
                       'Detail',
                       style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue),
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
                     ),
                     SizedBox(width: 8),
-                    Icon(Icons.arrow_forward_ios, size: 14, color: Colors.blue),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 14,
+                      color: Colors.blue,
+                    ),
                   ],
                 ),
               )

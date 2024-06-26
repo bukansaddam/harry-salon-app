@@ -5,6 +5,7 @@ import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/provider/order_provider.dart';
+import 'package:tugas_akhir_app/provider/review_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/provider/user_provider.dart';
@@ -16,6 +17,8 @@ import 'package:tugas_akhir_app/screen/customer/edit_profile_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/detail_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/home_customer_screen.dart';
+import 'package:tugas_akhir_app/screen/owner/review/review_screen.dart';
+import 'package:tugas_akhir_app/screen/owner/store/detail_store_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
 import '../config/injection.dart' as di;
 
@@ -48,6 +51,9 @@ class CustomerApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<ServiceProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<ReviewProvider>(),
         ),
       ],
       child: MaterialApp.router(
@@ -90,56 +96,74 @@ final GoRouter _router = GoRouter(
       builder: (context, state) => const RegisterScreen(),
     ),
     GoRoute(
-        path: '/home',
-        name: 'home',
-        builder: (context, state) {
-          return const HomeCustomerScreen();
-        },
-        routes: [
-          GoRoute(
-            path: 'all/hairstyle',
-            name: 'more_hairstyle',
-            builder: (context, state) => const HairstyleScreen(),
-          ),
-          GoRoute(
-            path: 'detail-hairstyle/:id',
-            name: 'detail_hairstyle',
+      path: '/home',
+      name: 'home',
+      builder: (context, state) {
+        return const HomeCustomerScreen();
+      },
+      routes: [
+        GoRoute(
+          path: 'all/hairstyle',
+          name: 'more_hairstyle',
+          builder: (context, state) => const HairstyleScreen(),
+        ),
+        GoRoute(
+          path: 'detail-hairstyle/:id',
+          name: 'detail_hairstyle',
+          builder: (context, state) {
+            final id = state.pathParameters['id'];
+            return DetailHairstyleScreen(id: id!);
+          },
+        ),
+        GoRoute(
+          path: 'edit-profile',
+          name: 'edit_profile',
+          builder: (context, state) {
+            final Map<String, dynamic> extra =
+                state.extra as Map<String, dynamic>;
+            final String title = extra['title'] as String;
+            final String user = extra['user'] as String;
+            return EditProfileScreen(title: title, user: user);
+          },
+        ),
+        GoRoute(
+          path: 'order',
+          name: 'order',
+          builder: (context, state) {
+            final Store extra = state.extra as Store;
+            return AddOrderScreen(location: extra);
+          },
+        ),
+        GoRoute(
+          path: 'detail-order/:id',
+          name: 'detail_order',
+          builder: (context, state) {
+            final id = state.pathParameters['id'];
+            final time = state.extra as int;
+            return DetailOrderScreen(
+              id: id!,
+              time: time,
+            );
+          },
+        ),
+        GoRoute(
+            path: 'detail-store/:id',
+            name: 'detail_store',
             builder: (context, state) {
               final id = state.pathParameters['id'];
-              return DetailHairstyleScreen(id: id!);
+              return DetailStoreScreen(id: id!);
             },
-          ),
-          GoRoute(
-            path: 'edit-profile',
-            name: 'edit_profile',
-            builder: (context, state) {
-              final Map<String, dynamic> extra =
-                  state.extra as Map<String, dynamic>;
-              final String title = extra['title'] as String;
-              final String user = extra['user'] as String;
-              return EditProfileScreen(title: title, user: user);
-            },
-          ),
-          GoRoute(
-            path: 'order',
-            name: 'order',
-            builder: (context, state) {
-              final Store extra = state.extra as Store;
-              return AddOrderScreen(location: extra);
-            },
-          ),
-          GoRoute(
-            path: 'detail-order/:id',
-            name: 'detail_order',
-            builder: (context, state) {
-              final id = state.pathParameters['id'];
-              final time = state.extra as int;
-              return DetailOrderScreen(
-                id: id!,
-                time: time,
-              );
-            },
-          ),
-        ]),
+            routes: [
+              GoRoute(
+                path: 'more-review',
+                name: 'more_review',
+                builder: (context, state) {
+                  final storeId = state.pathParameters['id'];
+                  return ReviewScreen(storeId: storeId!);
+                },
+              )
+            ]),
+      ],
+    ),
   ],
 );

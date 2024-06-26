@@ -39,6 +39,10 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
   ReviewProvider? reviewProvider;
   bool _isDataFetched = false;
 
+  final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
+
+  bool get isOwner => actor == 'owner';
+
   @override
   void initState() {
     super.initState();
@@ -50,12 +54,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     super.didChangeDependencies();
 
     if (!_isDataFetched) {
-      commodityProvider = Provider.of<CommodityProvider>(context);
+      if (isOwner) commodityProvider = Provider.of<CommodityProvider>(context);
       serviceProvider = Provider.of<ServiceProvider>(context);
       reviewProvider = Provider.of<ReviewProvider>(context);
 
       Future.microtask(() {
-        commodityProvider!.refreshCommodity(storeId: widget.id);
+        if (isOwner) commodityProvider!.refreshCommodity(storeId: widget.id);
         serviceProvider!.refreshService(storeId: widget.id);
         reviewProvider!.refreshReview(storeId: widget.id);
       });
@@ -145,10 +149,10 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           authRepository: AuthRepository(),
           apiService: ApiService(),
           id: widget.id),
-      child: Consumer5<StoreDetailProvider, CommodityProvider, ServiceProvider,
-          StoreProvider, ReviewProvider>(
-        builder: (context, detailProvider, commodityProvider, serviceProvider,
-            storeProvider, reviewProvider, child) {
+      child: Consumer4<StoreDetailProvider, ServiceProvider, StoreProvider,
+          ReviewProvider>(
+        builder: (context, detailProvider, serviceProvider, storeProvider,
+            reviewProvider, child) {
           final state = detailProvider.loadingState;
 
           return state.when(
@@ -164,7 +168,6 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                 context,
                 detailStore,
                 detailProvider,
-                commodityProvider,
                 serviceProvider,
                 storeProvider,
                 reviewProvider,
@@ -183,7 +186,6 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     BuildContext context,
     DetailStore detailStore,
     StoreDetailProvider detailProvider,
-    CommodityProvider commodityProvider,
     ServiceProvider serviceProvider,
     StoreProvider storeProvider,
     ReviewProvider reviewProvider,
@@ -239,7 +241,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                     IconButton(
                       onPressed: () {
                         context.pop();
-                        storeProvider.refreshOwnerStore();
+                        isOwner ? storeProvider.refreshOwnerStore() : null;
                       },
                       icon: const Icon(
                         Icons.arrow_back,
@@ -254,39 +256,43 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    PopupMenuButton(
-                      onSelected: (value) {
-                        _onSelected(context, value);
-                      },
-                      itemBuilder: (BuildContext context) {
-                        return [
-                          const PopupMenuItem(
-                            value: 'Edit',
-                            child: Text('Edit'),
-                          ),
-                          detailProvider.isActive == true
-                              ? const PopupMenuItem(
-                                  value: 'Deactivate',
-                                  child: Text('Deactivate'),
-                                )
-                              : const PopupMenuItem(
-                                  value: 'Activate',
-                                  child: Text('Activate'),
+                    isOwner
+                        ? PopupMenuButton(
+                            onSelected: (value) {
+                              _onSelected(context, value);
+                            },
+                            itemBuilder: (BuildContext context) {
+                              return [
+                                const PopupMenuItem(
+                                  value: 'Edit',
+                                  child: Text('Edit'),
                                 ),
-                          const PopupMenuItem(
-                            value: 'Delete',
-                            child: Text(
-                              'Delete',
-                              style: TextStyle(color: Colors.red),
+                                detailProvider.isActive == true
+                                    ? const PopupMenuItem(
+                                        value: 'Deactivate',
+                                        child: Text('Deactivate'),
+                                      )
+                                    : const PopupMenuItem(
+                                        value: 'Activate',
+                                        child: Text('Activate'),
+                                      ),
+                                const PopupMenuItem(
+                                  value: 'Delete',
+                                  child: Text(
+                                    'Delete',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ];
+                            },
+                            icon: const Icon(
+                              Icons.more_vert,
+                              color: Colors.white,
                             ),
+                          )
+                        : const SizedBox(
+                            width: 50,
                           ),
-                        ];
-                      },
-                      icon: const Icon(
-                        Icons.more_vert,
-                        color: Colors.white,
-                      ),
-                    ),
                   ],
                 ),
                 Container(
@@ -301,32 +307,36 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 12,
-                              height: 12,
-                              decoration: BoxDecoration(
-                                color: detailProvider.isActive == true
-                                    ? Colors.green
-                                    : Colors.red,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              context.watch<StoreDetailProvider>().isActive ==
-                                      true
-                                  ? 'Active'
-                                  : 'Inactive',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
+                        isOwner
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 12,
+                                    height: 12,
+                                    decoration: BoxDecoration(
+                                      color: detailProvider.isActive == true
+                                          ? Colors.green
+                                          : Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    context
+                                                .watch<StoreDetailProvider>()
+                                                .isActive ==
+                                            true
+                                        ? 'Active'
+                                        : 'Inactive',
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox.shrink(),
                         const SizedBox(height: 4),
                         Text(
                           detailStore.name,
@@ -365,64 +375,15 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                           ],
                         ),
                         const SizedBox(height: 20),
-                        DefaultTabController(
-                          length: 2,
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                width: double.infinity,
-                                height: 40,
-                                padding: const EdgeInsets.all(3),
-                                decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xFF3B59BA),
-                                      Color(0xFF354A98)
-                                    ],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                  ),
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                child: TabBar(
-                                  controller: _tabController,
-                                  indicatorSize: TabBarIndicatorSize.tab,
-                                  indicator: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    color: Colors.white,
-                                  ),
-                                  dividerHeight: 0,
-                                  labelStyle: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  labelColor: const Color(0xFF354A98),
-                                  unselectedLabelColor: Colors.white,
-                                  tabs: const [
-                                    TabItem(title: 'Detail'),
-                                    TabItem(title: 'Report'),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          child: ContentSizeTabBarView(
-                            controller: _tabController,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: [
-                              _buildDetail(
+                        isOwner
+                            ? _buildTab(
                                 detailStore,
                                 detailProvider,
-                                commodityProvider,
                                 serviceProvider,
                                 reviewProvider,
-                              ),
-                              _buildReport(detailStore),
-                            ],
-                          ),
-                        ),
+                              )
+                            : _buildCustomerSection(
+                                detailStore, serviceProvider, reviewProvider),
                       ],
                     ),
                   ),
@@ -435,10 +396,71 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
+  Widget _buildTab(DetailStore detailStore, StoreDetailProvider detailProvider,
+      ServiceProvider serviceProvider, ReviewProvider reviewProvider) {
+    return Column(
+      children: [
+        DefaultTabController(
+          length: 2,
+          child: Column(
+            children: <Widget>[
+              Container(
+                width: double.infinity,
+                height: 40,
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF3B59BA), Color(0xFF354A98)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: TabBar(
+                  controller: _tabController,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.white,
+                  ),
+                  dividerHeight: 0,
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  labelColor: const Color(0xFF354A98),
+                  unselectedLabelColor: Colors.white,
+                  tabs: const [
+                    TabItem(title: 'Detail'),
+                    TabItem(title: 'Report'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+        SizedBox(
+          child: ContentSizeTabBarView(
+            controller: _tabController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: [
+              _buildDetail(
+                detailStore,
+                detailProvider,
+                serviceProvider,
+                reviewProvider,
+              ),
+              _buildReport(detailStore),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildDetail(
     DetailStore detailStore,
     StoreDetailProvider detailProvider,
-    CommodityProvider commodityProvider,
     ServiceProvider serviceProvider,
     ReviewProvider reviewProvider,
   ) {
@@ -461,7 +483,13 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
         const SizedBox(height: 12),
         _buildRatingSection(detailStore, reviewProvider),
         const SizedBox(height: 12),
-        _buildCommoditySection(detailStore, commodityProvider),
+        isOwner
+            ? Consumer<CommodityProvider>(
+                builder: (context, commodityProvider, child) {
+                  return _buildCommoditySection(detailStore, commodityProvider);
+                },
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }
@@ -493,24 +521,28 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: isOwner
+              ? MainAxisAlignment.spaceBetween
+              : MainAxisAlignment.start,
           children: [
             const Text(
               'Services',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            TextButton(
-              onPressed: () {
-                context.goNamed(
-                  'more_service',
-                  pathParameters: {'id': widget.id},
-                );
-              },
-              child: const Text(
-                'see more',
-                style: TextStyle(color: Colors.blue),
-              ),
-            ),
+            isOwner
+                ? TextButton(
+                    onPressed: () {
+                      context.goNamed(
+                        'more_service',
+                        pathParameters: {'id': widget.id},
+                      );
+                    },
+                    child: const Text(
+                      'see more',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
         const SizedBox(height: 4),
@@ -704,9 +736,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
             children: [
               CircleAvatar(
                 radius: 24,
-                backgroundImage: Image.network(
-                  reviewProvider.reviews[0].avatar,
-                ).image,
+                backgroundImage: reviewProvider.reviews[0].avatar
+                        .contains('http')
+                    ? Image.network(reviewProvider.reviews[0].avatar).image
+                    : Image.network(
+                            '${ApiService.baseUrl}/${reviewProvider.reviews[0].avatar}')
+                        .image,
               ),
               const SizedBox(width: 8),
               Column(
@@ -987,6 +1022,31 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           title: Text('Joe Bambang'),
           leading: Icon(Icons.abc),
         ),
+      ],
+    );
+  }
+
+  Widget _buildCustomerSection(
+    DetailStore detailStore,
+    ServiceProvider serviceProvider,
+    ReviewProvider reviewProvider,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Description',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          detailStore.description,
+          textAlign: TextAlign.justify,
+        ),
+        const SizedBox(height: 12),
+        _buildServiceSection(detailStore, serviceProvider),
+        const SizedBox(height: 12),
+        _buildRatingSection(detailStore, reviewProvider)
       ],
     );
   }
