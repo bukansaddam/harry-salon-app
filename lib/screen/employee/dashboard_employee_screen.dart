@@ -289,11 +289,13 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
             end: true,
             title: "Waiting for customer confirmation",
             description: order?.userName ?? '',
-            enabled: status == const OrderState.waiting() ||
-                    status == const OrderState.onProcress() ||
-                    status == const OrderState.done()
-                ? true
-                : false,
+            enabled: order == null
+                ? false
+                : status == const OrderState.waiting() ||
+                        status == const OrderState.onProcress() ||
+                        status == const OrderState.done()
+                    ? true
+                    : false,
           ),
         ),
         GestureDetector(

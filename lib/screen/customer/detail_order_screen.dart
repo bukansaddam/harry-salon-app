@@ -182,12 +182,8 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                         color: const Color(0xFFB23745),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      onDone: () async {
-                        await context.read<OrderProvider>().updateStatusOrder(
-                              id: widget.id,
-                              status: 'delay',
-                            );
-                        await provider.getDetailOrder(id: widget.id);
+                      onDone: () {
+                        provider.getDetailOrder(id: widget.id);
                       },
                     )
                   : const SizedBox(),
