@@ -36,6 +36,7 @@ class ApiService {
   static const String _loginEmployee = '/auth/employees/signin';
   static const String _loginCustomer = '/auth/users/signin';
   static const String _detailUser = '/users';
+  static const String _owner = '/owners';
   static const String _order = '/orders';
 
   final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
@@ -690,8 +691,17 @@ class ApiService {
   Future<DetailUserResponse> getDetailUser({
     required String token,
   }) async {
+    String url = '';
+
+    if (isCustomer) {
+      url = '$baseUrl$_detailUser/detail';
+    } else if (isEmployee) {
+      url = '$baseUrl$_employee/detail';
+    } else {
+      url = '$baseUrl$_owner/detail';
+    }
     final response = await http.get(
-      Uri.parse('$baseUrl$_detailUser/detail'),
+      Uri.parse(url),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },
@@ -709,8 +719,17 @@ class ApiService {
     required List<int> images,
     required String filename,
   }) async {
-    var request =
-        http.MultipartRequest('PUT', Uri.parse('$baseUrl$_detailUser'));
+    String url = '';
+
+    if (isCustomer) {
+      url = '$baseUrl$_detailUser';
+    } else if (isEmployee) {
+      url = '$baseUrl$_employee';
+    } else {
+      url = '$baseUrl$_owner';
+    }
+
+    var request = http.MultipartRequest('PUT', Uri.parse(url));
 
     if (images.isNotEmpty) {
       var multipartFile = http.MultipartFile.fromBytes(
@@ -743,8 +762,17 @@ class ApiService {
     String? address,
     String? phoneNumber,
   }) async {
-    var request =
-        http.MultipartRequest('PUT', Uri.parse('$baseUrl$_detailUser'));
+    String url = '';
+
+    if (isCustomer) {
+      url = '$baseUrl$_detailUser';
+    } else if (isEmployee) {
+      url = '$baseUrl$_employee';
+    } else {
+      url = '$baseUrl$_owner';
+    }
+
+    var request = http.MultipartRequest('PUT', Uri.parse(url));
 
     if (name != null) request.fields['name'] = name;
     if (email != null) request.fields['email'] = email;

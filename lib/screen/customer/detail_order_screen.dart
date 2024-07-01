@@ -12,10 +12,9 @@ import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_hairstyle.dart';
 
 class DetailOrderScreen extends StatefulWidget {
-  const DetailOrderScreen({super.key, required this.id, required this.time});
+  const DetailOrderScreen({super.key, required this.id});
 
   final String id;
-  final int time;
 
   @override
   State<DetailOrderScreen> createState() => _DetailOrderScreenState();

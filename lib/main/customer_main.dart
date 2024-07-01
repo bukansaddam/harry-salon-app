@@ -139,11 +139,7 @@ final GoRouter _router = GoRouter(
           name: 'detail_order',
           builder: (context, state) {
             final id = state.pathParameters['id'];
-            final time = state.extra as int;
-            return DetailOrderScreen(
-              id: id!,
-              time: time,
-            );
+            return DetailOrderScreen(id: id!);
           },
         ),
         GoRoute(

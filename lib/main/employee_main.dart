@@ -6,10 +6,12 @@ import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/provider/order_provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
+import 'package:tugas_akhir_app/provider/user_provider.dart';
 import 'package:tugas_akhir_app/screen/auth/login_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/add_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/detail_commodity_screen.dart';
+import 'package:tugas_akhir_app/screen/customer/edit_profile_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/employee_detail_order_screen.dart';
 import 'package:tugas_akhir_app/screen/home_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/payslip/detail_payslip_screen.dart';
@@ -42,6 +44,9 @@ class EmployeeApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<OrderProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<UserProvider>(),
         ),
       ],
       child: MaterialApp.router(
@@ -134,7 +139,18 @@ final GoRouter _router = GoRouter(
             final id = state.pathParameters['id'];
             return EmployeeDetailOrderScreen(orderId: id!);
           },
-        )
+        ),
+        GoRoute(
+          path: 'edit-profile',
+          name: 'edit_profile',
+          builder: (context, state) {
+            final Map<String, dynamic> extra =
+                state.extra as Map<String, dynamic>;
+            final String title = extra['title'] as String;
+            final String user = extra['user'] as String;
+            return EditProfileScreen(title: title, user: user);
+          },
+        ),
       ],
     ),
   ],

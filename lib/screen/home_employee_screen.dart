@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_akhir_app/screen/customer/profile_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/activity_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/dashboard_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/payslip_employee_screen.dart';
@@ -35,12 +36,7 @@ class _HomeEmployeeScreenState extends State<HomeEmployeeScreen> {
       style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
     ),
     PayslipEmployeeScreen(),
-    SafeArea(
-      child: Text(
-        'Profile',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-      ),
-    ),
+    ProfileScreen(),
   ];
 
   @override
