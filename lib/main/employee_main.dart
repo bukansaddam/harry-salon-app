@@ -13,6 +13,7 @@ import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/detail_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/customer/edit_profile_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/employee_detail_order_screen.dart';
+import 'package:tugas_akhir_app/screen/employee/order_screen.dart';
 import 'package:tugas_akhir_app/screen/home_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/payslip/detail_payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
@@ -151,6 +152,13 @@ final GoRouter _router = GoRouter(
             return EditProfileScreen(title: title, user: user);
           },
         ),
+        GoRoute(
+          path: 'more-order',
+          name: 'more_order',
+          builder: (context, state) {
+            return const OrderScreen();
+          },
+        )
       ],
     ),
   ],

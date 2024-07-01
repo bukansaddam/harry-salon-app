@@ -180,7 +180,6 @@ class OrderProvider extends ChangeNotifier {
       );
 
       if (orderResponse!.success) {
-        orders.addAll(orderResponse!.result!.data);
         upcomingTask = orderResponse!.result!.data.firstWhereOrNull((order) {
           return order.status == 'pending';
         });
@@ -196,12 +195,47 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> refreshOrderEmployee({bool isMoreUpcoming = false}) async {
-    if (isMoreUpcoming) {
-      pageItems = 1;
-      orders = [];
+  Future<void> getMoreOrderEmployee() async {
+    try {
+      if (pageItems == 1) {
+        loadingState = const LoadingState.loading();
+        notifyListeners();
+      }
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        loadingState = const LoadingState.error('You are not logged in');
+        notifyListeners();
+        return;
+      }
+
+      orderResponse = await apiService.getCurrentOrder(
+        token: token,
+        page: pageItems,
+        size: sizeItems,
+      );
+
+      if (orderResponse!.success) {
+        orders.addAll(orderResponse!.result!.data
+            .where((order) => order.status == 'pending'));
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(orderResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
     }
-    await getOrderEmployee(isMoreUpcoming: isMoreUpcoming);
+  }
+
+  Future<void> refreshOrderEmployee() async {
+    pageItems = 1;
+    orders = [];
+    await getMoreOrderEmployee();
   }
 
   Future<void> getCurrentOrderEmployee() async {

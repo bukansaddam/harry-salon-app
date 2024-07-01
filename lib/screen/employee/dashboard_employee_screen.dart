@@ -156,7 +156,7 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
             ),
             TextButton(
               onPressed: () {
-                // do something
+                context.goNamed('more_order');
               },
               child: const Text(
                 'see more',
