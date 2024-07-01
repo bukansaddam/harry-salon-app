@@ -213,6 +213,9 @@ mixin _$DetailOrder {
   bool get isOnLocation => throw _privateConstructorUsedError;
   bool get isAccepted => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
+  String get userName => throw _privateConstructorUsedError;
+  String get userAvatar => throw _privateConstructorUsedError;
+  int get userPhone => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
   String get storeLocation => throw _privateConstructorUsedError;
   String get serviceImage => throw _privateConstructorUsedError;
@@ -242,6 +245,9 @@ abstract class $DetailOrderCopyWith<$Res> {
       bool isOnLocation,
       bool isAccepted,
       String status,
+      String userName,
+      String userAvatar,
+      int userPhone,
       String storeName,
       String storeLocation,
       String serviceImage,
@@ -274,6 +280,9 @@ class _$DetailOrderCopyWithImpl<$Res, $Val extends DetailOrder>
     Object? isOnLocation = null,
     Object? isAccepted = null,
     Object? status = null,
+    Object? userName = null,
+    Object? userAvatar = null,
+    Object? userPhone = null,
     Object? storeName = null,
     Object? storeLocation = null,
     Object? serviceImage = null,
@@ -312,6 +321,18 @@ class _$DetailOrderCopyWithImpl<$Res, $Val extends DetailOrder>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
+      userName: null == userName
+          ? _value.userName
+          : userName // ignore: cast_nullable_to_non_nullable
+              as String,
+      userAvatar: null == userAvatar
+          ? _value.userAvatar
+          : userAvatar // ignore: cast_nullable_to_non_nullable
+              as String,
+      userPhone: null == userPhone
+          ? _value.userPhone
+          : userPhone // ignore: cast_nullable_to_non_nullable
+              as int,
       storeName: null == storeName
           ? _value.storeName
           : storeName // ignore: cast_nullable_to_non_nullable
@@ -376,6 +397,9 @@ abstract class _$$DetailOrderImplCopyWith<$Res>
       bool isOnLocation,
       bool isAccepted,
       String status,
+      String userName,
+      String userAvatar,
+      int userPhone,
       String storeName,
       String storeLocation,
       String serviceImage,
@@ -407,6 +431,9 @@ class __$$DetailOrderImplCopyWithImpl<$Res>
     Object? isOnLocation = null,
     Object? isAccepted = null,
     Object? status = null,
+    Object? userName = null,
+    Object? userAvatar = null,
+    Object? userPhone = null,
     Object? storeName = null,
     Object? storeLocation = null,
     Object? serviceImage = null,
@@ -445,6 +472,18 @@ class __$$DetailOrderImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String,
+      userName: null == userName
+          ? _value.userName
+          : userName // ignore: cast_nullable_to_non_nullable
+              as String,
+      userAvatar: null == userAvatar
+          ? _value.userAvatar
+          : userAvatar // ignore: cast_nullable_to_non_nullable
+              as String,
+      userPhone: null == userPhone
+          ? _value.userPhone
+          : userPhone // ignore: cast_nullable_to_non_nullable
+              as int,
       storeName: null == storeName
           ? _value.storeName
           : storeName // ignore: cast_nullable_to_non_nullable
@@ -492,6 +531,9 @@ class _$DetailOrderImpl implements _DetailOrder {
       required this.isOnLocation,
       required this.isAccepted,
       required this.status,
+      required this.userName,
+      required this.userAvatar,
+      required this.userPhone,
       required this.storeName,
       required this.storeLocation,
       required this.serviceImage,
@@ -519,6 +561,12 @@ class _$DetailOrderImpl implements _DetailOrder {
   @override
   final String status;
   @override
+  final String userName;
+  @override
+  final String userAvatar;
+  @override
+  final int userPhone;
+  @override
   final String storeName;
   @override
   final String storeLocation;
@@ -537,7 +585,7 @@ class _$DetailOrderImpl implements _DetailOrder {
 
   @override
   String toString() {
-    return 'DetailOrder(id: $id, orderNumber: $orderNumber, endTime: $endTime, description: $description, isOnLocation: $isOnLocation, isAccepted: $isAccepted, status: $status, storeName: $storeName, storeLocation: $storeLocation, serviceImage: $serviceImage, serviceName: $serviceName, servicePrice: $servicePrice, employeeAvatar: $employeeAvatar, employeeName: $employeeName, reference: $reference)';
+    return 'DetailOrder(id: $id, orderNumber: $orderNumber, endTime: $endTime, description: $description, isOnLocation: $isOnLocation, isAccepted: $isAccepted, status: $status, userName: $userName, userAvatar: $userAvatar, userPhone: $userPhone, storeName: $storeName, storeLocation: $storeLocation, serviceImage: $serviceImage, serviceName: $serviceName, servicePrice: $servicePrice, employeeAvatar: $employeeAvatar, employeeName: $employeeName, reference: $reference)';
   }
 
   @override
@@ -556,6 +604,12 @@ class _$DetailOrderImpl implements _DetailOrder {
             (identical(other.isAccepted, isAccepted) ||
                 other.isAccepted == isAccepted) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.userName, userName) ||
+                other.userName == userName) &&
+            (identical(other.userAvatar, userAvatar) ||
+                other.userAvatar == userAvatar) &&
+            (identical(other.userPhone, userPhone) ||
+                other.userPhone == userPhone) &&
             (identical(other.storeName, storeName) ||
                 other.storeName == storeName) &&
             (identical(other.storeLocation, storeLocation) ||
@@ -585,6 +639,9 @@ class _$DetailOrderImpl implements _DetailOrder {
       isOnLocation,
       isAccepted,
       status,
+      userName,
+      userAvatar,
+      userPhone,
       storeName,
       storeLocation,
       serviceImage,
@@ -617,6 +674,9 @@ abstract class _DetailOrder implements DetailOrder {
       required final bool isOnLocation,
       required final bool isAccepted,
       required final String status,
+      required final String userName,
+      required final String userAvatar,
+      required final int userPhone,
       required final String storeName,
       required final String storeLocation,
       required final String serviceImage,
@@ -643,6 +703,12 @@ abstract class _DetailOrder implements DetailOrder {
   bool get isAccepted;
   @override
   String get status;
+  @override
+  String get userName;
+  @override
+  String get userAvatar;
+  @override
+  int get userPhone;
   @override
   String get storeName;
   @override

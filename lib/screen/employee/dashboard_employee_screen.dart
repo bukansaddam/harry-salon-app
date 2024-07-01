@@ -183,7 +183,10 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
                       'id': order.id.toString(),
                     });
                   },
-                  btnOnAccept: orderProvider.currentTask == null ? true : false,
+                  btnOnAccept: orderProvider.currentTask == null ||
+                          orderProvider.currentTask!.status == 'done'
+                      ? true
+                      : false,
                   onAccept: () {
                     showDialog(
                         context: context,
