@@ -6,11 +6,15 @@ class CardTasks extends StatelessWidget {
   const CardTasks(
       {super.key,
       required this.order,
-      required this.onAccept,
-      required this.onDetail});
+      this.onAccept = _defaultFunction,
+      required this.onDetail,
+      this.btnOnAccept = false});
+
+  static void _defaultFunction() {}
 
   final Order order;
   final Function() onAccept, onDetail;
+  final bool btnOnAccept;
 
   @override
   Widget build(BuildContext context) {
@@ -84,15 +88,19 @@ class CardTasks extends StatelessWidget {
                     gradient: false,
                   ),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: CustomButton(
-                    function: onAccept,
-                    text: 'Accept',
-                    height: 35,
-                    radius: 5,
-                  ),
-                ),
+                btnOnAccept
+                    ? const SizedBox(width: 8)
+                    : const SizedBox.shrink(),
+                btnOnAccept
+                    ? Expanded(
+                        child: CustomButton(
+                          function: onAccept,
+                          text: 'Accept',
+                          height: 35,
+                          radius: 5,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
               ],
             ),
           ],

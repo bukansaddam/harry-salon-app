@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:tugas_akhir_app/common/loading_state.dart';
+import 'package:tugas_akhir_app/common/order_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/order.dart';
@@ -18,9 +19,12 @@ class OrderProvider extends ChangeNotifier {
   UploadResponse? uploadResponse;
 
   LoadingState loadingState = const LoadingState.initial();
+  LoadingState currentOrderLoadingState = const LoadingState.initial();
+  OrderState orderState = const OrderState.initial();
 
   List<Order> orders = [];
   Order? upcomingTask;
+  Order? currentTask;
 
   int pageItems = 1;
   int sizeItems = 10;
@@ -198,5 +202,58 @@ class OrderProvider extends ChangeNotifier {
       orders = [];
     }
     await getOrderEmployee(isMoreUpcoming: isMoreUpcoming);
+  }
+
+  Future<void> getCurrentOrderEmployee() async {
+    try {
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        currentOrderLoadingState =
+            const LoadingState.error('You are not logged in');
+        notifyListeners();
+        return;
+      }
+
+      orderResponse = await apiService.getOrderEmployee(
+        token: token,
+        page: pageItems,
+        size: sizeItems,
+      );
+
+      if (orderResponse!.success) {
+        currentTask = orderResponse!.result!.data
+            .lastWhereOrNull((order) => order.isMe == true);
+        _checkOrderState(currentTask!.status);
+        currentOrderLoadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        currentOrderLoadingState = LoadingState.error(orderResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      currentOrderLoadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
+  void _checkOrderState(String status) {
+    if (status == 'pending') {
+      orderState = const OrderState.pending();
+      notifyListeners();
+    } else if (status == 'waiting') {
+      orderState = const OrderState.waiting();
+      notifyListeners();
+    } else if (status == 'onProcess') {
+      orderState = const OrderState.onProcress();
+      notifyListeners();
+    } else if (status == 'done') {
+      orderState = const OrderState.done();
+      notifyListeners();
+    } else if (status == 'canceled') {
+      orderState = const OrderState.canceled();
+      notifyListeners();
+    }
   }
 }

@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir_app/common/order_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
+import 'package:tugas_akhir_app/model/order.dart';
 import 'package:tugas_akhir_app/model/user.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/provider/order_provider.dart';
@@ -52,6 +55,7 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
   Future<void> _getUpcomingTaskRealtime() async {
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       orderProvider!.getOrderEmployee();
+      orderProvider!.getCurrentOrderEmployee();
       debugPrint(orderProvider!.upcomingTask.toString());
     });
   }
@@ -92,7 +96,7 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
             height: 16,
           )),
           SliverToBoxAdapter(
-            child: _buildCurrentTasksSection(),
+            child: _buildCurrentTasksSection(orderProvider),
           ),
           const SliverToBoxAdapter(
               child: SizedBox(
@@ -165,7 +169,11 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
         ),
         orderState.when(
           initial: () => const SizedBox(
-              height: 200, child: Center(child: CircularProgressIndicator())),
+            height: 200,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
           loading: () => const Center(child: CircularProgressIndicator()),
           loaded: () => order != null
               ? CardTasks(
@@ -175,6 +183,7 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
                       'id': order.id.toString(),
                     });
                   },
+                  btnOnAccept: orderProvider.currentTask == null ? true : false,
                   onAccept: () {
                     showDialog(
                         context: context,
@@ -194,6 +203,7 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
                                 onPressed: () {
                                   orderProvider.updateStatusOrder(
                                       id: order.id, isAccepted: true);
+                                  context.pop();
                                 },
                                 child: const Text('Accept'),
                               ),
@@ -230,36 +240,95 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
     );
   }
 
-  Widget _buildCurrentTasksSection() {
-    return const Column(
+  Widget _buildCurrentTasksSection(OrderProvider orderProvider) {
+    final order = orderProvider.currentTask;
+    final status = orderProvider.orderState;
+    final state = orderProvider.currentOrderLoadingState;
+
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Current Tasks',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
         ),
-        MyTimelineTile(
-          start: false,
-          end: true,
-          title: "Waiting for customer confirmation",
-          description: "5 minutes remaining",
+        state.when(
+          initial: () => const SizedBox(
+              height: 150,
+              child: Center(
+                child: CircularProgressIndicator(),
+              )),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          loaded: () => order != null
+              ? _buildTimelineCurrentTask(order, status)
+              : _buildTimelineCurrentTask(order, status),
+          error: (error) => _buildTimelineCurrentTask(order, status),
         ),
-        MyTimelineTile(
-          start: true,
-          end: true,
-          title: "On Process",
-          description: "Potong Rambut",
-          enabled: false,
+      ],
+    );
+  }
+
+  Widget _buildTimelineCurrentTask(Order? order, OrderState status) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: order != null
+              ? () => context.goNamed('detail_order', pathParameters: {
+                    'id': order.id.toString(),
+                  })
+              : () {},
+          child: MyTimelineTile(
+            start: false,
+            end: true,
+            title: "Waiting for customer confirmation",
+            description: order?.userName ?? '',
+            enabled: status == const OrderState.waiting() ||
+                    status == const OrderState.onProcress() ||
+                    status == const OrderState.done()
+                ? true
+                : false,
+          ),
         ),
-        MyTimelineTile(
-          start: true,
-          end: true,
-          title: "Done",
-          description: "Rp. 100.000",
-          enabled: false,
+        GestureDetector(
+          onTap: order != null
+              ? () => context.goNamed('detail_order', pathParameters: {
+                    'id': order.id.toString(),
+                  })
+              : () {},
+          child: MyTimelineTile(
+            start: true,
+            end: true,
+            title: "On Process",
+            description: order?.serviceName ?? '',
+            enabled: status == const OrderState.onProcress() ||
+                    status == const OrderState.done()
+                ? true
+                : false,
+          ),
+        ),
+        GestureDetector(
+          onTap: order != null
+              ? () => context.goNamed('detail_order', pathParameters: {
+                    'id': order.id.toString(),
+                  })
+              : () {},
+          child: MyTimelineTile(
+            start: true,
+            end: true,
+            title: "Done",
+            description: order != null
+                ? NumberFormat.currency(
+                    locale: 'id',
+                    symbol: 'Rp',
+                    decimalDigits: 0,
+                  ).format(order.servicePrice)
+                : '',
+            enabled: status == const OrderState.done() ? true : false,
+          ),
         )
       ],
     );
