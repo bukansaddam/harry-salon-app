@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:tugas_akhir_app/common/loading_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
@@ -19,11 +20,13 @@ class OrderProvider extends ChangeNotifier {
   LoadingState loadingState = const LoadingState.initial();
 
   List<Order> orders = [];
+  Order? upcomingTask;
 
   int pageItems = 1;
   int sizeItems = 10;
 
   int waitingTime = 0;
+
   Future<void> getOrder() async {
     try {
       if (pageItems == 1) {
@@ -41,13 +44,19 @@ class OrderProvider extends ChangeNotifier {
       }
 
       orderResponse = await apiService.getCurrentOrder(
-          token: token, page: pageItems, size: sizeItems);
+        token: token,
+        page: pageItems,
+        size: sizeItems,
+      );
 
       if (orderResponse!.success) {
         orders.addAll(
             orderResponse!.result!.data.where((order) => order.isMe == true));
-        waitingTime =
-            orders.isNotEmpty ? (orders.first.orderNumber! - 1) * 15 : 0;
+        waitingTime = orders.isNotEmpty
+            ? orders.first.orderNumber != 0
+                ? (orders.first.orderNumber! - 1) * 15
+                : 0
+            : 0;
         loadingState = const LoadingState.loaded();
         notifyListeners();
       } else {
@@ -140,5 +149,54 @@ class OrderProvider extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  Future<void> getOrderEmployee({bool isMoreUpcoming = false}) async {
+    try {
+      if (isMoreUpcoming) {
+        if (pageItems == 1) {
+          loadingState = const LoadingState.loading();
+          notifyListeners();
+        }
+      }
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        loadingState = const LoadingState.error('You are not logged in');
+        notifyListeners();
+        return;
+      }
+
+      orderResponse = await apiService.getCurrentOrder(
+        token: token,
+        page: pageItems,
+        size: sizeItems,
+      );
+
+      if (orderResponse!.success) {
+        orders.addAll(orderResponse!.result!.data);
+        upcomingTask = orderResponse!.result!.data.firstWhereOrNull((order) {
+          return order.status == 'pending';
+        });
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(orderResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
+  Future<void> refreshOrderEmployee({bool isMoreUpcoming = false}) async {
+    if (isMoreUpcoming) {
+      pageItems = 1;
+      orders = [];
+    }
+    await getOrderEmployee(isMoreUpcoming: isMoreUpcoming);
   }
 }

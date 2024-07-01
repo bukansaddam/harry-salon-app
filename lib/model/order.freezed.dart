@@ -398,6 +398,7 @@ mixin _$Order {
   String get description => throw _privateConstructorUsedError;
   String get userName => throw _privateConstructorUsedError;
   String get userAvatar => throw _privateConstructorUsedError;
+  int get userPhone => throw _privateConstructorUsedError;
   String get storeName => throw _privateConstructorUsedError;
   String get storeLocation => throw _privateConstructorUsedError;
   String get serviceName => throw _privateConstructorUsedError;
@@ -423,6 +424,7 @@ abstract class $OrderCopyWith<$Res> {
       String description,
       String userName,
       String userAvatar,
+      int userPhone,
       String storeName,
       String storeLocation,
       String serviceName,
@@ -453,6 +455,7 @@ class _$OrderCopyWithImpl<$Res, $Val extends Order>
     Object? description = null,
     Object? userName = null,
     Object? userAvatar = null,
+    Object? userPhone = null,
     Object? storeName = null,
     Object? storeLocation = null,
     Object? serviceName = null,
@@ -486,6 +489,10 @@ class _$OrderCopyWithImpl<$Res, $Val extends Order>
           ? _value.userAvatar
           : userAvatar // ignore: cast_nullable_to_non_nullable
               as String,
+      userPhone: null == userPhone
+          ? _value.userPhone
+          : userPhone // ignore: cast_nullable_to_non_nullable
+              as int,
       storeName: null == storeName
           ? _value.storeName
           : storeName // ignore: cast_nullable_to_non_nullable
@@ -544,6 +551,7 @@ abstract class _$$OrderImplCopyWith<$Res> implements $OrderCopyWith<$Res> {
       String description,
       String userName,
       String userAvatar,
+      int userPhone,
       String storeName,
       String storeLocation,
       String serviceName,
@@ -573,6 +581,7 @@ class __$$OrderImplCopyWithImpl<$Res>
     Object? description = null,
     Object? userName = null,
     Object? userAvatar = null,
+    Object? userPhone = null,
     Object? storeName = null,
     Object? storeLocation = null,
     Object? serviceName = null,
@@ -606,6 +615,10 @@ class __$$OrderImplCopyWithImpl<$Res>
           ? _value.userAvatar
           : userAvatar // ignore: cast_nullable_to_non_nullable
               as String,
+      userPhone: null == userPhone
+          ? _value.userPhone
+          : userPhone // ignore: cast_nullable_to_non_nullable
+              as int,
       storeName: null == storeName
           ? _value.storeName
           : storeName // ignore: cast_nullable_to_non_nullable
@@ -648,6 +661,7 @@ class _$OrderImpl implements _Order {
       required this.description,
       required this.userName,
       required this.userAvatar,
+      required this.userPhone,
       required this.storeName,
       required this.storeLocation,
       required this.serviceName,
@@ -672,6 +686,8 @@ class _$OrderImpl implements _Order {
   @override
   final String userAvatar;
   @override
+  final int userPhone;
+  @override
   final String storeName;
   @override
   final String storeLocation;
@@ -688,7 +704,7 @@ class _$OrderImpl implements _Order {
 
   @override
   String toString() {
-    return 'Order(orderNumber: $orderNumber, isMe: $isMe, id: $id, description: $description, userName: $userName, userAvatar: $userAvatar, storeName: $storeName, storeLocation: $storeLocation, serviceName: $serviceName, servicePrice: $servicePrice, status: $status, date: $date, reference: $reference)';
+    return 'Order(orderNumber: $orderNumber, isMe: $isMe, id: $id, description: $description, userName: $userName, userAvatar: $userAvatar, userPhone: $userPhone, storeName: $storeName, storeLocation: $storeLocation, serviceName: $serviceName, servicePrice: $servicePrice, status: $status, date: $date, reference: $reference)';
   }
 
   @override
@@ -706,6 +722,8 @@ class _$OrderImpl implements _Order {
                 other.userName == userName) &&
             (identical(other.userAvatar, userAvatar) ||
                 other.userAvatar == userAvatar) &&
+            (identical(other.userPhone, userPhone) ||
+                other.userPhone == userPhone) &&
             (identical(other.storeName, storeName) ||
                 other.storeName == storeName) &&
             (identical(other.storeLocation, storeLocation) ||
@@ -730,6 +748,7 @@ class _$OrderImpl implements _Order {
       description,
       userName,
       userAvatar,
+      userPhone,
       storeName,
       storeLocation,
       serviceName,
@@ -760,6 +779,7 @@ abstract class _Order implements Order {
       required final String description,
       required final String userName,
       required final String userAvatar,
+      required final int userPhone,
       required final String storeName,
       required final String storeLocation,
       required final String serviceName,
@@ -782,6 +802,8 @@ abstract class _Order implements Order {
   String get userName;
   @override
   String get userAvatar;
+  @override
+  int get userPhone;
   @override
   String get storeName;
   @override

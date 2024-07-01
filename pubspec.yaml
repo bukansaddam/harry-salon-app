@@ -10,6 +10,7 @@ environment:
 dependencies:
   android_alarm_manager_plus: ^4.0.3
   carousel_slider: ^4.2.1
+  collection: ^1.18.0
   contentsize_tabbarview: ^0.0.2
   cupertino_icons: ^1.0.6
   delightful_toast: ^1.1.0

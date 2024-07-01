@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_akhir_app/model/order.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 
 class CardTasks extends StatelessWidget {
-  const CardTasks({super.key});
+  const CardTasks(
+      {super.key,
+      required this.order,
+      required this.onAccept,
+      required this.onDetail});
+
+  final Order order;
+  final Function() onAccept, onDetail;
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +22,9 @@ class CardTasks extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   backgroundColor: Colors.white,
                   radius: 25,
                   child: Icon(
@@ -24,42 +32,44 @@ class CardTasks extends StatelessWidget {
                     color: Colors.blue,
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Name',
-                      style: TextStyle(
+                      order.userName,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text('Description'),
+                    Text(order.userPhone.toString()),
                   ],
                 )
               ],
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Potong Rambut',
-              style: TextStyle(
+            Text(
+              order.serviceName,
+              style: const TextStyle(
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Description',
+            Text(
+              order.description,
             ),
             const SizedBox(height: 12),
-            const Row(
+            Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.attach_file,
                   size: 16,
                 ),
-                SizedBox(width: 4),
-                Text('1 Reference'),
+                const SizedBox(width: 4),
+                order.reference != null
+                    ? Text(order.reference!.name)
+                    : const Text('No Reference'),
               ],
             ),
             const SizedBox(height: 24),
@@ -67,7 +77,7 @@ class CardTasks extends StatelessWidget {
               children: [
                 Expanded(
                   child: CustomButton(
-                    function: () {},
+                    function: onDetail,
                     text: 'Detail',
                     height: 35,
                     radius: 5,
@@ -77,7 +87,7 @@ class CardTasks extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: CustomButton(
-                    function: () {},
+                    function: onAccept,
                     text: 'Accept',
                     height: 35,
                     radius: 5,

@@ -4,11 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
+import 'package:tugas_akhir_app/provider/order_provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
 import 'package:tugas_akhir_app/screen/auth/login_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/add_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/detail_commodity_screen.dart';
+import 'package:tugas_akhir_app/screen/employee/employee_detail_order_screen.dart';
 import 'package:tugas_akhir_app/screen/home_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/payslip/detail_payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
@@ -37,6 +39,9 @@ class EmployeeApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<PayslipProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<OrderProvider>(),
         ),
       ],
       child: MaterialApp.router(
@@ -120,6 +125,14 @@ final GoRouter _router = GoRouter(
           builder: (context, state) {
             final id = state.pathParameters['id'];
             return DetailPayslipScreen(id: id!);
+          },
+        ),
+        GoRoute(
+          path: 'detail-order/:id',
+          name: 'detail_order',
+          builder: (context, state) {
+            final id = state.pathParameters['id'];
+            return EmployeeDetailOrderScreen(orderId: id!);
           },
         )
       ],

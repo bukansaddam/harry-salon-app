@@ -36,6 +36,7 @@ class Order with _$Order {
     required String description,
     required String userName,
     required String userAvatar,
+    required int userPhone,
     required String storeName,
     required String storeLocation,
     required String serviceName,

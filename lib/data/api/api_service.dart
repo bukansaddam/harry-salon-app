@@ -866,4 +866,23 @@ class ApiService {
       return UploadResponse.fromJson(jsonDecode(response.body));
     }
   }
+
+  Future<OrderResponse> getOrderEmployee({
+    required String token,
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_order/employee?&page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return OrderResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return OrderResponse.fromJson(jsonDecode(response.body));
+    }
+  }
 }
