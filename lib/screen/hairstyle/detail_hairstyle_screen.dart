@@ -6,6 +6,7 @@ import 'package:tugas_akhir_app/common/loading_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/detail_hairstyle.dart';
+import 'package:tugas_akhir_app/provider/favorite_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_detail_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
@@ -22,6 +23,20 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
   final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
 
   bool get isOwner => actor == 'owner';
+  bool get isCustomer => actor == 'customer';
+
+  FavoriteProvider? favoriteProvider;
+
+  @override
+  void initState() {
+    super.initState();
+
+    favoriteProvider = context.read<FavoriteProvider>();
+
+    Future.microtask(() {
+      favoriteProvider!.getFavorite(id: widget.id);
+    });
+  }
 
   void _onSelected(value) {
     switch (value) {
@@ -44,10 +59,11 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
       ),
       builder: (context, child) {
         return Scaffold(
-          body: Consumer<HairstyleDetailProvider>(
-            builder: (context, provider, child) {
-              final state = provider.loadingState;
-              return _buildBody(context, provider, state);
+          body: Consumer2<HairstyleDetailProvider, FavoriteProvider>(
+            builder: (context, hairstyleProvider, favoriteProvider, child) {
+              final state = hairstyleProvider.loadingState;
+              return _buildBody(
+                  context, hairstyleProvider, favoriteProvider, state);
             },
           ),
         );
@@ -55,8 +71,12 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
     );
   }
 
-  Widget _buildBody(BuildContext context, HairstyleDetailProvider provider,
-      LoadingState state) {
+  Widget _buildBody(
+    BuildContext context,
+    HairstyleDetailProvider hairstyleProvider,
+    FavoriteProvider favoriteProvider,
+    LoadingState state,
+  ) {
     return Stack(
       children: [
         Positioned(
@@ -84,9 +104,11 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
             ),
             loading: () => const SizedBox.shrink(),
             loaded: () {
-              final detailHairstyle = provider.detailHairstyleResponse!.data;
+              final detailHairstyle =
+                  hairstyleProvider.detailHairstyleResponse!.data;
 
-              return _buildCarousel(context, provider, detailHairstyle);
+              return _buildCarousel(
+                  context, hairstyleProvider, detailHairstyle);
             },
             error: (message) => Center(
               child: Text(message),
@@ -108,7 +130,7 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
         SafeArea(
           child: Stack(
             children: [
-              _buildAppBar(context),
+              _buildAppBar(context, favoriteProvider),
               Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 250),
@@ -124,7 +146,7 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
                     ),
                     loaded: () {
                       final detailHairstyle =
-                          provider.detailHairstyleResponse!.data;
+                          hairstyleProvider.detailHairstyleResponse!.data;
 
                       return _buildDetailHairstyle(context, detailHairstyle);
                     },
@@ -139,7 +161,9 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
     );
   }
 
-  Widget _buildCarousel(BuildContext context, HairstyleDetailProvider provider,
+  Widget _buildCarousel(
+      BuildContext context,
+      HairstyleDetailProvider hairstyleProvider,
       DetailHairstyle detailHairstyle) {
     return CarouselSlider(
       items: detailHairstyle.images.map((index) {
@@ -166,7 +190,7 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context, FavoriteProvider favoriteProvider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -207,9 +231,26 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
                   color: Colors.white,
                 ),
               )
-            : const SizedBox(
-                width: 30,
-              ),
+            : isCustomer
+                ? IconButton(
+                    onPressed: () async {
+                      if (favoriteProvider.isFavorite) {
+                        await favoriteProvider.removeFromFavorite(widget.id);
+                        debugPrint('Remove from favorite');
+                      } else {
+                        await favoriteProvider.addToFavorite(widget.id);
+                        debugPrint('Add to favorite');
+                      }
+                    },
+                    icon: Icon(
+                      favoriteProvider.isFavorite
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: Colors.red,
+                    ))
+                : const SizedBox(
+                    width: 30,
+                  ),
       ],
     );
   }

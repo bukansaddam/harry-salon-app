@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_akhir_app/screen/customer/favorite_screen.dart';
 import 'package:tugas_akhir_app/screen/customer/homepage_customer_screen.dart';
 import 'package:tugas_akhir_app/screen/customer/profile_screen.dart';
 
@@ -28,12 +29,7 @@ class _HomeCustomerScreenState extends State<HomeCustomerScreen> {
 
   static const List<Widget> _screens = <Widget>[
     HomepageCustomerScreen(),
-    SafeArea(
-      child: Text(
-        'Profile',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-      ),
-    ),
+    FavoriteScreen(),
     SafeArea(
       child: Text(
         'Profile',

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
+import 'package:tugas_akhir_app/provider/favorite_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/provider/order_provider.dart';
 import 'package:tugas_akhir_app/provider/review_provider.dart';
@@ -54,6 +55,9 @@ class CustomerApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<ReviewProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<FavoriteProvider>(),
         ),
       ],
       child: MaterialApp.router(

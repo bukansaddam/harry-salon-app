@@ -11,6 +11,7 @@ import 'package:tugas_akhir_app/model/detail_payslip.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/model/detail_user.dart';
 import 'package:tugas_akhir_app/model/employee.dart';
+import 'package:tugas_akhir_app/model/favorite.dart';
 import 'package:tugas_akhir_app/model/hairstyle.dart';
 import 'package:tugas_akhir_app/model/login.dart';
 import 'package:tugas_akhir_app/model/order.dart';
@@ -39,6 +40,7 @@ class ApiService {
   static const String _detailUser = '/users';
   static const String _owner = '/owners';
   static const String _order = '/orders';
+  static const String _favorite = '/favorites';
 
   final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
 
@@ -932,6 +934,68 @@ class ApiService {
       return QueueResponse.fromJson(jsonDecode(response.body));
     } else {
       throw QueueResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<FavoriteResponse> getFavorite({
+    required String token,
+    String? name,
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_favorite?name=$name&page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint(response.body);
+      return FavoriteResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw FavoriteResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<UploadResponse> createFavorite({
+    required String token,
+    required String hairstyleId,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl$_favorite'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(<String, String>{
+        'hairstyleId': hairstyleId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<UploadResponse> deleteFavorite({
+    required String token,
+    required String id,
+  }) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl$_favorite/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
     }
   }
 }

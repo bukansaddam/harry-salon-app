@@ -4,6 +4,7 @@ import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
+import 'package:tugas_akhir_app/provider/favorite_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/order_provider.dart';
@@ -48,6 +49,9 @@ void init() {
   );
   locator.registerLazySingleton<OrderProvider>(
     () => OrderProvider(apiService: locator(), authRepository: locator()),
+  );
+  locator.registerLazySingleton<FavoriteProvider>(
+    () => FavoriteProvider(apiService: locator(), authRepository: locator()),
   );
 
   locator.registerLazySingleton<ApiService>(() => ApiService());
