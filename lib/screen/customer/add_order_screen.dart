@@ -44,6 +44,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
     super.initState();
     final hairstyleProvider = context.read<HairstyleProvider>();
     final serviceProvider = context.read<ServiceProvider>();
+    final orderProvider = context.read<OrderProvider>();
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -55,8 +56,9 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
     });
 
     Future.microtask(() async {
+      serviceProvider.refreshService(storeId: widget.location.id);
       await hairstyleProvider.refreshHairstyle(searchValue: searchValue);
-      await serviceProvider.refreshService(storeId: widget.location.id);
+      await orderProvider.getQueue(storeId: widget.location.id);
       if (mounted) {
         setState(() {
           dropdownValue = serviceProvider.services.isNotEmpty
@@ -106,8 +108,9 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   }
 
   Widget _buildBody() {
-    return Consumer2<ServiceProvider, HairstyleProvider>(
-      builder: (context, serviceProvider, hairstyleProvider, child) {
+    return Consumer3<ServiceProvider, HairstyleProvider, OrderProvider>(
+      builder:
+          (context, serviceProvider, hairstyleProvider, orderProvider, child) {
         final serviceState = serviceProvider.loadingState;
         return Column(
           children: [
@@ -175,7 +178,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                 ),
               ),
             ),
-            _buildTotal(),
+            _buildTotal(orderProvider),
           ],
         );
       },
@@ -385,7 +388,9 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
     );
   }
 
-  Widget _buildTotal() {
+  Widget _buildTotal(OrderProvider orderProvider) {
+    final state = orderProvider.loadingState;
+    final queue = orderProvider.queue;
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -426,16 +431,33 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                     ],
                   ),
                 ),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Queue'),
-                      Text(
-                        '2 (30 min)',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
+                      const Text('Queue'),
+                      state.when(
+                        initial: () => const Text(
+                          '-',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        loading: () => const Text(
+                          '-',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        loaded: () => Text(
+                          '${queue?.totalOrder ?? 0} (${queue?.totalDuration ?? 0} min)',
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        error: (error) => Text(
+                          error,
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      )
                     ],
                   ),
                 )

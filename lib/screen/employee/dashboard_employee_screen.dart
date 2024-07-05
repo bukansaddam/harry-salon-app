@@ -309,10 +309,12 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
             end: true,
             title: "On Process",
             description: order?.serviceName ?? '',
-            enabled: status == const OrderState.onProcress() ||
-                    status == const OrderState.done()
-                ? true
-                : false,
+            enabled: order == null
+                ? false
+                : status == const OrderState.onProcress() ||
+                        status == const OrderState.done()
+                    ? true
+                    : false,
           ),
         ),
         GestureDetector(
@@ -332,7 +334,11 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
                     decimalDigits: 0,
                   ).format(order.servicePrice)
                 : '',
-            enabled: status == const OrderState.done() ? true : false,
+            enabled: order == null
+                ? false
+                : status == const OrderState.done()
+                    ? true
+                    : false,
           ),
         )
       ],

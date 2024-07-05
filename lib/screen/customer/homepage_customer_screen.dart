@@ -50,13 +50,13 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
       await userProvider.getDetailUser();
       await storeProvider.refreshStore();
       await orderProvider.refreshOrder();
-      if (mounted && storeProvider.stores.isNotEmpty) {
+      if (mounted && storeProvider.storesCustomer.isNotEmpty) {
         setState(() {
-          dropdownValue = storeProvider.stores.isNotEmpty
-              ? storeProvider.stores.first
+          dropdownValue = storeProvider.storesCustomer.isNotEmpty
+              ? storeProvider.storesCustomer.first
               : null;
           _locationController.text =
-              "${storeProvider.stores.first.name}, ${storeProvider.stores.first.location}";
+              "${storeProvider.storesCustomer.first.name}, ${storeProvider.storesCustomer.first.location}";
         });
       }
     });
@@ -597,9 +597,9 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                       child: CircularProgressIndicator(),
                     ),
                     loaded: () => ListView.builder(
-                      itemCount: storeProvider.stores.length,
+                      itemCount: storeProvider.storesCustomer.length,
                       itemBuilder: (context, index) {
-                        final store = storeProvider.stores[index];
+                        final store = storeProvider.storesCustomer[index];
                         return _buildItemStore(store);
                       },
                     ),

@@ -15,6 +15,7 @@ import 'package:tugas_akhir_app/model/hairstyle.dart';
 import 'package:tugas_akhir_app/model/login.dart';
 import 'package:tugas_akhir_app/model/order.dart';
 import 'package:tugas_akhir_app/model/payslip.dart';
+import 'package:tugas_akhir_app/model/queue.dart';
 import 'package:tugas_akhir_app/model/register.dart';
 import 'package:tugas_akhir_app/model/review.dart';
 import 'package:tugas_akhir_app/model/service.dart';
@@ -609,6 +610,7 @@ class ApiService {
     String filenames,
     String name,
     String price,
+    String duration,
     String storeId,
   ) async {
     var request = http.MultipartRequest(
@@ -626,6 +628,7 @@ class ApiService {
     request.fields.addAll({
       'name': name,
       'price': price,
+      'duration': duration,
       'storeId': storeId,
     });
 
@@ -911,6 +914,24 @@ class ApiService {
       return OrderResponse.fromJson(jsonDecode(response.body));
     } else {
       return OrderResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<QueueResponse> getQueue({
+    required String token,
+    required String storeId,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_order/time/$storeId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return QueueResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw QueueResponse.fromJson(jsonDecode(response.body));
     }
   }
 }

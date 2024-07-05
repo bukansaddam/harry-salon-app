@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class AddServiceScreen extends StatefulWidget {
 class _AddServiceScreenState extends State<AddServiceScreen> {
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
+  final _durationController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   late ServiceProvider _serviceProvider;
@@ -37,6 +39,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     _nameController.dispose();
     _priceController.dispose();
     _serviceProvider.clearImage();
+    _durationController.dispose();
     super.dispose();
   }
 
@@ -90,6 +93,28 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                   controller: _priceController,
                   hintText: 'Input service price here',
                   labelText: 'Price',
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'Duration (minutes)',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                CustomTextField(
+                  controller: _durationController,
+                  hintText: 'Input service duration here',
+                  labelText: 'Duration',
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
                 ),
                 const SizedBox(height: 60),
                 context.watch<ServiceProvider>().loadingState.when(
@@ -268,11 +293,13 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     if (_formKey.currentState!.validate()) {
       final name = _nameController.text;
       final price = _priceController.text;
+      final duration = _durationController.text;
       final storeId = widget.storeId;
 
       await provider.createService(
         name: name,
         price: price,
+        duration: duration,
         storeId: storeId,
       );
 

@@ -88,6 +88,7 @@ class ServiceProvider extends ChangeNotifier {
     required String storeId,
     required String name,
     required String price,
+    required String duration,
   }) async {
     try {
       loadingState = const LoadingState.loading();
@@ -111,6 +112,7 @@ class ServiceProvider extends ChangeNotifier {
         filename,
         name,
         price,
+        duration,
         storeId,
       );
 

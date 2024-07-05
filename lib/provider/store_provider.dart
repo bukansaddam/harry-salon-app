@@ -33,6 +33,7 @@ class StoreProvider extends ChangeNotifier {
   int sizeItems = 10;
 
   List<Store> stores = [];
+  List<Store> storesCustomer = [];
 
   int _activeStoreCount = 0;
   int get activeStoreCount => _activeStoreCount;
@@ -59,7 +60,8 @@ class StoreProvider extends ChangeNotifier {
       );
 
       if (storeResponse!.success) {
-        stores.addAll(storeResponse!.result.data);
+        storesCustomer.addAll(storeResponse!.result.data
+            .where((store) => store.isActive == true));
 
         loadingState = const LoadingState.loaded();
         notifyListeners();
@@ -83,7 +85,7 @@ class StoreProvider extends ChangeNotifier {
     String searchValue = '',
   }) async {
     pageItems = 1;
-    stores.clear();
+    storesCustomer.clear();
     await getAllStore(searchValue: searchValue);
   }
 

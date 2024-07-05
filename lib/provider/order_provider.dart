@@ -5,6 +5,7 @@ import 'package:tugas_akhir_app/common/order_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/order.dart';
+import 'package:tugas_akhir_app/model/queue.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 
 class OrderProvider extends ChangeNotifier {
@@ -17,6 +18,7 @@ class OrderProvider extends ChangeNotifier {
   final AuthRepository authRepository;
   OrderResponse? orderResponse;
   UploadResponse? uploadResponse;
+  QueueResponse? queueResponse;
 
   LoadingState loadingState = const LoadingState.initial();
   LoadingState currentOrderLoadingState = const LoadingState.initial();
@@ -26,6 +28,7 @@ class OrderProvider extends ChangeNotifier {
   Order? upcomingTask;
   Order? currentTask;
   Order? currentTaskCustomer;
+  Queue? queue;
 
   int pageItems = 1;
   int sizeItems = 10;
@@ -57,8 +60,8 @@ class OrderProvider extends ChangeNotifier {
       if (orderResponse!.success) {
         orders.addAll(
             orderResponse!.result!.data.where((order) => order.isMe == true));
-        currentTaskCustomer = orderResponse!.result!.data
-            .firstWhereOrNull((order) => order.isMe == true);
+        currentTaskCustomer = orderResponse!.result!.data.firstWhereOrNull(
+            (order) => order.isMe == true && order.status != "done");
         waitingTime = orders.isNotEmpty
             ? orders.first.orderNumber != 0
                 ? (orders.first.orderNumber! - 1) * 15
@@ -112,6 +115,38 @@ class OrderProvider extends ChangeNotifier {
         notifyListeners();
       } else {
         loadingState = LoadingState.error(response.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
+  Future<void> getQueue({String? storeId}) async {
+    try {
+      const LoadingState.loading();
+      notifyListeners();
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        loadingState = const LoadingState.error('You are not logged in');
+        notifyListeners();
+        return;
+      }
+
+      queueResponse =
+          await apiService.getQueue(token: token, storeId: storeId!);
+
+      if (queueResponse != null && queueResponse!.success) {
+        queue = queueResponse!.result;
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState =
+            LoadingState.error(queueResponse?.message ?? "Unknown error");
         notifyListeners();
       }
     } catch (e) {
