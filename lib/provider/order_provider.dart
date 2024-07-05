@@ -25,6 +25,7 @@ class OrderProvider extends ChangeNotifier {
   List<Order> orders = [];
   Order? upcomingTask;
   Order? currentTask;
+  Order? currentTaskCustomer;
 
   int pageItems = 1;
   int sizeItems = 10;
@@ -56,6 +57,8 @@ class OrderProvider extends ChangeNotifier {
       if (orderResponse!.success) {
         orders.addAll(
             orderResponse!.result!.data.where((order) => order.isMe == true));
+        currentTaskCustomer = orderResponse!.result!.data
+            .firstWhereOrNull((order) => order.isMe == true);
         waitingTime = orders.isNotEmpty
             ? orders.first.orderNumber != 0
                 ? (orders.first.orderNumber! - 1) * 15

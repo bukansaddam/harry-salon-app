@@ -265,7 +265,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                   ),
                   InkWell(
                     onTap: () {
-                      if (orderProvider.orderResponse?.result != null) {
+                      if (orderProvider.currentTaskCustomer != null) {
                         ToastMessage.show(context, 'You already ordered');
                       } else if (dropdownValue != null) {
                         context.goNamed('order', extra: dropdownValue);
@@ -348,10 +348,17 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                 ),
               ),
               loaded: () {
-                final myOrder = orderProvider.orders.first;
+                final myOrder = orderProvider.currentTaskCustomer;
                 final waitingTime = orderProvider.waitingTime;
-                if (myOrder.isMe == false) {
-                  return Container();
+                if (myOrder == null || myOrder.status == 'done') {
+                  return const SizedBox(
+                    height: 100,
+                    child: Center(
+                      child: Text(
+                        'You don\'t have any order right now',
+                      ),
+                    ),
+                  );
                 } else {
                   return Container(
                     width: double.infinity,
