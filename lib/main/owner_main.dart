@@ -6,6 +6,7 @@ import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
+import 'package:tugas_akhir_app/provider/order_history_provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
 import 'package:tugas_akhir_app/provider/review_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
@@ -30,6 +31,7 @@ import 'package:tugas_akhir_app/screen/owner/payslip/payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/review/review_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/service/add_service_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/service/service_screen.dart';
+import 'package:tugas_akhir_app/screen/owner/store/owner_detail_order_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/store/add_store_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/store/dashboard_screen.dart';
@@ -76,6 +78,9 @@ class OwnerApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<ReviewProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<OrderHistoryProvider>(),
         ),
       ],
       child: MaterialApp.router(
@@ -141,6 +146,16 @@ final GoRouter _router = GoRouter(
             return DetailStoreScreen(id: id!);
           },
           routes: [
+            GoRoute(
+              path: 'detail-order/:orderId',
+              name: 'detail_order',
+              builder: (context, state) {
+                final storeId = state.pathParameters['id'];
+                final orderId = state.pathParameters['orderId'];
+                return OwnerDetailHistoryScreen(
+                    storeId: storeId!, orderId: orderId!);
+              },
+            ),
             GoRoute(
               path: 'detail-statistic',
               name: 'detail_statistic',

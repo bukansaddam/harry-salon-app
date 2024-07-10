@@ -22,7 +22,9 @@ class OrderHistoryProvider extends ChangeNotifier {
 
   List<OrderHistory> orderHistories = [];
 
-  Future<void> getOrderHistory() async {
+  List<double> weeklyData = [];
+
+  Future<void> getOrderHistory({String storeId = ''}) async {
     try {
       if (page == 1) {
         loadingState = const LoadingState.loading();
@@ -36,10 +38,14 @@ class OrderHistoryProvider extends ChangeNotifier {
         token: token!,
         page: page,
         size: pageSize,
+        storeId: storeId,
       );
 
       if (orderHistoryResponse!.success) {
         orderHistories = orderHistoryResponse!.result.data;
+        weeklyData = orderHistoryResponse!.result.data
+            .map((history) => history.orderDate.weekday.toDouble() - 1)
+            .toList();
         loadingState = const LoadingState.loaded();
         notifyListeners();
       } else {
@@ -52,9 +58,9 @@ class OrderHistoryProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> refreshOrderHistory() async {
+  Future<void> refreshOrderHistory({String storeId = ''}) async {
     page = 1;
     orderHistories = [];
-    await getOrderHistory();
+    await getOrderHistory(storeId: storeId);
   }
 }

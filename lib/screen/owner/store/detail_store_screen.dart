@@ -11,12 +11,15 @@ import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
+import 'package:tugas_akhir_app/model/order_history.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
+import 'package:tugas_akhir_app/provider/order_history_provider.dart';
 import 'package:tugas_akhir_app/provider/review_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_detail_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/bar_graph/bar_graph.dart';
+import 'package:tugas_akhir_app/screen/widgets/card_history.dart';
 import 'package:tugas_akhir_app/screen/widgets/tab_item.dart';
 import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
@@ -37,6 +40,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
   CommodityProvider? commodityProvider;
   ServiceProvider? serviceProvider;
   ReviewProvider? reviewProvider;
+  OrderHistoryProvider? orderHistoryProvider;
   bool _isDataFetched = false;
 
   final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
@@ -55,13 +59,15 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
 
     if (!_isDataFetched) {
       if (isOwner) commodityProvider = Provider.of<CommodityProvider>(context);
-      serviceProvider = Provider.of<ServiceProvider>(context);
-      reviewProvider = Provider.of<ReviewProvider>(context);
+      serviceProvider = context.read<ServiceProvider>();
+      reviewProvider = context.read<ReviewProvider>();
+      orderHistoryProvider = context.read<OrderHistoryProvider>();
 
       Future.microtask(() {
         if (isOwner) commodityProvider!.refreshCommodity(storeId: widget.id);
         serviceProvider!.refreshService(storeId: widget.id);
         reviewProvider!.refreshReview(storeId: widget.id);
+        orderHistoryProvider!.refreshOrderHistory(storeId: widget.id);
       });
 
       _isDataFetched = true;
@@ -124,8 +130,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                 ),
                 TextButton(
                   onPressed: () {
-                    Provider.of<StoreDetailProvider>(context, listen: false)
-                        .activateStore();
+                    context.read<StoreDetailProvider>().activateStore();
                     context.pop();
                     ToastMessage.show(context, 'Store activated');
                   },
@@ -149,10 +154,10 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           authRepository: AuthRepository(),
           apiService: ApiService(),
           id: widget.id),
-      child: Consumer4<StoreDetailProvider, ServiceProvider, StoreProvider,
-          ReviewProvider>(
+      child: Consumer5<StoreDetailProvider, ServiceProvider, StoreProvider,
+          ReviewProvider, OrderHistoryProvider>(
         builder: (context, detailProvider, serviceProvider, storeProvider,
-            reviewProvider, child) {
+            reviewProvider, orderHistoryProvider, child) {
           final state = detailProvider.loadingState;
 
           return state.when(
@@ -171,6 +176,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                 serviceProvider,
                 storeProvider,
                 reviewProvider,
+                orderHistoryProvider,
               );
             },
             error: (message) => Center(
@@ -189,6 +195,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     ServiceProvider serviceProvider,
     StoreProvider storeProvider,
     ReviewProvider reviewProvider,
+    OrderHistoryProvider orderHistoryProvider,
   ) {
     return Scaffold(
       body: Stack(
@@ -381,6 +388,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                                 detailProvider,
                                 serviceProvider,
                                 reviewProvider,
+                                orderHistoryProvider,
                               )
                             : _buildCustomerSection(
                                 detailStore, serviceProvider, reviewProvider),
@@ -396,8 +404,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildTab(DetailStore detailStore, StoreDetailProvider detailProvider,
-      ServiceProvider serviceProvider, ReviewProvider reviewProvider) {
+  Widget _buildTab(
+      DetailStore detailStore,
+      StoreDetailProvider detailProvider,
+      ServiceProvider serviceProvider,
+      ReviewProvider reviewProvider,
+      OrderHistoryProvider orderHistoryProvider) {
     return Column(
       children: [
         DefaultTabController(
@@ -450,7 +462,10 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                 serviceProvider,
                 reviewProvider,
               ),
-              _buildReport(detailStore),
+              _buildReport(
+                detailStore,
+                orderHistoryProvider,
+              ),
             ],
           ),
         ),
@@ -494,7 +509,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildReport(DetailStore detailStore) {
+  Widget _buildReport(
+      DetailStore detailStore, OrderHistoryProvider orderHistoryProvider) {
     List<double> weeklyData = [];
     for (int i = 0; i < 7; i++) {
       weeklyData.add(Random().nextInt(90) + 10);
@@ -510,7 +526,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildStatisticSection(weeklyData, dates),
-        _buildHistorySection(),
+        const SizedBox(height: 16),
+        _buildHistorySection(orderHistoryProvider),
       ],
     );
   }
@@ -997,7 +1014,9 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildHistorySection() {
+  Widget _buildHistorySection(OrderHistoryProvider orderHistoryProvider) {
+    final state = orderHistoryProvider.loadingState;
+    final data = orderHistoryProvider.orderHistories;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1017,10 +1036,13 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
             ),
           ],
         ),
-        const SizedBox(height: 4),
-        const ListTile(
-          title: Text('Joe Bambang'),
-          leading: Icon(Icons.abc),
+        state.when(
+          initial: () => const SizedBox(),
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          loaded: () => _buildListHistory(data, orderHistoryProvider),
+          error: (e) => Text(e.toString()),
         ),
       ],
     );
@@ -1048,6 +1070,26 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
         const SizedBox(height: 12),
         _buildRatingSection(detailStore, reviewProvider)
       ],
+    );
+  }
+
+  _buildListHistory(
+      List<OrderHistory> data, OrderHistoryProvider orderHistoryProvider) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: min(data.length, 5),
+      itemBuilder: (context, index) {
+        return CardHistory(
+            padding: false,
+            history: data[index],
+            onTap: () {
+              context.goNamed('detail_order', pathParameters: {
+                'id': widget.id,
+                'orderId': data[index].id,
+              });
+            });
+      },
     );
   }
 }

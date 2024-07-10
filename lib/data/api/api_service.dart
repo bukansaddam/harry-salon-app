@@ -1005,10 +1005,11 @@ class ApiService {
     required String token,
     int page = 1,
     int size = 10,
+    String storeId = '',
   }) async {
     String url = '';
     if (isOwner) {
-      url = '$baseUrl$_history/store/?page=$page&pageSize=$size';
+      url = '$baseUrl$_history/store/$storeId?page=$page&pageSize=$size';
     } else if (isEmployee) {
       url = '$baseUrl$_history/employee/?page=$page&pageSize=$size';
     } else {

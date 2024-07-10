@@ -3,16 +3,24 @@ import 'package:intl/intl.dart';
 import 'package:tugas_akhir_app/model/order_history.dart';
 
 class CardHistory extends StatelessWidget {
-  const CardHistory({super.key, required this.history, required this.onTap});
+  const CardHistory(
+      {super.key,
+      required this.history,
+      required this.onTap,
+      this.padding = true});
 
   final OrderHistory history;
   final Function() onTap;
+  final bool padding;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListTile(
+          contentPadding: padding
+              ? const EdgeInsets.symmetric(horizontal: 16)
+              : const EdgeInsets.all(0),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -46,9 +54,9 @@ class CardHistory extends StatelessWidget {
           ),
           onTap: onTap,
         ),
-        const Divider(
-          indent: 16,
-          endIndent: 16,
+        Divider(
+          indent: padding ? 16 : 0,
+          endIndent: padding ? 16 : 0,
           height: 0,
         ),
       ],

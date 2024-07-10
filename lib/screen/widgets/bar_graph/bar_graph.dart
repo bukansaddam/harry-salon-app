@@ -39,13 +39,13 @@ class _MyBarGraphState extends State<MyBarGraph> {
   @override
   Widget build(BuildContext context) {
     BarData myBarData = BarData(
-      day1: widget.weeklyData[0],
-      day2: widget.weeklyData[1],
-      day3: widget.weeklyData[2],
-      day4: widget.weeklyData[3],
-      day5: widget.weeklyData[4],
-      day6: widget.weeklyData[5],
-      day7: widget.weeklyData[6],
+      day1: widget.weeklyData[0] ?? 0,
+      day2: widget.weeklyData[1] ?? 0,
+      day3: widget.weeklyData[2] ?? 0,
+      day4: widget.weeklyData[3] ?? 0,
+      day5: widget.weeklyData[4] ?? 0,
+      day6: widget.weeklyData[5] ?? 0,
+      day7: widget.weeklyData[6] ?? 0,
       date: widget.weeklyDate,
     );
     myBarData.initBarData();
