@@ -1028,7 +1028,10 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                context
+                    .goNamed('more_history', pathParameters: {'id': widget.id});
+              },
               child: const Text(
                 'see more',
                 style: TextStyle(color: Colors.blue),
@@ -1086,7 +1089,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
             onTap: () {
               context.goNamed('detail_order', pathParameters: {
                 'id': widget.id,
-                'orderId': data[index].id,
+                'orderId': data[index].orderId,
               });
             });
       },
