@@ -1006,8 +1006,16 @@ class ApiService {
     int page = 1,
     int size = 10,
   }) async {
+    String url = '';
+    if (isOwner) {
+      url = '$baseUrl$_history/store/?page=$page&pageSize=$size';
+    } else if (isEmployee) {
+      url = '$baseUrl$_history/employee/?page=$page&pageSize=$size';
+    } else {
+      url = '$baseUrl$_history/user/?page=$page&pageSize=$size';
+    }
     final response = await http.get(
-      Uri.parse('$baseUrl$_history/user/?page=$page&pageSize=$size'),
+      Uri.parse(url),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },
