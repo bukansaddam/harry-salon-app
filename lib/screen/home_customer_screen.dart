@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tugas_akhir_app/screen/customer/favorite_screen.dart';
 import 'package:tugas_akhir_app/screen/customer/homepage_customer_screen.dart';
+import 'package:tugas_akhir_app/screen/customer/order_history_screen.dart';
 import 'package:tugas_akhir_app/screen/customer/profile_screen.dart';
 
 class HomeCustomerScreen extends StatefulWidget {
@@ -30,12 +31,7 @@ class _HomeCustomerScreenState extends State<HomeCustomerScreen> {
   static const List<Widget> _screens = <Widget>[
     HomepageCustomerScreen(),
     FavoriteScreen(),
-    SafeArea(
-      child: Text(
-        'Profile',
-        style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-      ),
-    ),
+    OrderHistoryScreen(),
     ProfileScreen(),
   ];
 

@@ -15,6 +15,7 @@ import 'package:tugas_akhir_app/model/favorite.dart';
 import 'package:tugas_akhir_app/model/hairstyle.dart';
 import 'package:tugas_akhir_app/model/login.dart';
 import 'package:tugas_akhir_app/model/order.dart';
+import 'package:tugas_akhir_app/model/order_history.dart';
 import 'package:tugas_akhir_app/model/payslip.dart';
 import 'package:tugas_akhir_app/model/queue.dart';
 import 'package:tugas_akhir_app/model/register.dart';
@@ -41,6 +42,7 @@ class ApiService {
   static const String _owner = '/owners';
   static const String _order = '/orders';
   static const String _favorite = '/favorites';
+  static const String _history = '/histories/orders';
 
   final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
 
@@ -996,6 +998,24 @@ class ApiService {
       return UploadResponse.fromJson(jsonDecode(response.body));
     } else {
       return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<OrderHistoryResponse> getOrderHistory({
+    required String token,
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_history/user/?page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      return OrderHistoryResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw OrderHistoryResponse.fromJson(jsonDecode(response.body));
     }
   }
 }

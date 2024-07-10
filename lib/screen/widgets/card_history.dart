@@ -1,38 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:tugas_akhir_app/model/order_history.dart';
 
 class CardHistory extends StatelessWidget {
-  const CardHistory({super.key});
+  const CardHistory({super.key, required this.history, required this.onTap});
+
+  final OrderHistory history;
+  final Function() onTap;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListTile(
-          title: const Row(
+          title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Potong Rambut',
-                style: TextStyle(
+                history.serviceName,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
-                'Rp. 100.000',
-                style: TextStyle(
+                NumberFormat.currency(
+                  locale: 'id',
+                  symbol: 'Rp ',
+                  decimalDigits: 0,
+                ).format(history.servicePrice),
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          subtitle: const Column(
+          subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('12 April 2022, 18:30 WIB'),
-              Text('Description'),
+              Text(
+                DateFormat("d MMM yyyy, HH:mm:ss 'WIB'")
+                    .format(history.orderDate),
+              ),
+              Text(history.orderDescription),
             ],
           ),
-          onTap: () {},
+          onTap: onTap,
         ),
         const Divider(
           indent: 16,

@@ -12,9 +12,11 @@ import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_hairstyle.dart';
 
 class DetailOrderScreen extends StatefulWidget {
-  const DetailOrderScreen({super.key, required this.id});
+  const DetailOrderScreen(
+      {super.key, required this.id, this.title = 'Detail Order'});
 
   final String id;
+  final String title;
 
   @override
   State<DetailOrderScreen> createState() => _DetailOrderScreenState();
@@ -32,7 +34,7 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
       builder: (context, child) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Detail Order'),
+            title: Text(widget.title),
           ),
           body: Consumer<DetailOrderProvider>(
             builder: (context, detailProvider, child) {

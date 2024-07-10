@@ -5,6 +5,7 @@ import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/favorite_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
+import 'package:tugas_akhir_app/provider/order_history_provider.dart';
 import 'package:tugas_akhir_app/provider/order_provider.dart';
 import 'package:tugas_akhir_app/provider/review_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
@@ -58,6 +59,9 @@ class CustomerApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<FavoriteProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<OrderHistoryProvider>(),
         ),
       ],
       child: MaterialApp.router(
@@ -143,7 +147,8 @@ final GoRouter _router = GoRouter(
           name: 'detail_order',
           builder: (context, state) {
             final id = state.pathParameters['id'];
-            return DetailOrderScreen(id: id!);
+            final String? title = state.extra as String?;
+            return DetailOrderScreen(id: id!, title: title ?? 'Detail Order');
           },
         ),
         GoRoute(

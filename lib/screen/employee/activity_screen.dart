@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_akhir_app/model/order_history.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_attendance.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_history.dart';
 
@@ -62,7 +63,17 @@ class _ActivityScreenState extends State<ActivityScreen>
     return ListView.builder(
       itemCount: 10,
       itemBuilder: (context, index) {
-        return const CardHistory();
+        return CardHistory(
+          history: OrderHistory(
+              id: "",
+              orderId: "",
+              serviceName: "",
+              servicePrice: 12,
+              orderDate: DateTime.now(),
+              orderDescription: "",
+              status: ""),
+          onTap: () {},
+        );
       },
     );
   }
