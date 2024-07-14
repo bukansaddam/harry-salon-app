@@ -32,7 +32,9 @@ class CommodityProvider extends ChangeNotifier {
   int sizeItems = 10;
 
   Future<void> getAllCommodity(
-      {String? searchValue, required String storeId}) async {
+      {String? searchValue,
+      required String storeId,
+      String? category = ''}) async {
     try {
       if (pageItems == 1) {
         loadingState = const LoadingState.loading();
@@ -48,10 +50,13 @@ class CommodityProvider extends ChangeNotifier {
         return;
       }
 
+      if (category == 'All') category = '';
+
       commodityResponse = await apiService.getCommodity(
         token: token,
         storeId: storeId,
         name: searchValue!,
+        category: category!,
       );
 
       if (commodityResponse!.success) {
@@ -75,10 +80,12 @@ class CommodityProvider extends ChangeNotifier {
   Future<void> refreshCommodity({
     required String storeId,
     String searchValue = '',
+    String category = '',
   }) async {
     pageItems = 1;
     commodities.clear();
-    await getAllCommodity(storeId: storeId, searchValue: searchValue);
+    await getAllCommodity(
+        storeId: storeId, searchValue: searchValue, category: category);
   }
 
   Future<void> createCommodity({

@@ -26,6 +26,10 @@ class _CommodityScreenState extends State<CommodityScreen> {
   bool get isOwner => actor == 'owner';
   bool get isEmployee => actor == 'employee';
 
+  List<String> category = ['All', 'Hair Care', 'Hair Styling'];
+
+  String selectedCategory = '';
+
   @override
   void initState() {
     super.initState();
@@ -56,9 +60,10 @@ class _CommodityScreenState extends State<CommodityScreen> {
   void _onSearchChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 1000), () {
-      context
-          .read<CommodityProvider>()
-          .refreshCommodity(storeId: widget.storeId, searchValue: query);
+      context.read<CommodityProvider>().refreshCommodity(
+          storeId: widget.storeId,
+          searchValue: query,
+          category: selectedCategory);
     });
   }
 
@@ -70,6 +75,7 @@ class _CommodityScreenState extends State<CommodityScreen> {
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.all(16),
@@ -86,6 +92,39 @@ class _CommodityScreenState extends State<CommodityScreen> {
               ],
             ),
           ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: const Color(0xFFF3F5F9),
+              ),
+              child: DropdownButton<String>(
+                value: selectedCategory.isNotEmpty
+                    ? selectedCategory
+                    : category.first,
+                underline: const SizedBox(),
+                items: category.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? value) {
+                  setState(() {
+                    selectedCategory = value!;
+                  });
+                  context.read<CommodityProvider>().refreshCommodity(
+                        storeId: widget.storeId,
+                        category: selectedCategory,
+                      );
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),

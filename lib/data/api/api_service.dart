@@ -487,12 +487,13 @@ class ApiService {
     required String token,
     required String storeId,
     String name = '',
+    String category = '',
     int page = 1,
     int size = 10,
   }) async {
     final response = await http.get(
       Uri.parse(
-          '$baseUrl$_commodity/store/$storeId?name=$name&page=$page&pageSize=$size'),
+          '$baseUrl$_commodity/store/$storeId?name=$name&category=$category&page=$page&pageSize=$size'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },

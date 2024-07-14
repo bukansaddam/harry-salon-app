@@ -192,6 +192,8 @@ class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
             ),
           ),
           const SizedBox(height: 8),
+          Text('Category: ${detailCommodity.category}'),
+          const SizedBox(height: 8),
           const Text('Current Stock'),
           const SizedBox(height: 8),
           _buildStockSection(context, provider),

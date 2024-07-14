@@ -46,7 +46,9 @@ _$CommodityImpl _$$CommodityImplFromJson(Map<String, dynamic> json) =>
       image: json['image'] as String,
       name: json['name'] as String,
       stock: (json['stock'] as num?)?.toInt(),
+      category: json['category'] as String,
       storeId: json['storeId'] as String,
+      isDeleted: json['isDeleted'] as bool,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -57,7 +59,9 @@ Map<String, dynamic> _$$CommodityImplToJson(_$CommodityImpl instance) =>
       'image': instance.image,
       'name': instance.name,
       'stock': instance.stock,
+      'category': instance.category,
       'storeId': instance.storeId,
+      'isDeleted': instance.isDeleted,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };

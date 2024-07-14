@@ -42,11 +42,14 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
     totalValue = 0;
 
     Future.microtask(() async {
-      orderHistoryProvider!.refreshOrderHistory(
+      await orderHistoryProvider!.refreshOrderHistory(
         storeId: widget.storeId,
         dateStart: firstDate.toString(),
         dateEnd: lastDate.toString(),
       );
+      setState(() {
+        graphData(orderHistoryProvider);
+      });
     });
   }
 
@@ -58,7 +61,7 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
     totalValue =
         weeklyData.fold(0, (previousValue, element) => previousValue + element);
 
-    List<int> dates = orderHistoryProvider.dates;
+    List<int> dates = [];
     DateTime currentDate = firstDate;
     while (!currentDate.isAfter(lastDate)) {
       dates.add(int.parse(DateFormat('dd').format(currentDate)));
@@ -138,7 +141,7 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
                 showDateRangePicker(
                   context: context,
                   firstDate: DateTime(2020, 4, 1),
-                  lastDate: lastDate,
+                  lastDate: DateTime.now(),
                   initialDateRange: DateTimeRange(
                     start: firstDate,
                     end: lastDate,
@@ -171,6 +174,7 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
                       dateStart: firstDate.toString(),
                       dateEnd: lastDate.toString(),
                     );
+                    historyProvider.clearSelectedDaysOrder();
                     setState(() {
                       graphData(historyProvider);
                     });
@@ -192,7 +196,9 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
               ),
             ),
             Text(
-              '${totalValue.toInt()} Order',
+              historyProvider.selectedDaysOrder.isNotEmpty
+                  ? '${historyProvider.selectedDaysOrder.length.toInt()} Order'
+                  : '${totalValue.toInt()} Order',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -236,11 +242,10 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
                               0,
                               (previousValue, element) =>
                                   previousValue + element);
-                          // orderHistoryProvider!
-                          //     .refreshOrderHistory(date: firstDate.day);
                           orderHistoryProvider!.clearSelectedDaysOrder();
                         });
                       } else {
+                        debugPrint('Selected Value: $y');
                         setState(() {
                           totalValue = y.toDouble();
                           orderHistoryProvider!.getOrderByDate(date: x);

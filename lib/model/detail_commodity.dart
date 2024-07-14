@@ -21,8 +21,10 @@ class DetailCommodity with _$DetailCommodity {
     required String id,
     required String image,
     required String name,
+    required String category,
     required int? stock,
     required String storeId,
+    required bool isDeleted,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _DetailCommodity;

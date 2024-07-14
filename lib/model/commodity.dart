@@ -34,7 +34,9 @@ class Commodity with _$Commodity {
     required String image,
     required String name,
     required int? stock,
+    required String category,
     required String storeId,
+    required bool isDeleted,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _Commodity;
