@@ -210,6 +210,7 @@ OrderHistoryResult _$OrderHistoryResultFromJson(Map<String, dynamic> json) {
 mixin _$OrderHistoryResult {
   int? get totalCount => throw _privateConstructorUsedError;
   int? get totalPages => throw _privateConstructorUsedError;
+  List<Graph>? get graph => throw _privateConstructorUsedError;
   List<OrderHistory> get data => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -224,7 +225,11 @@ abstract class $OrderHistoryResultCopyWith<$Res> {
           OrderHistoryResult value, $Res Function(OrderHistoryResult) then) =
       _$OrderHistoryResultCopyWithImpl<$Res, OrderHistoryResult>;
   @useResult
-  $Res call({int? totalCount, int? totalPages, List<OrderHistory> data});
+  $Res call(
+      {int? totalCount,
+      int? totalPages,
+      List<Graph>? graph,
+      List<OrderHistory> data});
 }
 
 /// @nodoc
@@ -242,6 +247,7 @@ class _$OrderHistoryResultCopyWithImpl<$Res, $Val extends OrderHistoryResult>
   $Res call({
     Object? totalCount = freezed,
     Object? totalPages = freezed,
+    Object? graph = freezed,
     Object? data = null,
   }) {
     return _then(_value.copyWith(
@@ -253,6 +259,10 @@ class _$OrderHistoryResultCopyWithImpl<$Res, $Val extends OrderHistoryResult>
           ? _value.totalPages
           : totalPages // ignore: cast_nullable_to_non_nullable
               as int?,
+      graph: freezed == graph
+          ? _value.graph
+          : graph // ignore: cast_nullable_to_non_nullable
+              as List<Graph>?,
       data: null == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
@@ -269,7 +279,11 @@ abstract class _$$OrderHistoryResultImplCopyWith<$Res>
       __$$OrderHistoryResultImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int? totalCount, int? totalPages, List<OrderHistory> data});
+  $Res call(
+      {int? totalCount,
+      int? totalPages,
+      List<Graph>? graph,
+      List<OrderHistory> data});
 }
 
 /// @nodoc
@@ -285,6 +299,7 @@ class __$$OrderHistoryResultImplCopyWithImpl<$Res>
   $Res call({
     Object? totalCount = freezed,
     Object? totalPages = freezed,
+    Object? graph = freezed,
     Object? data = null,
   }) {
     return _then(_$OrderHistoryResultImpl(
@@ -296,6 +311,10 @@ class __$$OrderHistoryResultImplCopyWithImpl<$Res>
           ? _value.totalPages
           : totalPages // ignore: cast_nullable_to_non_nullable
               as int?,
+      graph: freezed == graph
+          ? _value._graph
+          : graph // ignore: cast_nullable_to_non_nullable
+              as List<Graph>?,
       data: null == data
           ? _value._data
           : data // ignore: cast_nullable_to_non_nullable
@@ -310,8 +329,10 @@ class _$OrderHistoryResultImpl implements _OrderHistoryResult {
   const _$OrderHistoryResultImpl(
       {required this.totalCount,
       required this.totalPages,
+      required final List<Graph>? graph,
       required final List<OrderHistory> data})
-      : _data = data;
+      : _graph = graph,
+        _data = data;
 
   factory _$OrderHistoryResultImpl.fromJson(Map<String, dynamic> json) =>
       _$$OrderHistoryResultImplFromJson(json);
@@ -320,6 +341,16 @@ class _$OrderHistoryResultImpl implements _OrderHistoryResult {
   final int? totalCount;
   @override
   final int? totalPages;
+  final List<Graph>? _graph;
+  @override
+  List<Graph>? get graph {
+    final value = _graph;
+    if (value == null) return null;
+    if (_graph is EqualUnmodifiableListView) return _graph;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<OrderHistory> _data;
   @override
   List<OrderHistory> get data {
@@ -330,7 +361,7 @@ class _$OrderHistoryResultImpl implements _OrderHistoryResult {
 
   @override
   String toString() {
-    return 'OrderHistoryResult(totalCount: $totalCount, totalPages: $totalPages, data: $data)';
+    return 'OrderHistoryResult(totalCount: $totalCount, totalPages: $totalPages, graph: $graph, data: $data)';
   }
 
   @override
@@ -342,12 +373,17 @@ class _$OrderHistoryResultImpl implements _OrderHistoryResult {
                 other.totalCount == totalCount) &&
             (identical(other.totalPages, totalPages) ||
                 other.totalPages == totalPages) &&
+            const DeepCollectionEquality().equals(other._graph, _graph) &&
             const DeepCollectionEquality().equals(other._data, _data));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, totalCount, totalPages,
+  int get hashCode => Object.hash(
+      runtimeType,
+      totalCount,
+      totalPages,
+      const DeepCollectionEquality().hash(_graph),
       const DeepCollectionEquality().hash(_data));
 
   @JsonKey(ignore: true)
@@ -369,6 +405,7 @@ abstract class _OrderHistoryResult implements OrderHistoryResult {
   const factory _OrderHistoryResult(
       {required final int? totalCount,
       required final int? totalPages,
+      required final List<Graph>? graph,
       required final List<OrderHistory> data}) = _$OrderHistoryResultImpl;
 
   factory _OrderHistoryResult.fromJson(Map<String, dynamic> json) =
@@ -378,6 +415,8 @@ abstract class _OrderHistoryResult implements OrderHistoryResult {
   int? get totalCount;
   @override
   int? get totalPages;
+  @override
+  List<Graph>? get graph;
   @override
   List<OrderHistory> get data;
   @override
@@ -648,5 +687,154 @@ abstract class _OrderHistory implements OrderHistory {
   @override
   @JsonKey(ignore: true)
   _$$OrderHistoryImplCopyWith<_$OrderHistoryImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+Graph _$GraphFromJson(Map<String, dynamic> json) {
+  return _Graph.fromJson(json);
+}
+
+/// @nodoc
+mixin _$Graph {
+  String get date => throw _privateConstructorUsedError;
+  int get count => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $GraphCopyWith<Graph> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $GraphCopyWith<$Res> {
+  factory $GraphCopyWith(Graph value, $Res Function(Graph) then) =
+      _$GraphCopyWithImpl<$Res, Graph>;
+  @useResult
+  $Res call({String date, int count});
+}
+
+/// @nodoc
+class _$GraphCopyWithImpl<$Res, $Val extends Graph>
+    implements $GraphCopyWith<$Res> {
+  _$GraphCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? date = null,
+    Object? count = null,
+  }) {
+    return _then(_value.copyWith(
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String,
+      count: null == count
+          ? _value.count
+          : count // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$GraphImplCopyWith<$Res> implements $GraphCopyWith<$Res> {
+  factory _$$GraphImplCopyWith(
+          _$GraphImpl value, $Res Function(_$GraphImpl) then) =
+      __$$GraphImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String date, int count});
+}
+
+/// @nodoc
+class __$$GraphImplCopyWithImpl<$Res>
+    extends _$GraphCopyWithImpl<$Res, _$GraphImpl>
+    implements _$$GraphImplCopyWith<$Res> {
+  __$$GraphImplCopyWithImpl(
+      _$GraphImpl _value, $Res Function(_$GraphImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? date = null,
+    Object? count = null,
+  }) {
+    return _then(_$GraphImpl(
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String,
+      count: null == count
+          ? _value.count
+          : count // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$GraphImpl implements _Graph {
+  const _$GraphImpl({required this.date, required this.count});
+
+  factory _$GraphImpl.fromJson(Map<String, dynamic> json) =>
+      _$$GraphImplFromJson(json);
+
+  @override
+  final String date;
+  @override
+  final int count;
+
+  @override
+  String toString() {
+    return 'Graph(date: $date, count: $count)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$GraphImpl &&
+            (identical(other.date, date) || other.date == date) &&
+            (identical(other.count, count) || other.count == count));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, date, count);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$GraphImplCopyWith<_$GraphImpl> get copyWith =>
+      __$$GraphImplCopyWithImpl<_$GraphImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$GraphImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _Graph implements Graph {
+  const factory _Graph({required final String date, required final int count}) =
+      _$GraphImpl;
+
+  factory _Graph.fromJson(Map<String, dynamic> json) = _$GraphImpl.fromJson;
+
+  @override
+  String get date;
+  @override
+  int get count;
+  @override
+  @JsonKey(ignore: true)
+  _$$GraphImplCopyWith<_$GraphImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

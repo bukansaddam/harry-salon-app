@@ -28,6 +28,9 @@ _$OrderHistoryResultImpl _$$OrderHistoryResultImplFromJson(
     _$OrderHistoryResultImpl(
       totalCount: (json['totalCount'] as num?)?.toInt(),
       totalPages: (json['totalPages'] as num?)?.toInt(),
+      graph: (json['graph'] as List<dynamic>?)
+          ?.map((e) => Graph.fromJson(e as Map<String, dynamic>))
+          .toList(),
       data: (json['data'] as List<dynamic>)
           .map((e) => OrderHistory.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -38,6 +41,7 @@ Map<String, dynamic> _$$OrderHistoryResultImplToJson(
     <String, dynamic>{
       'totalCount': instance.totalCount,
       'totalPages': instance.totalPages,
+      'graph': instance.graph,
       'data': instance.data,
     };
 
@@ -61,4 +65,15 @@ Map<String, dynamic> _$$OrderHistoryImplToJson(_$OrderHistoryImpl instance) =>
       'orderDate': instance.orderDate.toIso8601String(),
       'orderDescription': instance.orderDescription,
       'status': instance.status,
+    };
+
+_$GraphImpl _$$GraphImplFromJson(Map<String, dynamic> json) => _$GraphImpl(
+      date: json['date'] as String,
+      count: (json['count'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$GraphImplToJson(_$GraphImpl instance) =>
+    <String, dynamic>{
+      'date': instance.date,
+      'count': instance.count,
     };

@@ -1,14 +1,18 @@
-import 'dart:math';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:tugas_akhir_app/provider/order_history_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/bar_graph/bar_data.dart';
 import 'package:tugas_akhir_app/screen/widgets/bar_graph/bar_graph.dart';
+import 'package:tugas_akhir_app/screen/widgets/card_history.dart';
 import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class DetailStatisticScreen extends StatefulWidget {
-  const DetailStatisticScreen({super.key});
+  const DetailStatisticScreen({super.key, required this.storeId});
+
+  final String storeId;
 
   @override
   State<DetailStatisticScreen> createState() => _DetailStatisticScreenState();
@@ -17,25 +21,44 @@ class DetailStatisticScreen extends StatefulWidget {
 class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
   late DateTime firstDate;
   late DateTime lastDate;
-  late String formatedfirstDate;
-  late String formatedlastDate;
+  late String? formatedfirstDate;
+  late String? formatedlastDate;
   late double totalValue;
 
   List<double> weeklyData = [];
 
+  OrderHistoryProvider? orderHistoryProvider;
+
   @override
   void initState() {
-    firstDate = DateTime.now().subtract(const Duration(days: 7));
-    lastDate = DateTime.now().subtract(const Duration(days: 1));
+    super.initState();
+    orderHistoryProvider = context.read<OrderHistoryProvider>();
+
+    firstDate = DateTime.now().subtract(const Duration(days: 6));
+    lastDate = DateTime.now();
+
     formatedfirstDate = DateFormat('dd MMM').format(firstDate);
     formatedlastDate = DateFormat('dd MMM').format(lastDate);
-    for (int i = 0; i < 7; i++) {
-      weeklyData.add(Random().nextInt(90) + 10);
-    }
+    totalValue = 0;
+
+    Future.microtask(() async {
+      orderHistoryProvider!.refreshOrderHistory(
+        storeId: widget.storeId,
+        dateStart: firstDate.toString(),
+        dateEnd: lastDate.toString(),
+      );
+    });
+  }
+
+  void graphData(OrderHistoryProvider? orderHistoryProvider) {
+    formatedfirstDate = DateFormat('dd MMM').format(firstDate);
+    formatedlastDate = DateFormat('dd MMM').format(lastDate);
+    weeklyData = orderHistoryProvider!.weeklyData;
+    debugPrint('Weekly data: $weeklyData');
     totalValue =
         weeklyData.fold(0, (previousValue, element) => previousValue + element);
 
-    List<int> dates = [];
+    List<int> dates = orderHistoryProvider.dates;
     DateTime currentDate = firstDate;
     while (!currentDate.isAfter(lastDate)) {
       dates.add(int.parse(DateFormat('dd').format(currentDate)));
@@ -55,8 +78,6 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
       );
       barData.initBarData();
     }
-
-    super.initState();
   }
 
   @override
@@ -66,12 +87,26 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
         title: const Text('Statistics'),
       ),
       body: SingleChildScrollView(
-        child: _buildBody(context),
+        child: Consumer<OrderHistoryProvider>(
+          builder: (context, historyProvider, child) {
+            final state = historyProvider.loadingState;
+            return state.when(
+              initial: () => const Center(child: CircularProgressIndicator()),
+              loading: () => const SizedBox(),
+              loaded: () {
+                graphData(historyProvider);
+                return _buildBody(context, historyProvider);
+              },
+              error: (error) => Center(child: Text(error.toString())),
+            );
+          },
+        ),
       ),
     );
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildBody(
+      BuildContext context, OrderHistoryProvider historyProvider) {
     List<int> dates = [];
     DateTime currentDate = firstDate;
     while (!currentDate.isAfter(lastDate)) {
@@ -84,145 +119,188 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () {
-                  showDateRangePicker(
-                    context: context,
-                    firstDate: DateTime(2020, 4, 1),
-                    lastDate: DateTime.now().subtract(
-                      const Duration(days: 1),
-                    ),
-                    initialDateRange: DateTimeRange(
-                      start: firstDate,
-                      end: lastDate,
-                    ),
-                    builder: (context, child) {
-                      return Theme(
-                        data: Theme.of(context).copyWith(
-                          colorScheme: const ColorScheme.light(
-                            primary: Colors.blue,
-                            onPrimary: Colors.white,
-                            surface: Colors.blue,
-                            onSurface: Colors.black,
-                            onSecondary: Colors.black,
-                            secondary: Colors.blue,
-                          ),
-                        ),
-                        child: child!,
-                      );
-                    },
-                  ).then(
-                    (value) => setState(
-                      () {
-                        if (value != null && value.duration.inDays <= 7) {
-                          setState(() {
-                            firstDate = value.start;
-                            lastDate = value.end;
-                            formatedfirstDate =
-                                DateFormat('dd MMM').format(firstDate);
-                            formatedlastDate =
-                                DateFormat('dd MMM').format(lastDate);
-                            weeklyData.clear();
-                            for (int i = 0; i < 7; i++) {
-                              weeklyData.add(Random().nextInt(90) + 10);
-                            }
-                            totalValue = weeklyData.fold(
-                                0,
-                                (previousValue, element) =>
-                                    previousValue + element);
-                          });
-                        } else if (value != null) {
-                          ToastMessage.show(
-                            context,
-                            'Date range must be less than 7 days',
-                          );
-                        }
-                      },
-                    ),
-                  );
-                },
-                child: Text(
-                  '$formatedfirstDate - $formatedlastDate',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Color(0xFF3B59BA),
+          _buildStatSection(context, dates, historyProvider),
+          _buildOrderSection(historyProvider),
+        ],
+      ),
+    );
+  }
+
+  Column _buildStatSection(BuildContext context, List<int> dates,
+      OrderHistoryProvider historyProvider) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton(
+              onPressed: () {
+                showDateRangePicker(
+                  context: context,
+                  firstDate: DateTime(2020, 4, 1),
+                  lastDate: lastDate,
+                  initialDateRange: DateTimeRange(
+                    start: firstDate,
+                    end: lastDate,
                   ),
-                ),
-              ),
-              Text(
-                '${totalValue.toInt()} Order',
+                  builder: (context, child) {
+                    return Theme(
+                      data: Theme.of(context).copyWith(
+                        colorScheme: const ColorScheme.light(
+                          primary: Colors.blue,
+                          onPrimary: Colors.white,
+                          surface: Colors.blue,
+                          onSurface: Colors.black,
+                          onSecondary: Colors.black,
+                          secondary: Colors.blue,
+                        ),
+                      ),
+                      child: child!,
+                    );
+                  },
+                ).then((value) {
+                  if (value != null && value.duration.inDays <= 7) {
+                    setState(() {
+                      firstDate = value.start;
+                      lastDate = value.end;
+                      debugPrint(firstDate.toString());
+                      debugPrint(lastDate.toString());
+                    });
+                    historyProvider.refreshOrderHistory(
+                      storeId: widget.storeId,
+                      dateStart: firstDate.toString(),
+                      dateEnd: lastDate.toString(),
+                    );
+                    setState(() {
+                      graphData(historyProvider);
+                    });
+                  } else if (value != null) {
+                    ToastMessage.show(
+                      context,
+                      'Date range must be less than 7 days',
+                    );
+                  }
+                });
+              },
+              child: Text(
+                '$formatedfirstDate - $formatedlastDate',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                   color: Color(0xFF3B59BA),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const Center(
-            child: Text(
-              'Rp 1.000.000',
-              style: TextStyle(
+            ),
+            Text(
+              '${totalValue.toInt()} Order',
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 24,
+                fontSize: 16,
                 color: Color(0xFF3B59BA),
               ),
             ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Center(
+          child: Text(
+            NumberFormat.currency(locale: 'id', symbol: 'Rp.', decimalDigits: 0)
+                .format(historyProvider.totalIncome),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+              color: Color(0xFF3B59BA),
+            ),
           ),
-          const Center(
-            child: Text('Earning total in this week'),
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            height: 200,
-            child: (weeklyData.length == 7 && dates.length == 7)
-                ? MyBarGraph(
-                    weeklyData: weeklyData,
-                    weeklyDate: dates,
-                    onTapedBar: (event, response, index, isPressed) {
-                      if (response != null &&
-                          response.spot != null &&
-                          event is FlTapUpEvent) {
-                        final y = response.spot!.touchedRodData.toY;
-                        if (isPressed) {
-                          setState(() {
-                            totalValue = weeklyData.fold(
-                                0,
-                                (previousValue, element) =>
-                                    previousValue + element);
-                          });
-                        } else {
-                          setState(() {
-                            totalValue = y.toDouble();
-                          });
-                        }
+        ),
+        const Center(
+          child: Text('Earning total in this week'),
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          width: double.infinity,
+          height: 200,
+          child: (weeklyData.length == 7 && dates.length == 7)
+              ? MyBarGraph(
+                  weeklyData: context.watch<OrderHistoryProvider>().weeklyData,
+                  weeklyDate: dates,
+                  onTapedBar: (event, response, index, isPressed) {
+                    if (response != null &&
+                        response.spot != null &&
+                        event is FlTapUpEvent) {
+                      final y = response.spot!.touchedRodData.toY;
+                      final x = response.spot!.touchedBarGroup.x;
+                      if (isPressed) {
+                        setState(() {
+                          totalValue = weeklyData.fold(
+                              0,
+                              (previousValue, element) =>
+                                  previousValue + element);
+                          // orderHistoryProvider!
+                          //     .refreshOrderHistory(date: firstDate.day);
+                          orderHistoryProvider!.clearSelectedDaysOrder();
+                        });
+                      } else {
+                        setState(() {
+                          totalValue = y.toDouble();
+                          orderHistoryProvider!.getOrderByDate(date: x);
+                        });
                       }
-                    },
-                    onPressed: true,
-                    barWidth: 40,
-                    showLeftTitles: true,
-                  )
-                : const Center(
-                    child: Text('Data tidak lengkap, harap periksa inputan.')),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Order',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          const SizedBox(height: 4),
-          const ListTile(
-            title: Text('Joe Bambang'),
-            leading: Icon(Icons.abc),
-          ),
-        ],
-      ),
+                    }
+                  },
+                  onPressed: true,
+                  barWidth: 40,
+                  showLeftTitles: true,
+                )
+              : const Center(
+                  child: Text('Data tidak lengkap, harap periksa inputan.'),
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOrderSection(OrderHistoryProvider historyProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        const Text(
+          'Order',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        const SizedBox(height: 4),
+        _buildListOrder(historyProvider),
+      ],
+    );
+  }
+
+  Widget _buildListOrder(OrderHistoryProvider historyProvider) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount:
+          context.watch<OrderHistoryProvider>().selectedDaysOrder.isNotEmpty
+              ? historyProvider.selectedDaysOrder.length
+              : historyProvider.orderHistories.length,
+      itemBuilder: (context, index) {
+        final orderHistory =
+            context.watch<OrderHistoryProvider>().selectedDaysOrder.isNotEmpty
+                ? historyProvider.selectedDaysOrder[index]
+                : historyProvider.orderHistories[index];
+        return CardHistory(
+          history: orderHistory,
+          padding: false,
+          onTap: () {
+            context.goNamed('detail_order2',
+                pathParameters: {
+                  'id': widget.storeId,
+                  'orderId': orderHistory.orderId,
+                },
+                extra: 'Detail History');
+          },
+        );
+      },
     );
   }
 }

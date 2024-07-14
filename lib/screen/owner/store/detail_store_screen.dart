@@ -47,6 +47,9 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
 
   bool get isOwner => actor == 'owner';
 
+  DateTime now = DateTime.now();
+  DateTime weekAgo = DateTime.now().subtract(const Duration(days: 6));
+
   @override
   void initState() {
     super.initState();
@@ -67,7 +70,11 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
         if (isOwner) commodityProvider!.refreshCommodity(storeId: widget.id);
         serviceProvider!.refreshService(storeId: widget.id);
         reviewProvider!.refreshReview(storeId: widget.id);
-        orderHistoryProvider!.refreshOrderHistory(storeId: widget.id);
+        orderHistoryProvider!.refreshOrderHistory(
+          storeId: widget.id,
+          dateStart: weekAgo.toString(),
+          dateEnd: now.toString(),
+        );
       });
 
       _isDataFetched = true;
@@ -511,21 +518,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
 
   Widget _buildReport(
       DetailStore detailStore, OrderHistoryProvider orderHistoryProvider) {
-    List<double> weeklyData = [];
-    for (int i = 0; i < 7; i++) {
-      weeklyData.add(Random().nextInt(90) + 10);
-    }
-    List<int> dates = [];
-    DateTime now = DateTime.now().subtract(const Duration(days: 1));
-    for (int i = 6; i >= 0; i--) {
-      DateTime date = now.subtract(Duration(days: i));
-      dates.add(date.day);
-    }
-
+    final weeklyData = orderHistoryProvider.weeklyData;
+    final dates = orderHistoryProvider.dates;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildStatisticSection(weeklyData, dates),
+        _buildStatisticSection(weeklyData, dates, orderHistoryProvider),
         const SizedBox(height: 16),
         _buildHistorySection(orderHistoryProvider),
       ],
@@ -906,7 +904,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildStatisticSection(List<double> weeklyData, List<int> dates) {
+  Widget _buildStatisticSection(List<double> weeklyData, List<int> dates,
+      OrderHistoryProvider orderHistoryProvider) {
     return InkWell(
       onTap: () {
         context.goNamed('detail_statistic', pathParameters: {'id': widget.id});
@@ -930,7 +929,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                     Expanded(
                       flex: 1,
                       child: Text(
-                        '${DateFormat('dd MMM').format(DateTime.now().subtract(const Duration(days: 7)))} - Yesterday',
+                        '${DateFormat('dd MMM').format(DateTime.now().subtract(const Duration(days: 6)))} - Today',
                         style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -971,35 +970,41 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                 ),
               ),
               const SizedBox(width: 16),
-              const Expanded(
+              Expanded(
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Total Income',
                     style: TextStyle(
                       color: Colors.black,
                     ),
                   ),
                   Text(
-                    'Rp 1.000.000',
-                    style: TextStyle(
+                    NumberFormat.currency(
+                      locale: 'id',
+                      symbol: 'Rp ',
+                      decimalDigits: 0,
+                    ).format(orderHistoryProvider.totalIncome),
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 23,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8),
-                  Text(
+                  const SizedBox(height: 8),
+                  const Text(
                     'Total Order',
                     style: TextStyle(
                       color: Colors.black,
                     ),
                   ),
                   Text(
-                    '1000',
-                    style: TextStyle(
+                    orderHistoryProvider.orderHistoryResponse?.result.totalCount
+                            .toString() ??
+                        '0',
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,

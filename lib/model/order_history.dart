@@ -20,6 +20,7 @@ class OrderHistoryResult with _$OrderHistoryResult {
   const factory OrderHistoryResult({
     required int? totalCount,
     required int? totalPages,
+    required List<Graph>? graph,
     required List<OrderHistory> data,
   }) = _OrderHistoryResult;
 
@@ -41,4 +42,14 @@ class OrderHistory with _$OrderHistory {
 
   factory OrderHistory.fromJson(Map<String, dynamic> json) =>
       _$OrderHistoryFromJson(json);
+}
+
+@freezed
+class Graph with _$Graph {
+  const factory Graph({
+    required String date,
+    required int count,
+  }) = _Graph;
+
+  factory Graph.fromJson(Map<String, dynamic> json) => _$GraphFromJson(json);
 }

@@ -53,7 +53,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
     return BarChart(
       BarChartData(
         minY: 0,
-        maxY: 100,
+        maxY: 30,
         gridData: const FlGridData(show: false),
         borderData: FlBorderData(show: false),
         titlesData: FlTitlesData(

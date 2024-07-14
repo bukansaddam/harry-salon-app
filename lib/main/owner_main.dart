@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
+import 'package:tugas_akhir_app/provider/favorite_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/order_history_provider.dart';
@@ -86,6 +87,9 @@ class OwnerApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<OrderProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<FavoriteProvider>(),
         ),
       ],
       child: MaterialApp.router(
@@ -170,10 +174,24 @@ final GoRouter _router = GoRouter(
               },
             ),
             GoRoute(
-              path: 'detail-statistic',
-              name: 'detail_statistic',
-              builder: (context, state) => const DetailStatisticScreen(),
-            ),
+                path: 'detail-statistic',
+                name: 'detail_statistic',
+                builder: (context, state) {
+                  final storeId = state.pathParameters['id'];
+                  return DetailStatisticScreen(storeId: storeId!);
+                },
+                routes: [
+                  GoRoute(
+                    path: 'detail-order/:orderId',
+                    name: 'detail_order2',
+                    builder: (context, state) {
+                      final storeId = state.pathParameters['id'];
+                      final orderId = state.pathParameters['orderId'];
+                      return OwnerDetailHistoryScreen(
+                          storeId: storeId!, orderId: orderId!);
+                    },
+                  ),
+                ]),
             GoRoute(
               path: 'more-employee',
               name: 'more_employee',

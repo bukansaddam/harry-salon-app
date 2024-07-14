@@ -21,10 +21,16 @@ class OrderHistoryProvider extends ChangeNotifier {
   int pageSize = 10;
 
   List<OrderHistory> orderHistories = [];
+  List<OrderHistory> selectedDaysOrder = [];
 
   List<double> weeklyData = [];
+  List<int> dates = [];
 
-  Future<void> getOrderHistory({String storeId = ''}) async {
+  int totalOrder = 0;
+  int totalIncome = 0;
+
+  Future<void> getOrderHistory(
+      {String storeId = '', String dateStart = '', String dateEnd = ''}) async {
     try {
       if (page == 1) {
         loadingState = const LoadingState.loading();
@@ -39,13 +45,55 @@ class OrderHistoryProvider extends ChangeNotifier {
         page: page,
         size: pageSize,
         storeId: storeId,
+        dateStart: dateStart,
+        dateEnd: dateEnd,
       );
 
       if (orderHistoryResponse!.success) {
+        weeklyData = [];
         orderHistories = orderHistoryResponse!.result.data;
-        weeklyData = orderHistoryResponse!.result.data
-            .map((history) => history.orderDate.weekday.toDouble() - 1)
-            .toList();
+        getDataGraph();
+        totalIncome = orderHistoryResponse!.result.data.fold(0,
+            (previousValue, element) => previousValue + element.servicePrice);
+        totalOrder = orderHistoryResponse!.result.data.length;
+        loadingState = const LoadingState.loaded();
+        debugPrint(weeklyData.toString());
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(orderHistoryResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
+  Future<void> getGraphData(
+      {String storeId = '', String dateStart = '', String dateEnd = ''}) async {
+    try {
+      if (page == 1) {
+        loadingState = const LoadingState.loading();
+        notifyListeners();
+      }
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      orderHistoryResponse = await apiService.getOrderHistory(
+        token: token!,
+        page: page,
+        size: pageSize,
+        storeId: storeId,
+        dateStart: dateStart,
+        dateEnd: dateEnd,
+      );
+
+      if (orderHistoryResponse!.success) {
+        getDataGraph();
+        totalIncome = orderHistoryResponse!.result.data.fold(0,
+            (previousValue, element) => previousValue + element.servicePrice);
+        totalOrder = orderHistoryResponse!.result.data.length;
         loadingState = const LoadingState.loaded();
         notifyListeners();
       } else {
@@ -58,9 +106,39 @@ class OrderHistoryProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> refreshOrderHistory({String storeId = ''}) async {
-    page = 1;
-    orderHistories = [];
-    await getOrderHistory(storeId: storeId);
+  void getDataGraph() {
+    weeklyData = orderHistoryResponse!.result.graph!
+        .map((e) => e.count.toDouble())
+        .toList();
+    dates = orderHistoryResponse!.result.graph!
+        .map((e) => int.parse(e.date))
+        .toList();
+  }
+
+  Future<void> refreshOrderHistory(
+      {String storeId = '',
+      String dateStart = '',
+      String dateEnd = '',
+      int date = 0}) async {
+    if (date != 0) {
+      getOrderByDate(date: date);
+    } else {
+      page = 1;
+      orderHistories = [];
+      await getOrderHistory(
+          storeId: storeId, dateStart: dateStart, dateEnd: dateEnd);
+    }
+  }
+
+  Future<void> getOrderByDate({required int date}) async {
+    selectedDaysOrder = orderHistories
+        .where((element) => element.orderDate.day == date)
+        .toList();
+    notifyListeners();
+  }
+
+  Future<void> clearSelectedDaysOrder() async {
+    selectedDaysOrder.clear();
+    notifyListeners();
   }
 }

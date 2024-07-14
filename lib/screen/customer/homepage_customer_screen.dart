@@ -423,7 +423,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                           function: () {
                             context.goNamed('detail_order',
                                 pathParameters: {'id': myOrder.id},
-                                extra: waitingTime);
+                                extra: 'Detail Order');
                           },
                           text: 'Detail',
                           height: 35,
@@ -579,7 +579,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                     ),
                     IconButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        context.pop();
                       },
                       icon: const Icon(Icons.close, size: 20),
                     ),
