@@ -92,6 +92,7 @@ class CommodityProvider extends ChangeNotifier {
     required String storeId,
     required String name,
     required String stock,
+    required String category,
   }) async {
     try {
       loadingState = const LoadingState.loading();
@@ -122,6 +123,7 @@ class CommodityProvider extends ChangeNotifier {
         name,
         storeId,
         stock,
+        category,
       );
 
       if (uploadResponse!.success) {

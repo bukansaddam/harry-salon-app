@@ -531,6 +531,7 @@ class ApiService {
     String name,
     String storeId,
     String stock,
+    String category,
   ) async {
     var request = http.MultipartRequest(
       'POST',
@@ -548,6 +549,7 @@ class ApiService {
       'name': name,
       'storeId': storeId,
       'stock': stock,
+      'category': category,
     });
 
     request.headers.addAll({

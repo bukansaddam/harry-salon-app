@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -25,6 +26,16 @@ class _AddCommodityScreenState extends State<AddCommodityScreen> {
 
   final _formKey = GlobalKey<FormState>();
   late CommodityProvider _commodityProvider;
+
+  List<String> category = ['Hair Care', 'Hair Styling'];
+
+  String selectedCategory = '';
+
+  @override
+  void initState() {
+    selectedCategory = category.first;
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -76,6 +87,46 @@ class _AddCommodityScreenState extends State<AddCommodityScreen> {
                   controller: _nameController,
                   hintText: 'Input commodity name here',
                   labelText: 'Name',
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'Category',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.grey[200],
+                  ),
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: selectedCategory.isNotEmpty
+                        ? selectedCategory
+                        : category.first,
+                    underline: const SizedBox(),
+                    items: category.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedCategory = value!;
+                      });
+                      context.read<CommodityProvider>().refreshCommodity(
+                            storeId: widget.storeId,
+                            category: selectedCategory,
+                          );
+                    },
+                  ),
                 ),
                 const SizedBox(height: 12),
                 const Text(
@@ -274,6 +325,7 @@ class _AddCommodityScreenState extends State<AddCommodityScreen> {
         storeId: storeId,
         name: name,
         stock: stock.toString(),
+        category: selectedCategory,
       );
 
       if (mounted) {
