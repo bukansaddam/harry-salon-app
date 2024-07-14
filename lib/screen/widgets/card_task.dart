@@ -72,7 +72,7 @@ class CardTasks extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 order.reference != null
-                    ? Text(order.reference!.name)
+                    ? const Text('1 Reference')
                     : const Text('No Reference'),
               ],
             ),

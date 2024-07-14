@@ -112,45 +112,136 @@ class _EmployeeDetailOrderScreenState extends State<EmployeeDetailOrderScreen> {
                         initial: () => const SizedBox(),
                         pending: () => currentTask == null ||
                                 currentTask.status == 'done'
-                            ? _buildButton(
-                                detailProvider: detailProvider,
-                                title: 'Accept Order',
-                                function: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: const Text('Konfirmasi'),
-                                          content: const Text(
-                                              'Apakah Anda yakin ingin menerima pesanan ?'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                context.pop();
-                                              },
-                                              child: const Text('Tidak'),
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      child: PopupMenuButton(
+                                        itemBuilder: (context) => [
+                                          const PopupMenuItem(
+                                            value: 'cancel',
+                                            child: Text(
+                                              'Batalkan Order',
+                                              style:
+                                                  TextStyle(color: Colors.red),
                                             ),
-                                            TextButton(
-                                              onPressed: () async {
-                                                if (mounted) {
-                                                  context.pop();
-                                                  await context
-                                                      .read<OrderProvider>()
-                                                      .updateStatusOrder(
-                                                        id: widget.orderId,
-                                                        isAccepted: true,
-                                                      );
-                                                  await detailProvider
-                                                      .getDetailOrder(
-                                                          id: widget.orderId);
-                                                }
+                                          ),
+                                        ],
+                                        onSelected: (value) {
+                                          if (value == 'cancel') {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title:
+                                                      const Text('Konfirmasi'),
+                                                  content: const Text(
+                                                      'Apakah Anda yakin ingin menolak pesanan ?'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        context.pop();
+                                                      },
+                                                      child:
+                                                          const Text('Tidak'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () async {
+                                                        if (mounted) {
+                                                          context.pop();
+                                                          await context
+                                                              .read<
+                                                                  OrderProvider>()
+                                                              .updateStatusOrder(
+                                                                id: widget
+                                                                    .orderId,
+                                                                status:
+                                                                    'cancel',
+                                                              );
+                                                          await detailProvider
+                                                              .getDetailOrder(
+                                                                  id: widget
+                                                                      .orderId);
+                                                        }
+                                                      },
+                                                      child: const Text('Ya'),
+                                                    ),
+                                                  ],
+                                                );
                                               },
-                                              child: const Text('Ya'),
-                                            ),
-                                          ],
-                                        );
-                                      });
-                                })
+                                            );
+                                          }
+                                        },
+                                        icon: const Icon(
+                                          Icons.more_horiz_rounded,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: _buildButton(
+                                        detailProvider: detailProvider,
+                                        title: 'Accept Order',
+                                        function: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: const Text('Konfirmasi'),
+                                                content: const Text(
+                                                    'Apakah Anda yakin ingin menerima pesanan ?'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      context.pop();
+                                                    },
+                                                    child: const Text('Tidak'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () async {
+                                                      if (mounted) {
+                                                        context.pop();
+                                                        await context
+                                                            .read<
+                                                                OrderProvider>()
+                                                            .updateStatusOrder(
+                                                              id: widget
+                                                                  .orderId,
+                                                              isAccepted: true,
+                                                            );
+                                                        await detailProvider
+                                                            .getDetailOrder(
+                                                                id: widget
+                                                                    .orderId);
+                                                      }
+                                                    },
+                                                    child: const Text('Ya'),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
                             : const SizedBox(),
                         waiting: () => const SizedBox(),
                         onProcress: () => _buildButton(
@@ -158,38 +249,39 @@ class _EmployeeDetailOrderScreenState extends State<EmployeeDetailOrderScreen> {
                           title: 'Finish Order',
                           function: () {
                             showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('Konfirmasi'),
-                                    content: const Text(
-                                        'Apakah Anda yakin ingin menyelesaikan pesanan ?'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Konfirmasi'),
+                                  content: const Text(
+                                      'Apakah Anda yakin ingin menyelesaikan pesanan ?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        context.pop();
+                                      },
+                                      child: const Text('Tidak'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        if (mounted) {
                                           context.pop();
-                                        },
-                                        child: const Text('Tidak'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          if (mounted) {
-                                            context.pop();
-                                            await context
-                                                .read<OrderProvider>()
-                                                .updateStatusOrder(
-                                                  id: widget.orderId,
-                                                  status: 'done',
-                                                );
-                                            await detailProvider.getDetailOrder(
-                                                id: widget.orderId);
-                                          }
-                                        },
-                                        child: const Text('Ya'),
-                                      ),
-                                    ],
-                                  );
-                                });
+                                          await context
+                                              .read<OrderProvider>()
+                                              .updateStatusOrder(
+                                                id: widget.orderId,
+                                                status: 'done',
+                                              );
+                                          await detailProvider.getDetailOrder(
+                                              id: widget.orderId);
+                                        }
+                                      },
+                                      child: const Text('Ya'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           },
                         ),
                         done: () => const SizedBox(),

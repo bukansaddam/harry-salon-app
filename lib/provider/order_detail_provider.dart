@@ -72,7 +72,7 @@ class DetailOrderProvider extends ChangeNotifier {
     } else if (status == 'done') {
       orderState = const OrderState.done();
       notifyListeners();
-    } else if (status == 'canceled') {
+    } else if (status == 'cancel') {
       orderState = const OrderState.canceled();
       notifyListeners();
     }

@@ -61,7 +61,10 @@ class OrderProvider extends ChangeNotifier {
         orders.addAll(
             orderResponse!.result!.data.where((order) => order.isMe == true));
         currentTaskCustomer = orderResponse!.result!.data.firstWhereOrNull(
-            (order) => order.isMe == true && order.status != "done");
+            (order) =>
+                order.isMe == true &&
+                order.status != "done" &&
+                order.status != "cancel");
         waitingTime = orders.isNotEmpty
             ? orders.first.orderNumber != 0
                 ? (orders.first.orderNumber! - 1) * 15
@@ -323,7 +326,7 @@ class OrderProvider extends ChangeNotifier {
     } else if (status == 'done') {
       orderState = const OrderState.done();
       notifyListeners();
-    } else if (status == 'canceled') {
+    } else if (status == 'cancel') {
       orderState = const OrderState.canceled();
       notifyListeners();
     }

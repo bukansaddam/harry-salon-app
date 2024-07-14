@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:slide_countdown/slide_countdown.dart';
+import 'package:tugas_akhir_app/common/order_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/hairstyle.dart';
@@ -109,9 +110,12 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                       bottom: 40,
                       left: 16,
                       right: 16,
-                      child: context.watch<DetailOrderProvider>().isOnLocation
-                          ? const SizedBox()
-                          : _buildButton(detailProvider),
+                      child: detailProvider.orderState ==
+                              const OrderState.pending()
+                          ? context.watch<DetailOrderProvider>().isOnLocation
+                              ? const SizedBox()
+                              : _buildButton(detailProvider)
+                          : const SizedBox(),
                     ),
                   ],
                 ),
