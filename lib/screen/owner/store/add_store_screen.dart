@@ -1,16 +1,16 @@
 import 'dart:io';
-
-import 'package:delightful_toast/delight_toast.dart';
-import 'package:delightful_toast/toast/components/toast_card.dart';
-import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:geocoding/geocoding.dart' as geo;
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
+import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class AddStoreScreen extends StatefulWidget {
   const AddStoreScreen({super.key});
@@ -29,10 +29,22 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
   final formKey = GlobalKey<FormState>();
   late StoreProvider _imagesProvider;
 
+  LatLng? locationData;
+  LatLng currentLocation = const LatLng(0, 0);
+
+  geo.Placemark? placemark;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _imagesProvider = Provider.of<StoreProvider>(context, listen: false);
+
+    getMyLocation();
+
+    if (locationData != null && placemark != null) {
+      _addressController.text =
+          '${placemark!.street}, ${placemark!.subLocality}, ${placemark!.locality}, ${placemark!.country}';
+    }
   }
 
   @override
@@ -92,10 +104,60 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                CustomTextField(
-                  controller: _addressController,
-                  hintText: 'Input store address here',
-                  labelText: 'Address',
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomTextField(
+                        controller: _addressController,
+                        hintText: 'Input store address here',
+                        labelText: 'Address',
+                      ),
+                    ),
+                    Container(
+                      width: 55,
+                      height: 55,
+                      margin: const EdgeInsets.only(left: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: IconButton(
+                        onPressed: () async {
+                          final result = await context.pushNamed('maps',
+                              extra: LatLng(currentLocation.latitude,
+                                  currentLocation.longitude));
+
+                          if (result is LatLng) {
+                            setState(() {
+                              locationData = result;
+                            });
+
+                            try {
+                              final placemarks =
+                                  await geo.placemarkFromCoordinates(
+                                locationData!.latitude,
+                                locationData!.longitude,
+                              );
+
+                              if (placemarks.isNotEmpty) {
+                                setState(() {
+                                  placemark = placemarks.first;
+                                  _addressController.text =
+                                      '${placemark!.street}, ${placemark!.subLocality}, ${placemark!.locality}, ${placemark!.country}';
+                                });
+                              }
+                            } catch (e) {
+                              debugPrint('Error fetching placemark: $e');
+                            }
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.map_outlined,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
                 const SizedBox(height: 12),
                 Row(
@@ -188,31 +250,6 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                   minLines: 4,
                   labelText: 'Description',
                 ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Services',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Center(
-                  child: Text(
-                    'Services not added yet',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                CustomButton(
-                  function: () {},
-                  text: 'Add Services',
-                  width: 170,
-                  height: 30,
-                ),
                 const SizedBox(height: 60),
                 context.watch<StoreProvider>().loadingState.when(
                       initial: () =>
@@ -234,6 +271,56 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
     );
   }
 
+  void getMyLocation() async {
+    late bool serviceEnabled;
+    late PermissionStatus permissionGranted;
+    final Location location = Location();
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        debugPrint("Location services are not available");
+        return;
+      }
+    }
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        debugPrint("Location permission not granted");
+        return;
+      }
+    }
+
+    final locationDataResult = await location.getLocation();
+    final latLng =
+        LatLng(locationDataResult.latitude!, locationDataResult.longitude!);
+
+    if (mounted) {
+      setState(() {
+        currentLocation = latLng;
+        locationData = latLng;
+      });
+    }
+
+    try {
+      final placemarks = await geo.placemarkFromCoordinates(
+        locationDataResult.latitude!,
+        locationDataResult.longitude!,
+      );
+      if (placemarks.isNotEmpty) {
+        setState(() {
+          placemark = placemarks.first;
+          _addressController.text =
+              '${placemark!.street}, ${placemark!.subLocality}, ${placemark!.locality}, ${placemark!.country}';
+        });
+      }
+    } catch (e) {
+      debugPrint('Error fetching placemark: $e');
+    }
+  }
+
   void _onSubmit() async {
     if (formKey.currentState!.validate()) {
       final provider = context.read<StoreProvider>();
@@ -245,14 +332,14 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
       final description = _descriptionController.text;
 
       if (provider.imageUrls.isEmpty) {
-        _showMessage(context, 'Please add image');
+        ToastMessage.show(context, 'Please add image');
       } else {
         await provider.addStore(
           name,
           description,
           address,
-          0.0,
-          0.0,
+          locationData!.latitude,
+          locationData!.longitude,
           TimeOfDay(
             hour: int.parse(open.split(':')[0]),
             minute: int.parse(open.split(':')[1]),
@@ -265,10 +352,10 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
         if (mounted) {
           if (provider.uploadResponse!.success) {
             provider.refreshOwnerStore();
-            _showMessage(context, provider.uploadResponse!.message);
+            ToastMessage.show(context, provider.uploadResponse!.message);
             context.pop();
           } else {
-            _showMessage(context, provider.uploadResponse!.message);
+            ToastMessage.show(context, provider.uploadResponse!.message);
           }
         }
       }
@@ -431,7 +518,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
         provider.addImage(pickedFile);
       }
       provider.setImages([pickedFile]);
-      _showMessage(context, 'Image added');
+      ToastMessage.show(context, 'Image added');
     }
   }
 
@@ -452,23 +539,11 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
       } else {
         provider.setImages(pickedFiles);
       }
-      _showMessage(context, 'Image added');
+      ToastMessage.show(context, 'Image added');
     }
 
     if (mounted) {
       context.pop();
     }
-  }
-
-  void _showMessage(BuildContext context, String message) {
-    DelightToastBar(
-      autoDismiss: true,
-      builder: (context) => ToastCard(
-        leading: const Icon(Icons.ac_unit_rounded),
-        title: Text(message),
-      ),
-      position: DelightSnackbarPosition.top,
-      snackbarDuration: const Duration(seconds: 3),
-    ).show(context);
   }
 }

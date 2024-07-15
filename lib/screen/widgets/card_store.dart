@@ -83,6 +83,8 @@ class StoreCard extends StatelessWidget {
                         const SizedBox(height: 8),
                         Text(
                           store.location,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             color: Colors.white,
                           ),

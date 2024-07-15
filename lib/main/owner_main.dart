@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
@@ -33,6 +34,7 @@ import 'package:tugas_akhir_app/screen/owner/payslip/payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/review/review_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/service/add_service_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/service/service_screen.dart';
+import 'package:tugas_akhir_app/screen/owner/store/maps_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/store/more_order_history_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/store/owner_detail_order_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
@@ -143,10 +145,31 @@ final GoRouter _router = GoRouter(
           builder: (context, state) => const DashboardScreen(),
         ),
         GoRoute(
-          path: 'add-store',
-          name: 'add_store',
-          builder: (context, state) => const AddStoreScreen(),
-        ),
+            path: 'add-store',
+            name: 'add_store',
+            builder: (context, state) => const AddStoreScreen(),
+            routes: [
+              GoRoute(
+                path: 'maps',
+                name: 'maps',
+                builder: (context, state) {
+                  LatLng? location;
+
+                  if (state.extra is Set<LatLng> &&
+                      (state.extra as Set<LatLng>).isNotEmpty) {
+                    location = (state.extra as Set<LatLng>).first;
+                  } else {
+                    location = state.extra as LatLng?;
+                  }
+
+                  if (location != null) {
+                    return MapsScreen(initialLocation: location);
+                  } else {
+                    return const MapsScreen(initialLocation: LatLng(0.0, 0.0));
+                  }
+                },
+              )
+            ]),
         GoRoute(
           path: 'detail-store/:id',
           name: 'detail_store',

@@ -4,6 +4,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- For apps with targetSDK=31 (Android 12) -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
         android:label="@string/app_name"
@@ -51,6 +53,9 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+            <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDp_NzxrwKSMBjnoyMh5joJW4jZU-iITOw" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
