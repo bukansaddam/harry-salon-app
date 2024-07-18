@@ -3,6 +3,7 @@ import 'package:tugas_akhir_app/common/loading_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/review.dart';
+import 'package:tugas_akhir_app/model/upload.dart';
 
 class ReviewProvider extends ChangeNotifier {
   final AuthRepository authRepository;
@@ -16,6 +17,7 @@ class ReviewProvider extends ChangeNotifier {
   LoadingState loadingState = const LoadingState.initial();
 
   ReviewResponse? reviewResponse;
+  UploadResponse? uploadResponse;
 
   int? pageItems = 1;
   int sizeItems = 10;
@@ -24,6 +26,39 @@ class ReviewProvider extends ChangeNotifier {
 
   double? averageRating = 0;
   int? totalReview = 0;
+  int myRating = 0;
+
+  Future<void> createReview({
+    required String storeId,
+    required String comment,
+    required int rating,
+  }) async {
+    try {
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+      uploadResponse = await apiService.createReview(
+        token: token!,
+        storeId: storeId,
+        comment: comment,
+        rating: rating.toString(),
+      );
+      if (reviewResponse == null) {
+        loadingState = const LoadingState.error('Review not found');
+        notifyListeners();
+        return;
+      }
+      if (reviewResponse!.success) {
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(reviewResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
 
   Future<void> getAllReview(
       {required String storeId, String searchValue = ''}) async {
@@ -57,6 +92,7 @@ class ReviewProvider extends ChangeNotifier {
 
         loadingState = const LoadingState.loaded();
         totalReview = reviewResponse!.result.totalCount;
+        myRating = reviews.map((e) => e.rating!).firstOrNull ?? 0;
         notifyListeners();
         calculateAverageRating();
 

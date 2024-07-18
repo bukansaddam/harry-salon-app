@@ -68,6 +68,9 @@ class CustomerApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.white,
+          bottomSheetTheme: const BottomSheetThemeData(
+            backgroundColor: Colors.white,
+          ),
           appBarTheme: const AppBarTheme(
             backgroundColor: Colors.white,
             elevation: 0,

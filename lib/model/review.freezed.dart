@@ -402,6 +402,7 @@ Review _$ReviewFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Review {
   String get id => throw _privateConstructorUsedError;
+  bool get isMe => throw _privateConstructorUsedError;
   String get avatar => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
   int? get rating => throw _privateConstructorUsedError;
@@ -420,6 +421,7 @@ abstract class $ReviewCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      bool isMe,
       String avatar,
       String username,
       int? rating,
@@ -441,6 +443,7 @@ class _$ReviewCopyWithImpl<$Res, $Val extends Review>
   @override
   $Res call({
     Object? id = null,
+    Object? isMe = null,
     Object? avatar = null,
     Object? username = null,
     Object? rating = freezed,
@@ -452,6 +455,10 @@ class _$ReviewCopyWithImpl<$Res, $Val extends Review>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      isMe: null == isMe
+          ? _value.isMe
+          : isMe // ignore: cast_nullable_to_non_nullable
+              as bool,
       avatar: null == avatar
           ? _value.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
@@ -485,6 +492,7 @@ abstract class _$$ReviewImplCopyWith<$Res> implements $ReviewCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      bool isMe,
       String avatar,
       String username,
       int? rating,
@@ -504,6 +512,7 @@ class __$$ReviewImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? isMe = null,
     Object? avatar = null,
     Object? username = null,
     Object? rating = freezed,
@@ -515,6 +524,10 @@ class __$$ReviewImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      isMe: null == isMe
+          ? _value.isMe
+          : isMe // ignore: cast_nullable_to_non_nullable
+              as bool,
       avatar: null == avatar
           ? _value.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
@@ -544,6 +557,7 @@ class __$$ReviewImplCopyWithImpl<$Res>
 class _$ReviewImpl implements _Review {
   const _$ReviewImpl(
       {required this.id,
+      required this.isMe,
       required this.avatar,
       required this.username,
       required this.rating,
@@ -555,6 +569,8 @@ class _$ReviewImpl implements _Review {
 
   @override
   final String id;
+  @override
+  final bool isMe;
   @override
   final String avatar;
   @override
@@ -568,7 +584,7 @@ class _$ReviewImpl implements _Review {
 
   @override
   String toString() {
-    return 'Review(id: $id, avatar: $avatar, username: $username, rating: $rating, comment: $comment, date: $date)';
+    return 'Review(id: $id, isMe: $isMe, avatar: $avatar, username: $username, rating: $rating, comment: $comment, date: $date)';
   }
 
   @override
@@ -577,6 +593,7 @@ class _$ReviewImpl implements _Review {
         (other.runtimeType == runtimeType &&
             other is _$ReviewImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.isMe, isMe) || other.isMe == isMe) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
             (identical(other.username, username) ||
                 other.username == username) &&
@@ -587,8 +604,8 @@ class _$ReviewImpl implements _Review {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, avatar, username, rating, comment, date);
+  int get hashCode => Object.hash(
+      runtimeType, id, isMe, avatar, username, rating, comment, date);
 
   @JsonKey(ignore: true)
   @override
@@ -607,6 +624,7 @@ class _$ReviewImpl implements _Review {
 abstract class _Review implements Review {
   const factory _Review(
       {required final String id,
+      required final bool isMe,
       required final String avatar,
       required final String username,
       required final int? rating,
@@ -617,6 +635,8 @@ abstract class _Review implements Review {
 
   @override
   String get id;
+  @override
+  bool get isMe;
   @override
   String get avatar;
   @override

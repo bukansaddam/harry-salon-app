@@ -31,6 +31,7 @@ class ReviewResult with _$ReviewResult {
 class Review with _$Review {
   const factory Review({
     required String id,
+    required bool isMe,
     required String avatar,
     required String username,
     required int? rating,

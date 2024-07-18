@@ -698,6 +698,32 @@ class ApiService {
     }
   }
 
+  Future<UploadResponse> createReview({
+    required String token,
+    required String storeId,
+    required String comment,
+    required String rating,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl$_review'),
+      body: jsonEncode(<String, String>{
+        'storeId': storeId,
+        'comment': comment,
+        'rating': rating,
+      }),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
   Future<DetailUserResponse> getDetailUser({
     required String token,
   }) async {

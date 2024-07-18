@@ -20,6 +20,7 @@ import 'package:tugas_akhir_app/screen/auth/register_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/add_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/detail_commodity_screen.dart';
+import 'package:tugas_akhir_app/screen/customer/edit_profile_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/employee/add_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/employee/detail_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/employee/employee_screen.dart';
@@ -102,6 +103,9 @@ class OwnerApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.white,
+          bottomSheetTheme: const BottomSheetThemeData(
+            backgroundColor: Colors.white,
+          ),
           appBarTheme: const AppBarTheme(
             backgroundColor: Colors.white,
             elevation: 0,
@@ -356,7 +360,18 @@ final GoRouter _router = GoRouter(
             final id = state.pathParameters['id'];
             return DetailPayslipScreen(id: id!);
           },
-        )
+        ),
+        GoRoute(
+          path: 'edit-profile',
+          name: 'edit_profile',
+          builder: (context, state) {
+            final Map<String, dynamic> extra =
+                state.extra as Map<String, dynamic>;
+            final String title = extra['title'] as String;
+            final String user = extra['user'] as String;
+            return EditProfileScreen(title: title, user: user);
+          },
+        ),
       ],
     )
   ],

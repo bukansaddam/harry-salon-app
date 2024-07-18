@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -19,8 +20,10 @@ import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_detail_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/bar_graph/bar_graph.dart';
+import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_history.dart';
 import 'package:tugas_akhir_app/screen/widgets/tab_item.dart';
+import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
 import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class DetailStoreScreen extends StatefulWidget {
@@ -36,6 +39,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final ScrollController _scrollController = ScrollController();
+  final _reviewDescriptionController = TextEditingController();
 
   CommodityProvider? commodityProvider;
   ServiceProvider? serviceProvider;
@@ -46,6 +50,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
   final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
 
   bool get isOwner => actor == 'owner';
+  bool get isCustomer => actor == 'customer';
 
   DateTime now = DateTime.now();
   DateTime weekAgo = DateTime.now().subtract(const Duration(days: 6));
@@ -85,6 +90,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
   void dispose() {
     _tabController.dispose();
     _scrollController.dispose();
+    _reviewDescriptionController.dispose();
     super.dispose();
   }
 
@@ -673,6 +679,43 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        isCustomer
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Leave a review',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: () {
+                      // buildBottomSheet(reviewProvider);
+                      if (reviewProvider.myRating == 0) {
+                        buildBottomSheet(reviewProvider);
+                      } else {
+                        ToastMessage.show(context, 'You already left a review');
+                      }
+                    },
+                    child: RatingBarIndicator(
+                      rating: reviewProvider.myRating.toDouble(),
+                      itemBuilder: (context, index) => const Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      itemCount: 5,
+                      itemSize: 32,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 8),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              )
+            : const SizedBox.shrink(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -699,7 +742,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           children: [
             const Icon(
               Icons.star_rounded,
-              color: Colors.yellow,
+              color: Colors.amber,
               size: 55,
             ),
             Text.rich(
@@ -720,10 +763,148 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
         _buildItemReview(reviewProvider),
+      ],
+    );
+  }
+
+  Future<void> buildBottomSheet(ReviewProvider reviewProvider) {
+    return showModalBottomSheet(
+        useSafeArea: true,
+        isScrollControlled: true,
+        context: context,
+        builder: (_) {
+          return SizedBox(
+            width: double.infinity,
+            child: Column(
+              children: [
+                Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: _buildReviewSection(reviewProvider)),
+              ],
+            ),
+          );
+        });
+  }
+
+  Widget _buildReviewSection(ReviewProvider reviewProvider) {
+    int rating = 0;
+
+    void handleSubmit() {
+      if (rating == 0) {
+        ToastMessage.show(context, 'Please select rating');
+      } else {
+        reviewProvider
+            .createReview(
+          storeId: widget.id,
+          comment: _reviewDescriptionController.text,
+          rating: rating,
+        )
+            .then((_) {
+          if (reviewProvider.uploadResponse != null) {
+            if (reviewProvider.uploadResponse!.success) {
+              context.pop();
+              _reviewDescriptionController.clear();
+              ToastMessage.show(context, 'Your review has been submitted');
+            } else {
+              ToastMessage.show(
+                  context, reviewProvider.uploadResponse!.message);
+            }
+          } else {
+            ToastMessage.show(context, 'Failed to submit review');
+          }
+        }).catchError((error) {
+          ToastMessage.show(context, error.toString());
+        });
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: Stack(
+            children: [
+              const Center(
+                child: Text(
+                  "Add Review",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 0,
+                child: GestureDetector(
+                    onTap: () {
+                      context.pop();
+                      _reviewDescriptionController.clear();
+                    },
+                    child: const Icon(Icons.close)),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          'Rate your experience',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        const SizedBox(height: 12),
+        Center(
+          child: RatingBar.builder(
+            initialRating: 0,
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: false,
+            glow: false,
+            itemCount: 5,
+            itemSize: 36,
+            itemPadding: const EdgeInsets.symmetric(horizontal: 8),
+            itemBuilder: (context, _) => const Icon(
+              Icons.star,
+              color: Colors.amber,
+            ),
+            onRatingUpdate: (value) {
+              rating = value.toInt();
+            },
+          ),
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          'Write a review',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        const SizedBox(height: 12),
+        CustomTextField(
+          controller: _reviewDescriptionController,
+          hintText: 'Enter your review here',
+          minLines: 4,
+          labelText: 'Review',
+        ),
+        const SizedBox(height: 40),
+        reviewProvider.loadingState.when(
+          initial: () => CustomButton(
+            text: 'Submit',
+            function: handleSubmit,
+          ),
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          loaded: () => CustomButton(
+            text: 'Submit',
+            function: handleSubmit,
+          ),
+          error: (error) => CustomButton(
+            text: 'Submit',
+            function: handleSubmit,
+          ),
+        ),
       ],
     );
   }
@@ -780,15 +961,14 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                 ],
               ),
               const Spacer(),
-              RatingBar.builder(
-                initialRating: reviewProvider.reviews[0].rating!.toDouble(),
+              RatingBarIndicator(
+                rating: reviewProvider.reviews[0].rating!.toDouble(),
+                itemBuilder: (context, index) => const Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
                 itemCount: 5,
-                glow: false,
                 itemSize: 20,
-                ignoreGestures: true,
-                itemBuilder: (context, index) =>
-                    const Icon(Icons.star_rounded, color: Colors.amber),
-                onRatingUpdate: (value) {},
               ),
             ],
           ),

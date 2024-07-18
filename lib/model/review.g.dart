@@ -39,6 +39,7 @@ Map<String, dynamic> _$$ReviewResultImplToJson(_$ReviewResultImpl instance) =>
 
 _$ReviewImpl _$$ReviewImplFromJson(Map<String, dynamic> json) => _$ReviewImpl(
       id: json['id'] as String,
+      isMe: json['isMe'] as bool,
       avatar: json['avatar'] as String,
       username: json['username'] as String,
       rating: (json['rating'] as num?)?.toInt(),
@@ -49,6 +50,7 @@ _$ReviewImpl _$$ReviewImplFromJson(Map<String, dynamic> json) => _$ReviewImpl(
 Map<String, dynamic> _$$ReviewImplToJson(_$ReviewImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'isMe': instance.isMe,
       'avatar': instance.avatar,
       'username': instance.username,
       'rating': instance.rating,
