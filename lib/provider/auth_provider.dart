@@ -103,7 +103,7 @@ class AuthProvider extends ChangeNotifier {
 
         final User user = User(
           email: email,
-          token: loginResponse.token,
+          token: loginResponse.token!,
         );
 
         await authRepository.saveUser(user);
@@ -152,7 +152,7 @@ class AuthProvider extends ChangeNotifier {
 
         final User user = User(
           email: email,
-          token: loginResponse.token,
+          token: loginResponse.token!,
           storeId: loginResponse.storeId,
         );
 

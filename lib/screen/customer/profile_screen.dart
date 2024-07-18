@@ -21,6 +21,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final ScrollController _scrollController = ScrollController();
   late UserProvider userProvider;
 
+  final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
+
+  bool get isOwner => actor == 'owner';
+  bool get isEmployee => actor == 'employee';
+  bool get isCustomer => actor == 'customer';
+
   @override
   void initState() {
     super.initState();
@@ -47,9 +53,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Profile'),
-        ),
+        appBar: isOwner
+            ? null
+            : AppBar(
+                title: const Text('Profile'),
+              ),
         body: Consumer<UserProvider>(
           builder: (context, userProvider, child) {
             final state = userProvider.loadingState;
@@ -60,7 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 final user = userProvider.userDetailResponse!.data;
                 return _buildBody(user);
               },
-              error: (error) => _buildDialogLogin(),
+              error: (error) => _buildDialogLogin(error),
             );
           },
         ));
@@ -213,13 +221,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildDialogLogin() {
+  Widget _buildDialogLogin(String error) {
     return Center(
-      child: TextButton(
-        onPressed: () {
-          context.goNamed('login');
-        },
-        child: const Text('Login'),
+      child: Column(
+        children: [
+          TextButton(
+            onPressed: () {
+              context.goNamed('login');
+            },
+            child: const Text('Login'),
+          ),
+          Text(error),
+        ],
       ),
     );
   }

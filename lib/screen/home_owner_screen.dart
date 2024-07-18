@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/home_provider.dart';
+import 'package:tugas_akhir_app/screen/customer/profile_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/employee/employee_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/payslip/payslip_screen.dart';
@@ -35,10 +36,7 @@ class _HomeOwnerScreenState extends State<HomeOwnerScreen> {
     EmployeeScreen(),
     PayslipScreen(),
     HairstyleScreen(),
-    Text(
-      'Profile',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
+    ProfileScreen(),
   ];
 
   @override

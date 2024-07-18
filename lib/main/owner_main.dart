@@ -14,6 +14,7 @@ import 'package:tugas_akhir_app/provider/payslip_provider.dart';
 import 'package:tugas_akhir_app/provider/review_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
+import 'package:tugas_akhir_app/provider/user_provider.dart';
 import 'package:tugas_akhir_app/screen/auth/login_screen.dart';
 import 'package:tugas_akhir_app/screen/auth/register_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/add_commodity_screen.dart';
@@ -92,6 +93,9 @@ class OwnerApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<FavoriteProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<UserProvider>(),
         ),
       ],
       child: MaterialApp.router(

@@ -22,7 +22,7 @@ LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) {
 mixin _$LoginResponse {
   bool get success => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
-  String get token => throw _privateConstructorUsedError;
+  String? get token => throw _privateConstructorUsedError;
   String? get storeId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -37,7 +37,7 @@ abstract class $LoginResponseCopyWith<$Res> {
           LoginResponse value, $Res Function(LoginResponse) then) =
       _$LoginResponseCopyWithImpl<$Res, LoginResponse>;
   @useResult
-  $Res call({bool success, String message, String token, String? storeId});
+  $Res call({bool success, String message, String? token, String? storeId});
 }
 
 /// @nodoc
@@ -55,7 +55,7 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
   $Res call({
     Object? success = null,
     Object? message = null,
-    Object? token = null,
+    Object? token = freezed,
     Object? storeId = freezed,
   }) {
     return _then(_value.copyWith(
@@ -67,10 +67,10 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      token: null == token
+      token: freezed == token
           ? _value.token
           : token // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       storeId: freezed == storeId
           ? _value.storeId
           : storeId // ignore: cast_nullable_to_non_nullable
@@ -87,7 +87,7 @@ abstract class _$$LoginResponseImplCopyWith<$Res>
       __$$LoginResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool success, String message, String token, String? storeId});
+  $Res call({bool success, String message, String? token, String? storeId});
 }
 
 /// @nodoc
@@ -103,7 +103,7 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
   $Res call({
     Object? success = null,
     Object? message = null,
-    Object? token = null,
+    Object? token = freezed,
     Object? storeId = freezed,
   }) {
     return _then(_$LoginResponseImpl(
@@ -115,10 +115,10 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
-      token: null == token
+      token: freezed == token
           ? _value.token
           : token // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       storeId: freezed == storeId
           ? _value.storeId
           : storeId // ignore: cast_nullable_to_non_nullable
@@ -144,7 +144,7 @@ class _$LoginResponseImpl implements _LoginResponse {
   @override
   final String message;
   @override
-  final String token;
+  final String? token;
   @override
   final String? storeId;
 
@@ -187,7 +187,7 @@ abstract class _LoginResponse implements LoginResponse {
   const factory _LoginResponse(
       {required final bool success,
       required final String message,
-      required final String token,
+      required final String? token,
       final String? storeId}) = _$LoginResponseImpl;
 
   factory _LoginResponse.fromJson(Map<String, dynamic> json) =
@@ -198,7 +198,7 @@ abstract class _LoginResponse implements LoginResponse {
   @override
   String get message;
   @override
-  String get token;
+  String? get token;
   @override
   String? get storeId;
   @override

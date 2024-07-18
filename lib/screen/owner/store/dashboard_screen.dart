@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_store.dart';
 
@@ -185,16 +184,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         SliverPadding(
           padding: const EdgeInsets.only(top: 8),
           sliver: _buildList(count),
-        ),
-        SliverToBoxAdapter(
-          child: TextButton(
-            onPressed: () {
-              final authProvider = context.read<AuthProvider>();
-              authProvider.logout();
-              context.goNamed('login');
-            },
-            child: const Text('Logout'),
-          ),
         ),
       ],
     );

@@ -10,7 +10,7 @@ _$LoginResponseImpl _$$LoginResponseImplFromJson(Map<String, dynamic> json) =>
     _$LoginResponseImpl(
       success: json['success'] as bool,
       message: json['message'] as String,
-      token: json['token'] as String,
+      token: json['token'] as String?,
       storeId: json['storeId'] as String?,
     );
 

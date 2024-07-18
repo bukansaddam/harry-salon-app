@@ -8,7 +8,7 @@ class LoginResponse with _$LoginResponse {
   const factory LoginResponse({
     required bool success,
     required String message,
-    required String token,
+    required String? token,
     String? storeId,
   }) = _LoginResponse;
 
