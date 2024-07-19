@@ -22,5 +22,13 @@
       "program": "lib/main/customer_main.dart",
       "args": ["--dart-define=actor=customer", "--flavor", "customer", "--target", "lib/main/customer_main.dart"]
     },
+
+    {
+      "name": "tugas_akhir_app (qr)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main/qr_main.dart",
+      "args": ["--dart-define=actor=owner", "--flavor", "owner", "--target", "lib/main/qr_main.dart"]
+    },
   ]
 }

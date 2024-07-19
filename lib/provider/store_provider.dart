@@ -89,7 +89,7 @@ class StoreProvider extends ChangeNotifier {
     await getAllStore(searchValue: searchValue);
   }
 
-  Future<void> getAllOwnerStore() async {
+  Future<void> getAllOwnerStore({String searchValue = ''}) async {
     try {
       if (pageItems == 1) {
         loadingState = const LoadingState.loading();
@@ -100,7 +100,7 @@ class StoreProvider extends ChangeNotifier {
       final token = repository?.token;
 
       storeResponse = await apiService.getAllOwnerStore(
-          token: token!, page: pageItems!, size: sizeItems);
+          token: token!, page: pageItems!, size: sizeItems, name: searchValue);
 
       if (storeResponse!.success) {
         stores.addAll(storeResponse!.result.data);
@@ -127,10 +127,10 @@ class StoreProvider extends ChangeNotifier {
     _activeStoreCount = stores.where((store) => store.isActive).length;
   }
 
-  Future<void> refreshOwnerStore() async {
+  Future<void> refreshOwnerStore({String searchValue = ''}) async {
     pageItems = 1;
     stores.clear();
-    await getAllOwnerStore();
+    await getAllOwnerStore(searchValue: searchValue);
     await getTotalActiveStore();
   }
 

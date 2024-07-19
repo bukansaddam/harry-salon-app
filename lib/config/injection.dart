@@ -10,6 +10,7 @@ import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/order_history_provider.dart';
 import 'package:tugas_akhir_app/provider/order_provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
+import 'package:tugas_akhir_app/provider/presence_provider.dart';
 import 'package:tugas_akhir_app/provider/review_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
@@ -57,6 +58,9 @@ void init() {
   locator.registerLazySingleton<OrderHistoryProvider>(
     () =>
         OrderHistoryProvider(apiService: locator(), authRepository: locator()),
+  );
+  locator.registerLazySingleton<PresenceProvider>(
+    () => PresenceProvider(apiService: locator(), authRepository: locator()),
   );
 
   locator.registerLazySingleton<ApiService>(() => ApiService());

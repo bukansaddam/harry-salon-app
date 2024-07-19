@@ -7,6 +7,7 @@ import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/provider/order_history_provider.dart';
 import 'package:tugas_akhir_app/provider/order_provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
+import 'package:tugas_akhir_app/provider/presence_provider.dart';
 import 'package:tugas_akhir_app/provider/user_provider.dart';
 import 'package:tugas_akhir_app/screen/auth/login_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/add_commodity_screen.dart';
@@ -52,6 +53,9 @@ class EmployeeApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<OrderHistoryProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<PresenceProvider>(),
         ),
       ],
       child: MaterialApp.router(

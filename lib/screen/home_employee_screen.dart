@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:provider/provider.dart';
+import 'package:tugas_akhir_app/provider/presence_provider.dart';
 import 'package:tugas_akhir_app/screen/customer/profile_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/activity_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/dashboard_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/employee/payslip_employee_screen.dart';
+import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class HomeEmployeeScreen extends StatefulWidget {
   const HomeEmployeeScreen({super.key});
@@ -13,6 +17,14 @@ class HomeEmployeeScreen extends StatefulWidget {
 
 class _HomeEmployeeScreenState extends State<HomeEmployeeScreen> {
   late int _selectedIndex;
+  PresenceProvider? presenceProvider;
+
+  @override
+  void initState() {
+    super.initState();
+
+    presenceProvider = context.read<PresenceProvider>();
+  }
 
   @override
   void didChangeDependencies() {
@@ -126,8 +138,31 @@ class _HomeEmployeeScreenState extends State<HomeEmployeeScreen> {
         ),
       ),
       child: FloatingActionButton(
-        onPressed: () {
-          // do something
+        onPressed: () async {
+          String result = await FlutterBarcodeScanner.scanBarcode(
+            "#FF0000",
+            "Cancel",
+            true,
+            ScanMode.QR,
+          );
+
+          if (context.mounted && result.isNotEmpty && result != "-1") {
+            bool isSuccess = await context
+                .read<PresenceProvider>()
+                .createPresence(code: result);
+
+            if (context.mounted) {
+              if (isSuccess) {
+                ToastMessage.show(context, 'Success Presence');
+              } else {
+                ToastMessage.show(context, 'Failed Presence');
+              }
+            }
+          } else if (context.mounted && result == "-1") {
+            ToastMessage.show(context, 'Cancelled');
+          } else if (context.mounted) {
+            ToastMessage.show(context, 'Failed to scan');
+          }
         },
         backgroundColor: Colors.transparent,
         elevation: 0,
