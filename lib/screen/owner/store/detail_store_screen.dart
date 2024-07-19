@@ -694,12 +694,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                   const SizedBox(height: 8),
                   GestureDetector(
                     onTap: () {
-                      // buildBottomSheet(reviewProvider);
-                      if (reviewProvider.myRating == 0) {
-                        buildBottomSheet(reviewProvider);
-                      } else {
-                        ToastMessage.show(context, 'You already left a review');
-                      }
+                      buildBottomSheet(reviewProvider);
+                      // if (reviewProvider.myRating == 0) {
+                      //   buildBottomSheet(reviewProvider);
+                      // } else {
+                      //   ToastMessage.show(context, 'You already left a review');
+                      // }
                     },
                     child: RatingBarIndicator(
                       rating: reviewProvider.myRating.toDouble(),

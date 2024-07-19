@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tugas_akhir_app/model/presence.dart';
 
 class CardAttendance extends StatelessWidget {
   const CardAttendance({
     super.key,
+    required this.attendance,
   });
+
+  final Presence attendance;
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +32,14 @@ class CardAttendance extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    DateFormat('EEEE').format(DateTime.now()),
+                    DateFormat('EEEE').format(attendance.date),
                     style: const TextStyle(
                         color: Color(0xFF293869),
                         fontWeight: FontWeight.bold,
                         fontSize: 16),
                   ),
                   Text(
-                    DateFormat('dd-MMM-yyyy').format(DateTime.now()),
+                    DateFormat('dd-MMM-yyyy').format(attendance.date),
                     style: const TextStyle(
                       color: Color(0xFF293869),
                     ),
@@ -44,30 +48,30 @@ class CardAttendance extends StatelessWidget {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.access_time_outlined,
                       color: Color(0xFF293869),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Check In',
                           style: TextStyle(
                             color: Color(0xFF293869),
                           ),
                         ),
                         Text(
-                          '08:00 AM',
-                          style: TextStyle(
+                          DateFormat('HH:mm').format(attendance.entryTime),
+                          style: const TextStyle(
                             color: Color(0xFF293869),
                             fontWeight: FontWeight.bold,
                           ),
@@ -78,23 +82,25 @@ class CardAttendance extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.access_time_outlined,
                       color: Color(0xFF293869),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Check Out',
                           style: TextStyle(
                             color: Color(0xFF293869),
                           ),
                         ),
                         Text(
-                          '16:00 AM',
-                          style: TextStyle(
+                          attendance.exitTime != null
+                              ? DateFormat('HH:mm').format(attendance.exitTime!)
+                              : '--',
+                          style: const TextStyle(
                             color: Color(0xFF293869),
                             fontWeight: FontWeight.bold,
                           ),

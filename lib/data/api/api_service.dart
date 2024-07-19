@@ -17,6 +17,7 @@ import 'package:tugas_akhir_app/model/login.dart';
 import 'package:tugas_akhir_app/model/order.dart';
 import 'package:tugas_akhir_app/model/order_history.dart';
 import 'package:tugas_akhir_app/model/payslip.dart';
+import 'package:tugas_akhir_app/model/presence.dart';
 import 'package:tugas_akhir_app/model/qr_code.dart';
 import 'package:tugas_akhir_app/model/queue.dart';
 import 'package:tugas_akhir_app/model/register.dart';
@@ -26,7 +27,7 @@ import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.7:3000';
+  static const String baseUrl = 'http://10.217.25.223:3000';
   static const String _login = '/auth/owners/signin';
   static const String _register = '/auth/customers/signup';
   // static const String _logout = '/auth/owners/signout';
@@ -1103,6 +1104,24 @@ class ApiService {
     } catch (e) {
       debugPrint('Error: $e');
       rethrow;
+    }
+  }
+
+  Future<PresenceResponse> getAttendace({
+    required String token,
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_qrCode?page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      return PresenceResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw PresenceResponse.fromJson(jsonDecode(response.body));
     }
   }
 }
