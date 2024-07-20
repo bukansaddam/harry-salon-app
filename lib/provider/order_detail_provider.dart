@@ -75,6 +75,9 @@ class DetailOrderProvider extends ChangeNotifier {
     } else if (status == 'cancel') {
       orderState = const OrderState.canceled();
       notifyListeners();
+    } else if (status == 'unpaid') {
+      orderState = const OrderState.unpaid();
+      notifyListeners();
     }
   }
 

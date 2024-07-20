@@ -60,6 +60,9 @@ class _OwnerDetailHistoryScreenState extends State<OwnerDetailHistoryScreen> {
                                   initial: () => _buildBody(
                                         provider: detailProvider,
                                       ),
+                                  unpaid: () => _buildBody(
+                                        provider: detailProvider,
+                                      ),
                                   pending: () => _buildBody(
                                         provider: detailProvider,
                                       ),

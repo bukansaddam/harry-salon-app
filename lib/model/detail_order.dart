@@ -19,6 +19,7 @@ class DetailOrderResponse with _$DetailOrderResponse {
 class DetailOrder with _$DetailOrder {
   const factory DetailOrder({
     required String id,
+    required String linkPayment,
     required int orderNumber,
     required DateTime endTime,
     required String description,

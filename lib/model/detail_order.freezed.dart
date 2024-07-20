@@ -207,6 +207,7 @@ DetailOrder _$DetailOrderFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$DetailOrder {
   String get id => throw _privateConstructorUsedError;
+  String get linkPayment => throw _privateConstructorUsedError;
   int get orderNumber => throw _privateConstructorUsedError;
   DateTime get endTime => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
@@ -239,6 +240,7 @@ abstract class $DetailOrderCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String linkPayment,
       int orderNumber,
       DateTime endTime,
       String description,
@@ -274,6 +276,7 @@ class _$DetailOrderCopyWithImpl<$Res, $Val extends DetailOrder>
   @override
   $Res call({
     Object? id = null,
+    Object? linkPayment = null,
     Object? orderNumber = null,
     Object? endTime = null,
     Object? description = null,
@@ -296,6 +299,10 @@ class _$DetailOrderCopyWithImpl<$Res, $Val extends DetailOrder>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      linkPayment: null == linkPayment
+          ? _value.linkPayment
+          : linkPayment // ignore: cast_nullable_to_non_nullable
               as String,
       orderNumber: null == orderNumber
           ? _value.orderNumber
@@ -391,6 +398,7 @@ abstract class _$$DetailOrderImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
+      String linkPayment,
       int orderNumber,
       DateTime endTime,
       String description,
@@ -425,6 +433,7 @@ class __$$DetailOrderImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? linkPayment = null,
     Object? orderNumber = null,
     Object? endTime = null,
     Object? description = null,
@@ -447,6 +456,10 @@ class __$$DetailOrderImplCopyWithImpl<$Res>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      linkPayment: null == linkPayment
+          ? _value.linkPayment
+          : linkPayment // ignore: cast_nullable_to_non_nullable
               as String,
       orderNumber: null == orderNumber
           ? _value.orderNumber
@@ -525,6 +538,7 @@ class __$$DetailOrderImplCopyWithImpl<$Res>
 class _$DetailOrderImpl implements _DetailOrder {
   const _$DetailOrderImpl(
       {required this.id,
+      required this.linkPayment,
       required this.orderNumber,
       required this.endTime,
       required this.description,
@@ -548,6 +562,8 @@ class _$DetailOrderImpl implements _DetailOrder {
 
   @override
   final String id;
+  @override
+  final String linkPayment;
   @override
   final int orderNumber;
   @override
@@ -585,7 +601,7 @@ class _$DetailOrderImpl implements _DetailOrder {
 
   @override
   String toString() {
-    return 'DetailOrder(id: $id, orderNumber: $orderNumber, endTime: $endTime, description: $description, isOnLocation: $isOnLocation, isAccepted: $isAccepted, status: $status, userName: $userName, userAvatar: $userAvatar, userPhone: $userPhone, storeName: $storeName, storeLocation: $storeLocation, serviceImage: $serviceImage, serviceName: $serviceName, servicePrice: $servicePrice, employeeAvatar: $employeeAvatar, employeeName: $employeeName, reference: $reference)';
+    return 'DetailOrder(id: $id, linkPayment: $linkPayment, orderNumber: $orderNumber, endTime: $endTime, description: $description, isOnLocation: $isOnLocation, isAccepted: $isAccepted, status: $status, userName: $userName, userAvatar: $userAvatar, userPhone: $userPhone, storeName: $storeName, storeLocation: $storeLocation, serviceImage: $serviceImage, serviceName: $serviceName, servicePrice: $servicePrice, employeeAvatar: $employeeAvatar, employeeName: $employeeName, reference: $reference)';
   }
 
   @override
@@ -594,6 +610,8 @@ class _$DetailOrderImpl implements _DetailOrder {
         (other.runtimeType == runtimeType &&
             other is _$DetailOrderImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.linkPayment, linkPayment) ||
+                other.linkPayment == linkPayment) &&
             (identical(other.orderNumber, orderNumber) ||
                 other.orderNumber == orderNumber) &&
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
@@ -630,26 +648,28 @@ class _$DetailOrderImpl implements _DetailOrder {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      orderNumber,
-      endTime,
-      description,
-      isOnLocation,
-      isAccepted,
-      status,
-      userName,
-      userAvatar,
-      userPhone,
-      storeName,
-      storeLocation,
-      serviceImage,
-      serviceName,
-      servicePrice,
-      employeeAvatar,
-      employeeName,
-      reference);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        linkPayment,
+        orderNumber,
+        endTime,
+        description,
+        isOnLocation,
+        isAccepted,
+        status,
+        userName,
+        userAvatar,
+        userPhone,
+        storeName,
+        storeLocation,
+        serviceImage,
+        serviceName,
+        servicePrice,
+        employeeAvatar,
+        employeeName,
+        reference
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -668,6 +688,7 @@ class _$DetailOrderImpl implements _DetailOrder {
 abstract class _DetailOrder implements DetailOrder {
   const factory _DetailOrder(
       {required final String id,
+      required final String linkPayment,
       required final int orderNumber,
       required final DateTime endTime,
       required final String description,
@@ -691,6 +712,8 @@ abstract class _DetailOrder implements DetailOrder {
 
   @override
   String get id;
+  @override
+  String get linkPayment;
   @override
   int get orderNumber;
   @override

@@ -15,7 +15,6 @@ import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_hairstyle.dart';
 import 'package:tugas_akhir_app/screen/widgets/search_bar.dart';
 import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
-import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class AddOrderScreen extends StatefulWidget {
   const AddOrderScreen({super.key, required this.location});
@@ -490,10 +489,16 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
               hairstyleId: referenceHairstyle?.id,
             );
 
+            // if (isSuccess && mounted) {
+            //   provider.refreshOrder();
+            //   ToastMessage.show(context, 'Order created');
+            //   context.pop();
+            // }
             if (isSuccess && mounted) {
-              provider.refreshOrder();
-              ToastMessage.show(context, 'Order created');
-              context.pop();
+              context.goNamed(
+                'payment',
+                extra: provider.uploadResponse!.data,
+              );
             }
           }
         },

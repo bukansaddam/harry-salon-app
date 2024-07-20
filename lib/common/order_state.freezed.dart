@@ -19,6 +19,7 @@ mixin _$OrderState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function() unpaid,
     required TResult Function() pending,
     required TResult Function() waiting,
     required TResult Function() onProcress,
@@ -30,6 +31,7 @@ mixin _$OrderState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function()? unpaid,
     TResult? Function()? pending,
     TResult? Function()? waiting,
     TResult? Function()? onProcress,
@@ -41,6 +43,7 @@ mixin _$OrderState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function()? unpaid,
     TResult Function()? pending,
     TResult Function()? waiting,
     TResult Function()? onProcress,
@@ -53,6 +56,7 @@ mixin _$OrderState {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_OrderStateInitial value) initial,
+    required TResult Function(_OrderStateUnpaid value) unpaid,
     required TResult Function(_OrderStatePending value) pending,
     required TResult Function(_OrderStateWaiting value) waiting,
     required TResult Function(_OrderStateOnProcress value) onProcress,
@@ -64,6 +68,7 @@ mixin _$OrderState {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_OrderStateInitial value)? initial,
+    TResult? Function(_OrderStateUnpaid value)? unpaid,
     TResult? Function(_OrderStatePending value)? pending,
     TResult? Function(_OrderStateWaiting value)? waiting,
     TResult? Function(_OrderStateOnProcress value)? onProcress,
@@ -75,6 +80,7 @@ mixin _$OrderState {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_OrderStateInitial value)? initial,
+    TResult Function(_OrderStateUnpaid value)? unpaid,
     TResult Function(_OrderStatePending value)? pending,
     TResult Function(_OrderStateWaiting value)? waiting,
     TResult Function(_OrderStateOnProcress value)? onProcress,
@@ -143,6 +149,7 @@ class _$OrderStateInitialImpl implements _OrderStateInitial {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function() unpaid,
     required TResult Function() pending,
     required TResult Function() waiting,
     required TResult Function() onProcress,
@@ -157,6 +164,7 @@ class _$OrderStateInitialImpl implements _OrderStateInitial {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function()? unpaid,
     TResult? Function()? pending,
     TResult? Function()? waiting,
     TResult? Function()? onProcress,
@@ -171,6 +179,7 @@ class _$OrderStateInitialImpl implements _OrderStateInitial {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function()? unpaid,
     TResult Function()? pending,
     TResult Function()? waiting,
     TResult Function()? onProcress,
@@ -189,6 +198,7 @@ class _$OrderStateInitialImpl implements _OrderStateInitial {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_OrderStateInitial value) initial,
+    required TResult Function(_OrderStateUnpaid value) unpaid,
     required TResult Function(_OrderStatePending value) pending,
     required TResult Function(_OrderStateWaiting value) waiting,
     required TResult Function(_OrderStateOnProcress value) onProcress,
@@ -203,6 +213,7 @@ class _$OrderStateInitialImpl implements _OrderStateInitial {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_OrderStateInitial value)? initial,
+    TResult? Function(_OrderStateUnpaid value)? unpaid,
     TResult? Function(_OrderStatePending value)? pending,
     TResult? Function(_OrderStateWaiting value)? waiting,
     TResult? Function(_OrderStateOnProcress value)? onProcress,
@@ -217,6 +228,7 @@ class _$OrderStateInitialImpl implements _OrderStateInitial {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_OrderStateInitial value)? initial,
+    TResult Function(_OrderStateUnpaid value)? unpaid,
     TResult Function(_OrderStatePending value)? pending,
     TResult Function(_OrderStateWaiting value)? waiting,
     TResult Function(_OrderStateOnProcress value)? onProcress,
@@ -234,6 +246,144 @@ class _$OrderStateInitialImpl implements _OrderStateInitial {
 
 abstract class _OrderStateInitial implements OrderState {
   const factory _OrderStateInitial() = _$OrderStateInitialImpl;
+}
+
+/// @nodoc
+abstract class _$$OrderStateUnpaidImplCopyWith<$Res> {
+  factory _$$OrderStateUnpaidImplCopyWith(_$OrderStateUnpaidImpl value,
+          $Res Function(_$OrderStateUnpaidImpl) then) =
+      __$$OrderStateUnpaidImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$OrderStateUnpaidImplCopyWithImpl<$Res>
+    extends _$OrderStateCopyWithImpl<$Res, _$OrderStateUnpaidImpl>
+    implements _$$OrderStateUnpaidImplCopyWith<$Res> {
+  __$$OrderStateUnpaidImplCopyWithImpl(_$OrderStateUnpaidImpl _value,
+      $Res Function(_$OrderStateUnpaidImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$OrderStateUnpaidImpl implements _OrderStateUnpaid {
+  const _$OrderStateUnpaidImpl();
+
+  @override
+  String toString() {
+    return 'OrderState.unpaid()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$OrderStateUnpaidImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() unpaid,
+    required TResult Function() pending,
+    required TResult Function() waiting,
+    required TResult Function() onProcress,
+    required TResult Function() done,
+    required TResult Function() canceled,
+    required TResult Function(String message) error,
+  }) {
+    return unpaid();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? unpaid,
+    TResult? Function()? pending,
+    TResult? Function()? waiting,
+    TResult? Function()? onProcress,
+    TResult? Function()? done,
+    TResult? Function()? canceled,
+    TResult? Function(String message)? error,
+  }) {
+    return unpaid?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? unpaid,
+    TResult Function()? pending,
+    TResult Function()? waiting,
+    TResult Function()? onProcress,
+    TResult Function()? done,
+    TResult Function()? canceled,
+    TResult Function(String message)? error,
+    required TResult orElse(),
+  }) {
+    if (unpaid != null) {
+      return unpaid();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_OrderStateInitial value) initial,
+    required TResult Function(_OrderStateUnpaid value) unpaid,
+    required TResult Function(_OrderStatePending value) pending,
+    required TResult Function(_OrderStateWaiting value) waiting,
+    required TResult Function(_OrderStateOnProcress value) onProcress,
+    required TResult Function(_OrderStateDone value) done,
+    required TResult Function(_OrderStateCanceled value) canceled,
+    required TResult Function(_OrderStateError value) error,
+  }) {
+    return unpaid(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_OrderStateInitial value)? initial,
+    TResult? Function(_OrderStateUnpaid value)? unpaid,
+    TResult? Function(_OrderStatePending value)? pending,
+    TResult? Function(_OrderStateWaiting value)? waiting,
+    TResult? Function(_OrderStateOnProcress value)? onProcress,
+    TResult? Function(_OrderStateDone value)? done,
+    TResult? Function(_OrderStateCanceled value)? canceled,
+    TResult? Function(_OrderStateError value)? error,
+  }) {
+    return unpaid?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_OrderStateInitial value)? initial,
+    TResult Function(_OrderStateUnpaid value)? unpaid,
+    TResult Function(_OrderStatePending value)? pending,
+    TResult Function(_OrderStateWaiting value)? waiting,
+    TResult Function(_OrderStateOnProcress value)? onProcress,
+    TResult Function(_OrderStateDone value)? done,
+    TResult Function(_OrderStateCanceled value)? canceled,
+    TResult Function(_OrderStateError value)? error,
+    required TResult orElse(),
+  }) {
+    if (unpaid != null) {
+      return unpaid(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _OrderStateUnpaid implements OrderState {
+  const factory _OrderStateUnpaid() = _$OrderStateUnpaidImpl;
 }
 
 /// @nodoc
@@ -275,6 +425,7 @@ class _$OrderStatePendingImpl implements _OrderStatePending {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function() unpaid,
     required TResult Function() pending,
     required TResult Function() waiting,
     required TResult Function() onProcress,
@@ -289,6 +440,7 @@ class _$OrderStatePendingImpl implements _OrderStatePending {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function()? unpaid,
     TResult? Function()? pending,
     TResult? Function()? waiting,
     TResult? Function()? onProcress,
@@ -303,6 +455,7 @@ class _$OrderStatePendingImpl implements _OrderStatePending {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function()? unpaid,
     TResult Function()? pending,
     TResult Function()? waiting,
     TResult Function()? onProcress,
@@ -321,6 +474,7 @@ class _$OrderStatePendingImpl implements _OrderStatePending {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_OrderStateInitial value) initial,
+    required TResult Function(_OrderStateUnpaid value) unpaid,
     required TResult Function(_OrderStatePending value) pending,
     required TResult Function(_OrderStateWaiting value) waiting,
     required TResult Function(_OrderStateOnProcress value) onProcress,
@@ -335,6 +489,7 @@ class _$OrderStatePendingImpl implements _OrderStatePending {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_OrderStateInitial value)? initial,
+    TResult? Function(_OrderStateUnpaid value)? unpaid,
     TResult? Function(_OrderStatePending value)? pending,
     TResult? Function(_OrderStateWaiting value)? waiting,
     TResult? Function(_OrderStateOnProcress value)? onProcress,
@@ -349,6 +504,7 @@ class _$OrderStatePendingImpl implements _OrderStatePending {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_OrderStateInitial value)? initial,
+    TResult Function(_OrderStateUnpaid value)? unpaid,
     TResult Function(_OrderStatePending value)? pending,
     TResult Function(_OrderStateWaiting value)? waiting,
     TResult Function(_OrderStateOnProcress value)? onProcress,
@@ -407,6 +563,7 @@ class _$OrderStateWaitingImpl implements _OrderStateWaiting {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function() unpaid,
     required TResult Function() pending,
     required TResult Function() waiting,
     required TResult Function() onProcress,
@@ -421,6 +578,7 @@ class _$OrderStateWaitingImpl implements _OrderStateWaiting {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function()? unpaid,
     TResult? Function()? pending,
     TResult? Function()? waiting,
     TResult? Function()? onProcress,
@@ -435,6 +593,7 @@ class _$OrderStateWaitingImpl implements _OrderStateWaiting {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function()? unpaid,
     TResult Function()? pending,
     TResult Function()? waiting,
     TResult Function()? onProcress,
@@ -453,6 +612,7 @@ class _$OrderStateWaitingImpl implements _OrderStateWaiting {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_OrderStateInitial value) initial,
+    required TResult Function(_OrderStateUnpaid value) unpaid,
     required TResult Function(_OrderStatePending value) pending,
     required TResult Function(_OrderStateWaiting value) waiting,
     required TResult Function(_OrderStateOnProcress value) onProcress,
@@ -467,6 +627,7 @@ class _$OrderStateWaitingImpl implements _OrderStateWaiting {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_OrderStateInitial value)? initial,
+    TResult? Function(_OrderStateUnpaid value)? unpaid,
     TResult? Function(_OrderStatePending value)? pending,
     TResult? Function(_OrderStateWaiting value)? waiting,
     TResult? Function(_OrderStateOnProcress value)? onProcress,
@@ -481,6 +642,7 @@ class _$OrderStateWaitingImpl implements _OrderStateWaiting {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_OrderStateInitial value)? initial,
+    TResult Function(_OrderStateUnpaid value)? unpaid,
     TResult Function(_OrderStatePending value)? pending,
     TResult Function(_OrderStateWaiting value)? waiting,
     TResult Function(_OrderStateOnProcress value)? onProcress,
@@ -540,6 +702,7 @@ class _$OrderStateOnProcressImpl implements _OrderStateOnProcress {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function() unpaid,
     required TResult Function() pending,
     required TResult Function() waiting,
     required TResult Function() onProcress,
@@ -554,6 +717,7 @@ class _$OrderStateOnProcressImpl implements _OrderStateOnProcress {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function()? unpaid,
     TResult? Function()? pending,
     TResult? Function()? waiting,
     TResult? Function()? onProcress,
@@ -568,6 +732,7 @@ class _$OrderStateOnProcressImpl implements _OrderStateOnProcress {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function()? unpaid,
     TResult Function()? pending,
     TResult Function()? waiting,
     TResult Function()? onProcress,
@@ -586,6 +751,7 @@ class _$OrderStateOnProcressImpl implements _OrderStateOnProcress {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_OrderStateInitial value) initial,
+    required TResult Function(_OrderStateUnpaid value) unpaid,
     required TResult Function(_OrderStatePending value) pending,
     required TResult Function(_OrderStateWaiting value) waiting,
     required TResult Function(_OrderStateOnProcress value) onProcress,
@@ -600,6 +766,7 @@ class _$OrderStateOnProcressImpl implements _OrderStateOnProcress {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_OrderStateInitial value)? initial,
+    TResult? Function(_OrderStateUnpaid value)? unpaid,
     TResult? Function(_OrderStatePending value)? pending,
     TResult? Function(_OrderStateWaiting value)? waiting,
     TResult? Function(_OrderStateOnProcress value)? onProcress,
@@ -614,6 +781,7 @@ class _$OrderStateOnProcressImpl implements _OrderStateOnProcress {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_OrderStateInitial value)? initial,
+    TResult Function(_OrderStateUnpaid value)? unpaid,
     TResult Function(_OrderStatePending value)? pending,
     TResult Function(_OrderStateWaiting value)? waiting,
     TResult Function(_OrderStateOnProcress value)? onProcress,
@@ -672,6 +840,7 @@ class _$OrderStateDoneImpl implements _OrderStateDone {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function() unpaid,
     required TResult Function() pending,
     required TResult Function() waiting,
     required TResult Function() onProcress,
@@ -686,6 +855,7 @@ class _$OrderStateDoneImpl implements _OrderStateDone {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function()? unpaid,
     TResult? Function()? pending,
     TResult? Function()? waiting,
     TResult? Function()? onProcress,
@@ -700,6 +870,7 @@ class _$OrderStateDoneImpl implements _OrderStateDone {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function()? unpaid,
     TResult Function()? pending,
     TResult Function()? waiting,
     TResult Function()? onProcress,
@@ -718,6 +889,7 @@ class _$OrderStateDoneImpl implements _OrderStateDone {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_OrderStateInitial value) initial,
+    required TResult Function(_OrderStateUnpaid value) unpaid,
     required TResult Function(_OrderStatePending value) pending,
     required TResult Function(_OrderStateWaiting value) waiting,
     required TResult Function(_OrderStateOnProcress value) onProcress,
@@ -732,6 +904,7 @@ class _$OrderStateDoneImpl implements _OrderStateDone {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_OrderStateInitial value)? initial,
+    TResult? Function(_OrderStateUnpaid value)? unpaid,
     TResult? Function(_OrderStatePending value)? pending,
     TResult? Function(_OrderStateWaiting value)? waiting,
     TResult? Function(_OrderStateOnProcress value)? onProcress,
@@ -746,6 +919,7 @@ class _$OrderStateDoneImpl implements _OrderStateDone {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_OrderStateInitial value)? initial,
+    TResult Function(_OrderStateUnpaid value)? unpaid,
     TResult Function(_OrderStatePending value)? pending,
     TResult Function(_OrderStateWaiting value)? waiting,
     TResult Function(_OrderStateOnProcress value)? onProcress,
@@ -804,6 +978,7 @@ class _$OrderStateCanceledImpl implements _OrderStateCanceled {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function() unpaid,
     required TResult Function() pending,
     required TResult Function() waiting,
     required TResult Function() onProcress,
@@ -818,6 +993,7 @@ class _$OrderStateCanceledImpl implements _OrderStateCanceled {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function()? unpaid,
     TResult? Function()? pending,
     TResult? Function()? waiting,
     TResult? Function()? onProcress,
@@ -832,6 +1008,7 @@ class _$OrderStateCanceledImpl implements _OrderStateCanceled {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function()? unpaid,
     TResult Function()? pending,
     TResult Function()? waiting,
     TResult Function()? onProcress,
@@ -850,6 +1027,7 @@ class _$OrderStateCanceledImpl implements _OrderStateCanceled {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_OrderStateInitial value) initial,
+    required TResult Function(_OrderStateUnpaid value) unpaid,
     required TResult Function(_OrderStatePending value) pending,
     required TResult Function(_OrderStateWaiting value) waiting,
     required TResult Function(_OrderStateOnProcress value) onProcress,
@@ -864,6 +1042,7 @@ class _$OrderStateCanceledImpl implements _OrderStateCanceled {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_OrderStateInitial value)? initial,
+    TResult? Function(_OrderStateUnpaid value)? unpaid,
     TResult? Function(_OrderStatePending value)? pending,
     TResult? Function(_OrderStateWaiting value)? waiting,
     TResult? Function(_OrderStateOnProcress value)? onProcress,
@@ -878,6 +1057,7 @@ class _$OrderStateCanceledImpl implements _OrderStateCanceled {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_OrderStateInitial value)? initial,
+    TResult Function(_OrderStateUnpaid value)? unpaid,
     TResult Function(_OrderStatePending value)? pending,
     TResult Function(_OrderStateWaiting value)? waiting,
     TResult Function(_OrderStateOnProcress value)? onProcress,
@@ -963,6 +1143,7 @@ class _$OrderStateErrorImpl implements _OrderStateError {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
+    required TResult Function() unpaid,
     required TResult Function() pending,
     required TResult Function() waiting,
     required TResult Function() onProcress,
@@ -977,6 +1158,7 @@ class _$OrderStateErrorImpl implements _OrderStateError {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
+    TResult? Function()? unpaid,
     TResult? Function()? pending,
     TResult? Function()? waiting,
     TResult? Function()? onProcress,
@@ -991,6 +1173,7 @@ class _$OrderStateErrorImpl implements _OrderStateError {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
+    TResult Function()? unpaid,
     TResult Function()? pending,
     TResult Function()? waiting,
     TResult Function()? onProcress,
@@ -1009,6 +1192,7 @@ class _$OrderStateErrorImpl implements _OrderStateError {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_OrderStateInitial value) initial,
+    required TResult Function(_OrderStateUnpaid value) unpaid,
     required TResult Function(_OrderStatePending value) pending,
     required TResult Function(_OrderStateWaiting value) waiting,
     required TResult Function(_OrderStateOnProcress value) onProcress,
@@ -1023,6 +1207,7 @@ class _$OrderStateErrorImpl implements _OrderStateError {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_OrderStateInitial value)? initial,
+    TResult? Function(_OrderStateUnpaid value)? unpaid,
     TResult? Function(_OrderStatePending value)? pending,
     TResult? Function(_OrderStateWaiting value)? waiting,
     TResult? Function(_OrderStateOnProcress value)? onProcress,
@@ -1037,6 +1222,7 @@ class _$OrderStateErrorImpl implements _OrderStateError {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_OrderStateInitial value)? initial,
+    TResult Function(_OrderStateUnpaid value)? unpaid,
     TResult Function(_OrderStatePending value)? pending,
     TResult Function(_OrderStateWaiting value)? waiting,
     TResult Function(_OrderStateOnProcress value)? onProcress,

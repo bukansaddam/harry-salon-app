@@ -67,6 +67,12 @@ class _EmployeeDetailOrderScreenState extends State<EmployeeDetailOrderScreen> {
                                         message:
                                             'Menunggu konfirmasi dari toko',
                                       ),
+                                  unpaid: () => _buildBody(
+                                        provider: detailProvider,
+                                        title: 'Menunggu Konfirmasi',
+                                        message:
+                                            'Menunggu konfirmasi dari toko',
+                                      ),
                                   pending: () => _buildBody(
                                       provider: detailProvider,
                                       title: 'Menunggu Konfirmasi',
@@ -110,6 +116,7 @@ class _EmployeeDetailOrderScreenState extends State<EmployeeDetailOrderScreen> {
                       right: 16,
                       child: detailProvider.orderState.when(
                         initial: () => const SizedBox(),
+                        unpaid: () => const SizedBox(),
                         pending: () => currentTask == null ||
                                 currentTask.status == 'done'
                             ? Row(
@@ -329,6 +336,7 @@ class _EmployeeDetailOrderScreenState extends State<EmployeeDetailOrderScreen> {
                         fontWeight: FontWeight.bold,
                         color: orderState.when(
                           initial: () => Colors.black,
+                          unpaid: () => Colors.yellow[500],
                           pending: () => Colors.yellow[500],
                           waiting: () => Colors.green,
                           onProcress: () => Colors.green,

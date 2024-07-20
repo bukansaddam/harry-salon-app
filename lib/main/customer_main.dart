@@ -16,6 +16,7 @@ import 'package:tugas_akhir_app/screen/auth/register_screen.dart';
 import 'package:tugas_akhir_app/screen/customer/add_order_screen.dart';
 import 'package:tugas_akhir_app/screen/customer/detail_order_screen.dart';
 import 'package:tugas_akhir_app/screen/customer/edit_profile_screen.dart';
+import 'package:tugas_akhir_app/screen/customer/payment_webview_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/detail_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/home_customer_screen.dart';
@@ -143,6 +144,16 @@ final GoRouter _router = GoRouter(
           builder: (context, state) {
             final Store extra = state.extra as Store;
             return AddOrderScreen(location: extra);
+          },
+        ),
+        GoRoute(
+          path: 'payment',
+          name: 'payment',
+          builder: (context, state) {
+            final String url = state.extra as String;
+            return PaymentWebviewScreen(
+              url: url,
+            );
           },
         ),
         GoRoute(

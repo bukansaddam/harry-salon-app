@@ -5,6 +5,7 @@ part 'order_state.freezed.dart';
 @freezed
 class OrderState with _$OrderState {
   const factory OrderState.initial() = _OrderStateInitial;
+  const factory OrderState.unpaid() = _OrderStateUnpaid;
   const factory OrderState.pending() = _OrderStatePending;
   const factory OrderState.waiting() = _OrderStateWaiting;
   const factory OrderState.onProcress() = _OrderStateOnProcress;

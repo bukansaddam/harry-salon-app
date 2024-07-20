@@ -67,6 +67,12 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                                         message:
                                             'Menunggu konfirmasi dari toko',
                                       ),
+                                  unpaid: () => _buildBody(
+                                        provider: detailProvider,
+                                        title: 'Belum Melakukan Pembayaran',
+                                        message:
+                                            'Mohon lakukan pembayaran sebelum waktu yang ditentukan',
+                                      ),
                                   pending: () => _buildBody(
                                         provider: detailProvider,
                                         title: 'Menunggu Konfirmasi',
@@ -115,7 +121,10 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                           ? context.watch<DetailOrderProvider>().isOnLocation
                               ? const SizedBox()
                               : _buildButton(detailProvider)
-                          : const SizedBox(),
+                          : detailProvider.orderState ==
+                                  const OrderState.unpaid()
+                              ? _buildButtonPayment(detailProvider)
+                              : const SizedBox(),
                     ),
                   ],
                 ),
@@ -159,6 +168,7 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                   fontWeight: FontWeight.bold,
                   color: status.when(
                     initial: () => Colors.black,
+                    unpaid: () => Colors.yellow[500],
                     pending: () => Colors.yellow[500],
                     waiting: () => Colors.green,
                     onProcress: () => Colors.green,
@@ -358,6 +368,16 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
             });
       },
       text: "Confirm Attendance",
+    );
+  }
+
+  Widget _buildButtonPayment(DetailOrderProvider detailProvider) {
+    return CustomButton(
+      function: () {
+        context.goNamed('payment',
+            extra: detailProvider.detailOrderResponse!.data.linkPayment);
+      },
+      text: "Pay Now",
     );
   }
 }

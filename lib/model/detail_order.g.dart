@@ -25,6 +25,7 @@ Map<String, dynamic> _$$DetailOrderResponseImplToJson(
 _$DetailOrderImpl _$$DetailOrderImplFromJson(Map<String, dynamic> json) =>
     _$DetailOrderImpl(
       id: json['id'] as String,
+      linkPayment: json['linkPayment'] as String,
       orderNumber: (json['orderNumber'] as num).toInt(),
       endTime: DateTime.parse(json['endTime'] as String),
       description: json['description'] as String,
@@ -49,6 +50,7 @@ _$DetailOrderImpl _$$DetailOrderImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$DetailOrderImplToJson(_$DetailOrderImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'linkPayment': instance.linkPayment,
       'orderNumber': instance.orderNumber,
       'endTime': instance.endTime.toIso8601String(),
       'description': instance.description,

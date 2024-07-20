@@ -22,6 +22,7 @@ UploadResponse _$UploadResponseFromJson(Map<String, dynamic> json) {
 mixin _$UploadResponse {
   bool get success => throw _privateConstructorUsedError;
   String get message => throw _privateConstructorUsedError;
+  String? get data => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +36,7 @@ abstract class $UploadResponseCopyWith<$Res> {
           UploadResponse value, $Res Function(UploadResponse) then) =
       _$UploadResponseCopyWithImpl<$Res, UploadResponse>;
   @useResult
-  $Res call({bool success, String message});
+  $Res call({bool success, String message, String? data});
 }
 
 /// @nodoc
@@ -53,6 +54,7 @@ class _$UploadResponseCopyWithImpl<$Res, $Val extends UploadResponse>
   $Res call({
     Object? success = null,
     Object? message = null,
+    Object? data = freezed,
   }) {
     return _then(_value.copyWith(
       success: null == success
@@ -63,6 +65,10 @@ class _$UploadResponseCopyWithImpl<$Res, $Val extends UploadResponse>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
+      data: freezed == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -75,7 +81,7 @@ abstract class _$$UploadResponseImplCopyWith<$Res>
       __$$UploadResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool success, String message});
+  $Res call({bool success, String message, String? data});
 }
 
 /// @nodoc
@@ -91,6 +97,7 @@ class __$$UploadResponseImplCopyWithImpl<$Res>
   $Res call({
     Object? success = null,
     Object? message = null,
+    Object? data = freezed,
   }) {
     return _then(_$UploadResponseImpl(
       success: null == success
@@ -101,6 +108,10 @@ class __$$UploadResponseImplCopyWithImpl<$Res>
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
+      data: freezed == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -108,7 +119,8 @@ class __$$UploadResponseImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$UploadResponseImpl implements _UploadResponse {
-  const _$UploadResponseImpl({required this.success, required this.message});
+  const _$UploadResponseImpl(
+      {required this.success, required this.message, this.data});
 
   factory _$UploadResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$UploadResponseImplFromJson(json);
@@ -117,10 +129,12 @@ class _$UploadResponseImpl implements _UploadResponse {
   final bool success;
   @override
   final String message;
+  @override
+  final String? data;
 
   @override
   String toString() {
-    return 'UploadResponse(success: $success, message: $message)';
+    return 'UploadResponse(success: $success, message: $message, data: $data)';
   }
 
   @override
@@ -129,12 +143,13 @@ class _$UploadResponseImpl implements _UploadResponse {
         (other.runtimeType == runtimeType &&
             other is _$UploadResponseImpl &&
             (identical(other.success, success) || other.success == success) &&
-            (identical(other.message, message) || other.message == message));
+            (identical(other.message, message) || other.message == message) &&
+            (identical(other.data, data) || other.data == data));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, success, message);
+  int get hashCode => Object.hash(runtimeType, success, message, data);
 
   @JsonKey(ignore: true)
   @override
@@ -154,7 +169,8 @@ class _$UploadResponseImpl implements _UploadResponse {
 abstract class _UploadResponse implements UploadResponse {
   const factory _UploadResponse(
       {required final bool success,
-      required final String message}) = _$UploadResponseImpl;
+      required final String message,
+      final String? data}) = _$UploadResponseImpl;
 
   factory _UploadResponse.fromJson(Map<String, dynamic> json) =
       _$UploadResponseImpl.fromJson;
@@ -163,6 +179,8 @@ abstract class _UploadResponse implements UploadResponse {
   bool get success;
   @override
   String get message;
+  @override
+  String? get data;
   @override
   @JsonKey(ignore: true)
   _$$UploadResponseImplCopyWith<_$UploadResponseImpl> get copyWith =>

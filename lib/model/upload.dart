@@ -8,6 +8,7 @@ class UploadResponse with _$UploadResponse {
   const factory UploadResponse({
     required bool success,
     required String message,
+    String? data,
   }) = _UploadResponse;
 
   factory UploadResponse.fromJson(Map<String, dynamic> json) =>

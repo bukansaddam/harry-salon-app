@@ -10,6 +10,7 @@ _$UploadResponseImpl _$$UploadResponseImplFromJson(Map<String, dynamic> json) =>
     _$UploadResponseImpl(
       success: json['success'] as bool,
       message: json['message'] as String,
+      data: json['data'] as String?,
     );
 
 Map<String, dynamic> _$$UploadResponseImplToJson(
@@ -17,4 +18,5 @@ Map<String, dynamic> _$$UploadResponseImplToJson(
     <String, dynamic>{
       'success': instance.success,
       'message': instance.message,
+      'data': instance.data,
     };

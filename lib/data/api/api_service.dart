@@ -27,7 +27,7 @@ import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://10.217.25.223:3000';
+  static const String baseUrl = 'http://192.168.1.9:3000';
   static const String _login = '/auth/owners/signin';
   static const String _register = '/auth/customers/signup';
   // static const String _logout = '/auth/owners/signout';
