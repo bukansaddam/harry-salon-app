@@ -18,8 +18,8 @@ class EmployeeResponse with _$EmployeeResponse {
 @freezed
 class EmployeeResult with _$EmployeeResult {
   const factory EmployeeResult({
-    @JsonKey(name: 'total_count') required int? totalCount,
-    @JsonKey(name: 'total_pages') required int? totalPages,
+    required int? totalCount,
+    required int? totalPages,
     required List<Employee> data,
   }) = _EmployeeResult;
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/presence_provider.dart';
 import 'package:tugas_akhir_app/screen/customer/profile_screen.dart';
@@ -139,14 +139,11 @@ class _HomeEmployeeScreenState extends State<HomeEmployeeScreen> {
       ),
       child: FloatingActionButton(
         onPressed: () async {
-          String result = await FlutterBarcodeScanner.scanBarcode(
-            "#FF0000",
-            "Cancel",
-            true,
-            ScanMode.QR,
-          );
+          String? result = await context.pushNamed('scan_qr');
 
-          if (context.mounted && result.isNotEmpty && result != "-1") {
+          debugPrint(result);
+
+          if (context.mounted && result!.isNotEmpty && result != "-1") {
             bool isSuccess = await context
                 .read<PresenceProvider>()
                 .createPresence(code: result);

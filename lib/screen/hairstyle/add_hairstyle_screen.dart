@@ -131,13 +131,18 @@ class _AddHairstyleScreenState extends State<AddHairstyleScreen> {
         );
 
         if (mounted) {
-          if (provider.uploadResponse!.success) {
-            provider.refreshHairstyle();
-            ToastMessage.show(context, 'Hairstyle added');
-            context.pop();
-          } else {
-            ToastMessage.show(context, provider.uploadResponse!.message);
-          }
+          provider.loadingState.when(
+            initial: () {},
+            loading: () {},
+            loaded: () {
+              provider.refreshHairstyle();
+              ToastMessage.show(context, 'Hairstyle added');
+              context.pop();
+            },
+            error: (error) {
+              ToastMessage.show(context, error);
+            },
+          );
         }
       }
     }

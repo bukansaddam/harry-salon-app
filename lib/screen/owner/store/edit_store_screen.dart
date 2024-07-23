@@ -1,25 +1,30 @@
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:location/location.dart';
 import 'package:provider/provider.dart';
-import 'package:geocoding/geocoding.dart' as geo;
+import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
+import 'package:geocoding/geocoding.dart' as geo;
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
 import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
-class AddStoreScreen extends StatefulWidget {
-  const AddStoreScreen({super.key});
+class EditStoreScreen extends StatefulWidget {
+  const EditStoreScreen(
+      {super.key, required this.storeId, required this.detailStore});
+
+  final String storeId;
+  final DetailStore detailStore;
 
   @override
-  State<AddStoreScreen> createState() => _AddStoreScreenState();
+  State<EditStoreScreen> createState() => _EditStoreScreenState();
 }
 
-class _AddStoreScreenState extends State<AddStoreScreen> {
+class _EditStoreScreenState extends State<EditStoreScreen> {
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
   final _openController = TextEditingController();
@@ -34,22 +39,37 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
 
   geo.Placemark? placemark;
 
+  // List<Map<String, dynamic>> combinedImages = [];
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _storeProvider = Provider.of<StoreProvider>(context, listen: false);
+    _storeProvider = context.read<StoreProvider>();
 
-    getMyLocation();
+    _nameController.text = widget.detailStore.name;
+    _addressController.text = widget.detailStore.location;
+    _openController.text = widget.detailStore.openAt;
+    _closeController.text = widget.detailStore.closeAt;
+    _descriptionController.text = widget.detailStore.description;
+  }
 
-    if (locationData != null && placemark != null) {
-      _addressController.text =
-          '${placemark!.name}, ${placemark!.subLocality}, ${placemark!.locality}, ${placemark!.country}';
-    }
+  @override
+  void initState() {
+    super.initState();
+
+    getLocation();
+
+    Future.microtask(() {
+      _storeProvider.addExistingImage(widget.detailStore);
+      _storeProvider.combineImages();
+    });
   }
 
   @override
   void dispose() {
-    _storeProvider.clearImage();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _storeProvider.clearImage();
+    });
     _nameController.dispose();
     _addressController.dispose();
     _openController.dispose();
@@ -58,11 +78,50 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
     super.dispose();
   }
 
+  void getLocation() async {
+    try {
+      locationData =
+          LatLng(widget.detailStore.latitude, widget.detailStore.longitude);
+      currentLocation = locationData!;
+
+      final placemarks = await geo.placemarkFromCoordinates(
+        widget.detailStore.latitude,
+        widget.detailStore.longitude,
+      );
+      placemark = placemarks.first;
+    } catch (e) {
+      // Handle the error or show an error message to the user
+      debugPrint("Error retrieving location: $e");
+      // Optionally, set a default location or take other appropriate action
+    }
+  }
+
+  // void updateCombinedImages() {
+  //   final provider = _storeProvider!;
+  //   final List<Map<String, dynamic>> modifiableStoreImages =
+  //       widget.detailStore.images
+  //           .map((image) => {
+  //                 'isProvider': false,
+  //                 'url': "${ApiService.baseUrl}/${image.image}",
+  //                 'id': image.id
+  //               })
+  //           .toList();
+
+  //   setState(() {
+  //     combinedImages = [
+  //       ...modifiableStoreImages,
+  //       ...provider.imageUrls.map(
+  //         (url) => {'isProvider': true, 'url': url},
+  //       ),
+  //     ];
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Store'),
+        title: const Text('Edit Store'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -271,56 +330,6 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
     );
   }
 
-  void getMyLocation() async {
-    late bool serviceEnabled;
-    late PermissionStatus permissionGranted;
-    final Location location = Location();
-
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        debugPrint("Location services are not available");
-        return;
-      }
-    }
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        debugPrint("Location permission not granted");
-        return;
-      }
-    }
-
-    final locationDataResult = await location.getLocation();
-    final latLng =
-        LatLng(locationDataResult.latitude!, locationDataResult.longitude!);
-
-    if (mounted) {
-      setState(() {
-        currentLocation = latLng;
-        locationData = latLng;
-      });
-    }
-
-    try {
-      final placemarks = await geo.placemarkFromCoordinates(
-        locationDataResult.latitude!,
-        locationDataResult.longitude!,
-      );
-      if (placemarks.isNotEmpty) {
-        setState(() {
-          placemark = placemarks.first;
-          _addressController.text =
-              '${placemark!.street}, ${placemark!.subLocality}, ${placemark!.locality}, ${placemark!.country}';
-        });
-      }
-    } catch (e) {
-      debugPrint('Error fetching placemark: $e');
-    }
-  }
-
   void _onSubmit() async {
     if (formKey.currentState!.validate()) {
       final provider = context.read<StoreProvider>();
@@ -331,37 +340,33 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
       final close = _closeController.text;
       final description = _descriptionController.text;
 
-      if (provider.imageUrls.isEmpty) {
+      if (provider.imageUrls.isEmpty && provider.existingImages.isEmpty) {
         ToastMessage.show(context, 'Image cannot be empty');
       } else {
-        await provider.addStore(
-          name,
-          description,
-          address,
-          locationData!.latitude,
-          locationData!.longitude,
-          TimeOfDay(
+        await provider.updateStore(
+          id: widget.detailStore.id,
+          name: name,
+          description: description,
+          location: address,
+          latitude: locationData!.latitude,
+          longitude: locationData!.longitude,
+          openAt: TimeOfDay(
             hour: int.parse(open.split(':')[0]),
             minute: int.parse(open.split(':')[1]),
           ),
-          TimeOfDay(
+          closeAt: TimeOfDay(
             hour: int.parse(close.split(':')[0]),
             minute: int.parse(close.split(':')[1]),
           ),
         );
         if (mounted) {
-          provider.loadingState.when(
-            initial: () {},
-            loading: () {},
-            loaded: () {
-              provider.refreshOwnerStore();
-              ToastMessage.show(context, provider.uploadResponse!.message);
-              context.pop();
-            },
-            error: (error) {
-              ToastMessage.show(context, error);
-            },
-          );
+          if (provider.uploadResponse!.success) {
+            provider.refreshOwnerStore();
+            ToastMessage.show(context, provider.uploadResponse!.message);
+            context.pop();
+          } else {
+            ToastMessage.show(context, provider.uploadResponse!.message);
+          }
         }
       }
     }
@@ -369,14 +374,15 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
 
   Widget _buildImage(BuildContext context) {
     final provider = context.watch<StoreProvider>();
-    return provider.imageUrls.isNotEmpty
+
+    return provider.combinedImages.isNotEmpty
         ? SizedBox(
             height: 100,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: provider.imageUrls.length + 1,
+              itemCount: provider.combinedImages.length + 1,
               itemBuilder: (context, index) {
-                if (index == provider.imageUrls.length) {
+                if (index == provider.combinedImages.length) {
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: InkWell(
@@ -399,6 +405,13 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                     ),
                   );
                 } else {
+                  final isProviderImage =
+                      provider.combinedImages[index]['isProvider'] as bool;
+                  final imageUrl =
+                      provider.combinedImages[index]['url'] as String;
+                  final imageId =
+                      provider.combinedImages[index]['id'] as String?;
+
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: InkWell(
@@ -418,8 +431,16 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                                   child: const Text('No'),
                                 ),
                                 TextButton(
-                                  onPressed: () {
-                                    provider.removeImage(index);
+                                  onPressed: () async {
+                                    if (isProviderImage) {
+                                      provider.removeImage(index -
+                                          provider.existingImages.length);
+                                    } else {
+                                      provider.deleteExistingImage(imageId!);
+                                      debugPrint(
+                                          'Deleted: ${provider.deletedImages}');
+                                    }
+                                    provider.combineImages();
                                     context.pop();
                                   },
                                   child: const Text('Yes'),
@@ -431,12 +452,19 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.file(
-                          File(provider.imageUrls[index]),
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
+                        child: isProviderImage
+                            ? Image.file(
+                                File(imageUrl),
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                imageUrl,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     ),
                   );
@@ -524,6 +552,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
       }
       provider.setImages([pickedFile]);
       ToastMessage.show(context, 'Image added');
+      provider.combineImages();
     }
   }
 
@@ -545,6 +574,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
         provider.setImages(pickedFiles);
       }
       ToastMessage.show(context, 'Image added');
+      provider.combineImages();
     }
 
     if (mounted) {

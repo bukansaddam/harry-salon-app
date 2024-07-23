@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/model/hairstyle.dart';
 
 class CardHairstyle extends StatefulWidget {
@@ -35,7 +34,7 @@ class _CardHairstyleState extends State<CardHairstyle> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.network(
-                  '${ApiService.baseUrl}/${widget.hairstyle.image}',
+                  widget.hairstyle.image,
                   fit: BoxFit.cover,
                   width: double.infinity,
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
@@ -36,6 +37,7 @@ import 'package:tugas_akhir_app/screen/owner/payslip/payslip_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/review/review_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/service/add_service_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/service/service_screen.dart';
+import 'package:tugas_akhir_app/screen/owner/store/edit_store_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/store/maps_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/store/more_order_history_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/store/owner_detail_order_screen.dart';
@@ -205,24 +207,25 @@ final GoRouter _router = GoRouter(
               },
             ),
             GoRoute(
-                path: 'detail-statistic',
-                name: 'detail_statistic',
-                builder: (context, state) {
-                  final storeId = state.pathParameters['id'];
-                  return DetailStatisticScreen(storeId: storeId!);
-                },
-                routes: [
-                  GoRoute(
-                    path: 'detail-order/:orderId',
-                    name: 'detail_order2',
-                    builder: (context, state) {
-                      final storeId = state.pathParameters['id'];
-                      final orderId = state.pathParameters['orderId'];
-                      return OwnerDetailHistoryScreen(
-                          storeId: storeId!, orderId: orderId!);
-                    },
-                  ),
-                ]),
+              path: 'detail-statistic',
+              name: 'detail_statistic',
+              builder: (context, state) {
+                final storeId = state.pathParameters['id'];
+                return DetailStatisticScreen(storeId: storeId!);
+              },
+              routes: [
+                GoRoute(
+                  path: 'detail-order/:orderId',
+                  name: 'detail_order2',
+                  builder: (context, state) {
+                    final storeId = state.pathParameters['id'];
+                    final orderId = state.pathParameters['orderId'];
+                    return OwnerDetailHistoryScreen(
+                        storeId: storeId!, orderId: orderId!);
+                  },
+                ),
+              ],
+            ),
             GoRoute(
               path: 'more-employee',
               name: 'more_employee',
@@ -292,7 +295,17 @@ final GoRouter _router = GoRouter(
                 final storeId = state.pathParameters['id'];
                 return ReviewScreen(storeId: storeId!);
               },
-            )
+            ),
+            GoRoute(
+              path: 'edit-store',
+              name: 'edit_store',
+              builder: (context, state) {
+                final storeId = state.pathParameters['id'];
+                final detailStore = state.extra as DetailStore;
+                return EditStoreScreen(
+                    storeId: storeId!, detailStore: detailStore);
+              },
+            ),
           ],
         ),
         GoRoute(

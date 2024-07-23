@@ -94,10 +94,14 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     super.dispose();
   }
 
-  void _onSelected(BuildContext context, value) {
+  void _onSelected(BuildContext context, value, DetailStore detailStore) {
     switch (value) {
       case 'Edit':
-        ToastMessage.show(context, value);
+        context.goNamed(
+          'edit_store',
+          pathParameters: {'id': widget.id},
+          extra: detailStore,
+        );
         break;
       case 'Deactivate':
         showDialog(
@@ -211,208 +215,217 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     OrderHistoryProvider orderHistoryProvider,
   ) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: CarouselSlider(
-              items: detailStore.images.map((index) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                        width: double.infinity,
-                        decoration: const BoxDecoration(
-                          color: Colors.black,
-                        ),
-                        child: Image.network(
-                          "${ApiService.baseUrl}/${index.image}",
-                          fit: BoxFit.cover,
-                        ));
-                  },
-                );
-              }).toList(),
-              options: CarouselOptions(
-                aspectRatio: 1.2,
-                viewportFraction: 1,
-                autoPlay: true,
-              ),
-            ),
-          ),
-          IgnorePointer(
-            child: Container(
-              height: 200,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.black87, Colors.transparent],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+      body: RefreshIndicator(
+        onRefresh: () {
+          return detailProvider.getDetailStore(widget.id);
+        },
+        child: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: CarouselSlider(
+                items: detailStore.images.map((index) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return Container(
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            color: Colors.black,
+                          ),
+                          child: Image.network(
+                            index.image.toString().contains('http')
+                                ? index.image
+                                : '${ApiService.baseUrl}/${index.image}',
+                            fit: BoxFit.cover,
+                          ));
+                    },
+                  );
+                }).toList(),
+                options: CarouselOptions(
+                  aspectRatio: 1.2,
+                  viewportFraction: 1,
+                  autoPlay: detailStore.images.length > 1 ? true : false,
+                  enableInfiniteScroll:
+                      detailStore.images.length > 1 ? true : false,
                 ),
               ),
             ),
-          ),
-          SafeArea(
-            child: Stack(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        context.pop();
-                        isOwner ? storeProvider.refreshOwnerStore() : null;
-                      },
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
+            IgnorePointer(
+              child: Container(
+                height: 200,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.black87, Colors.transparent],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+            ),
+            SafeArea(
+              child: Stack(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          context.pop();
+                          isOwner ? storeProvider.refreshOwnerStore() : null;
+                        },
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    const Text(
-                      'Detail Store',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                      const Text(
+                        'Detail Store',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
+                      isOwner
+                          ? PopupMenuButton(
+                              onSelected: (value) {
+                                _onSelected(context, value, detailStore);
+                              },
+                              itemBuilder: (BuildContext context) {
+                                return [
+                                  const PopupMenuItem(
+                                    value: 'Edit',
+                                    child: Text('Edit'),
+                                  ),
+                                  detailProvider.isActive == true
+                                      ? const PopupMenuItem(
+                                          value: 'Deactivate',
+                                          child: Text('Deactivate'),
+                                        )
+                                      : const PopupMenuItem(
+                                          value: 'Activate',
+                                          child: Text('Activate'),
+                                        ),
+                                  const PopupMenuItem(
+                                    value: 'Delete',
+                                    child: Text(
+                                      'Delete',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
+                                ];
+                              },
+                              icon: const Icon(
+                                Icons.more_vert,
+                                color: Colors.white,
+                              ),
+                            )
+                          : const SizedBox(
+                              width: 50,
+                            ),
+                    ],
+                  ),
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(top: 250),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(13),
                     ),
-                    isOwner
-                        ? PopupMenuButton(
-                            onSelected: (value) {
-                              _onSelected(context, value);
-                            },
-                            itemBuilder: (BuildContext context) {
-                              return [
-                                const PopupMenuItem(
-                                  value: 'Edit',
-                                  child: Text('Edit'),
-                                ),
-                                detailProvider.isActive == true
-                                    ? const PopupMenuItem(
-                                        value: 'Deactivate',
-                                        child: Text('Deactivate'),
-                                      )
-                                    : const PopupMenuItem(
-                                        value: 'Activate',
-                                        child: Text('Activate'),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          isOwner
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 12,
+                                      height: 12,
+                                      decoration: BoxDecoration(
+                                        color: detailProvider.isActive == true
+                                            ? Colors.green
+                                            : Colors.red,
+                                        shape: BoxShape.circle,
                                       ),
-                                const PopupMenuItem(
-                                  value: 'Delete',
-                                  child: Text(
-                                    'Delete',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ),
-                              ];
-                            },
-                            icon: const Icon(
-                              Icons.more_vert,
-                              color: Colors.white,
-                            ),
-                          )
-                        : const SizedBox(
-                            width: 50,
-                          ),
-                  ],
-                ),
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(top: 250),
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(13),
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        isOwner
-                            ? Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 12,
-                                    height: 12,
-                                    decoration: BoxDecoration(
-                                      color: detailProvider.isActive == true
-                                          ? Colors.green
-                                          : Colors.red,
-                                      shape: BoxShape.circle,
                                     ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    context
-                                                .watch<StoreDetailProvider>()
-                                                .isActive ==
-                                            true
-                                        ? 'Active'
-                                        : 'Inactive',
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      context
+                                                  .watch<StoreDetailProvider>()
+                                                  .isActive ==
+                                              true
+                                          ? 'Active'
+                                          : 'Inactive',
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              )
-                            : const SizedBox.shrink(),
-                        const SizedBox(height: 4),
-                        Text(
-                          detailStore.name,
-                          style: const TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 26,
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
+                          const SizedBox(height: 4),
+                          Text(
+                            detailStore.name,
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 26,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.location_on_outlined,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              detailStore.location,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.schedule_outlined,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Open ${detailStore.openAt.split(':').take(2).join(':')} - ${detailStore.closeAt.split(':').take(2).join(':')}',
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        isOwner
-                            ? _buildTab(
-                                detailStore,
-                                detailProvider,
-                                serviceProvider,
-                                reviewProvider,
-                                orderHistoryProvider,
-                              )
-                            : _buildCustomerSection(
-                                detailStore, serviceProvider, reviewProvider),
-                      ],
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on_outlined,
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                detailStore.location,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.schedule_outlined,
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Open ${detailStore.openAt.split(':').take(2).join(':')} - ${detailStore.closeAt.split(':').take(2).join(':')}',
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          isOwner
+                              ? _buildTab(
+                                  detailStore,
+                                  detailProvider,
+                                  serviceProvider,
+                                  reviewProvider,
+                                  orderHistoryProvider,
+                                )
+                              : _buildCustomerSection(
+                                  detailStore, serviceProvider, reviewProvider),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          )
-        ],
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tugas_akhir_app/common/loading_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
+import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 import 'package:image/image.dart' as img;
@@ -34,6 +35,9 @@ class StoreProvider extends ChangeNotifier {
 
   List<Store> stores = [];
   List<Store> storesCustomer = [];
+  List<String> deletedImages = [];
+  List<Map<String, dynamic>> existingImages = [];
+  List<Map<String, dynamic>> combinedImages = [];
 
   int _activeStoreCount = 0;
   int get activeStoreCount => _activeStoreCount;
@@ -189,6 +193,62 @@ class StoreProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> updateStore({
+    required String id,
+    required String name,
+    required String description,
+    required String location,
+    required double latitude,
+    required double longitude,
+    required TimeOfDay openAt,
+    required TimeOfDay closeAt,
+  }) async {
+    try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      List<List<int>> compressedImages = [];
+      List<String> filenames = [];
+
+      for (var image in _images) {
+        var bytes = await image.readAsBytes();
+        var compressedBytes = await compressImage(bytes);
+        var filename = image.name;
+        filenames.add(filename);
+        compressedImages.add(compressedBytes);
+      }
+
+      uploadResponse = await apiService.updateStore(
+          token: token!,
+          id: id,
+          images: compressedImages,
+          filenames: filenames,
+          name: name,
+          description: description,
+          location: location,
+          latitude: latitude,
+          longitude: longitude,
+          openAt: openAt,
+          closeAt: closeAt,
+          deletedImages: deletedImages);
+
+      if (uploadResponse!.success) {
+        loadingState = const LoadingState.loaded();
+        _message = uploadResponse!.message;
+        notifyListeners();
+      } else {
+        _message = uploadResponse!.message;
+        loadingState = LoadingState.error(uploadResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   Future<List<int>> compressImage(List<int> bytes) async {
     int imageLength = bytes.length;
     if (imageLength < 1000000) return bytes;
@@ -233,11 +293,44 @@ class StoreProvider extends ChangeNotifier {
   void removeImage(int index) {
     _images.removeAt(index);
     _imageUrls.removeAt(index);
+    combineImages();
     notifyListeners();
   }
 
   void clearImage() {
     _images = [];
     _imageUrls = [];
+    deletedImages = [];
+    notifyListeners();
+  }
+
+  void addExistingImage(DetailStore detailStore) {
+    existingImages = detailStore.images
+        .map((image) => {
+              'isProvider': false,
+              'url': image.image.toString().contains('http')
+                  ? image.image
+                  : '${ApiService.baseUrl}/${image.image}',
+              'id': image.id
+            })
+        .toList();
+    notifyListeners();
+  }
+
+  void combineImages() {
+    combinedImages = [
+      ...existingImages,
+      ..._imageUrls.map(
+        (url) => {'isProvider': true, 'url': url},
+      ),
+    ];
+    notifyListeners();
+    debugPrint(combinedImages.toString());
+  }
+
+  void deleteExistingImage(String id) {
+    existingImages.removeWhere((image) => image['id'] == id);
+    deletedImages.add(id);
+    notifyListeners();
   }
 }

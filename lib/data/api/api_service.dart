@@ -27,7 +27,8 @@ import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.9:3000';
+  static const String baseUrl = 'https://api.harrysalon.me';
+  // static const String baseUrl = 'http://192.168.1.50:3000';
   static const String _login = '/auth/owners/signin';
   static const String _register = '/auth/customers/signup';
   // static const String _logout = '/auth/owners/signout';
@@ -234,6 +235,64 @@ class ApiService {
       return DetailStoreResponse.fromJson(jsonDecode(response.body));
     } else {
       throw DetailStoreResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<UploadResponse> updateStore({
+    required String token,
+    required String id,
+    List<List<int>>? images,
+    List<String>? filenames,
+    String? name,
+    String? description,
+    String? location,
+    double? latitude,
+    double? longitude,
+    TimeOfDay? openAt,
+    TimeOfDay? closeAt,
+    List<String>? deletedImages,
+  }) async {
+    var request =
+        http.MultipartRequest('PUT', Uri.parse('$baseUrl$_store/$id'));
+
+    if (images != null) {
+      for (int i = 0; i < images.length; i++) {
+        var multipartFile = http.MultipartFile.fromBytes(
+          'images',
+          images[i],
+          filename: filenames![i],
+        );
+        request.files.add(multipartFile);
+      }
+    }
+
+    if (name != null) request.fields['name'] = name;
+    if (description != null) request.fields['description'] = description;
+    if (location != null) request.fields['location'] = location;
+    if (latitude != null) request.fields['latitude'] = latitude.toString();
+    if (longitude != null) request.fields['longitude'] = longitude.toString();
+    if (openAt != null) {
+      request.fields['openAt'] = '${openAt.hour}:${openAt.minute}';
+    }
+    if (closeAt != null) {
+      request.fields['closeAt'] = '${closeAt.hour}:${closeAt.minute}';
+    }
+    if (deletedImages != null) {
+      request.fields['deletedImagesId'] = deletedImages.join(',');
+    }
+
+    request.headers.addAll({
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer $token',
+    });
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
     }
   }
 

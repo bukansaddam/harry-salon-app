@@ -40,6 +40,7 @@ class DetailStore with _$DetailStore {
 @freezed
 class StoreImage with _$StoreImage {
   const factory StoreImage({
+    required String id,
     required String image,
   }) = _StoreImage;
 

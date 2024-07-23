@@ -35,7 +35,7 @@ class CardLocation extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(placemark?.street ?? '',
+                  Text(placemark?.name ?? '',
                       style: const TextStyle(
                         fontSize: 20,
                         color: Colors.black,

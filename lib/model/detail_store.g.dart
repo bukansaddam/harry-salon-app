@@ -60,10 +60,12 @@ Map<String, dynamic> _$$DetailStoreImplToJson(_$DetailStoreImpl instance) =>
 
 _$StoreImageImpl _$$StoreImageImplFromJson(Map<String, dynamic> json) =>
     _$StoreImageImpl(
+      id: json['id'] as String,
       image: json['image'] as String,
     );
 
 Map<String, dynamic> _$$StoreImageImplToJson(_$StoreImageImpl instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'image': instance.image,
     };

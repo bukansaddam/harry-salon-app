@@ -18,8 +18,8 @@ class ReviewResponse with _$ReviewResponse {
 @freezed
 class ReviewResult with _$ReviewResult {
   const factory ReviewResult({
-    @JsonKey(name: 'total_count') required int? totalCount,
-    @JsonKey(name: 'total_pages') required int? totalPages,
+    required int? totalCount,
+    required int? totalPages,
     required List<Review> data,
   }) = _ReviewResult;
 

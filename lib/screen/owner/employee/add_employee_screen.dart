@@ -236,13 +236,18 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       );
 
       if (mounted) {
-        if (provider.uploadResponse!.success) {
-          provider.refreshEmployee();
-          context.pop();
-          ToastMessage.show(context, provider.uploadResponse!.message);
-        } else {
-          ToastMessage.show(context, provider.uploadResponse!.message);
-        }
+        provider.loadingState.when(
+          initial: () {},
+          loading: () {},
+          loaded: () {
+            provider.refreshEmployee();
+            context.pop();
+            ToastMessage.show(context, provider.uploadResponse!.message);
+          },
+          error: (error) {
+            ToastMessage.show(context, error);
+          },
+        );
       }
     }
   }

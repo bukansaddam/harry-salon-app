@@ -18,6 +18,7 @@ import 'package:tugas_akhir_app/screen/employee/employee_detail_order_screen.dar
 import 'package:tugas_akhir_app/screen/employee/order_screen.dart';
 import 'package:tugas_akhir_app/screen/home_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/payslip/detail_payslip_screen.dart';
+import 'package:tugas_akhir_app/screen/scan_qr_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
 import '../config/injection.dart' as di;
 
@@ -97,6 +98,10 @@ final GoRouter _router = GoRouter(
       name: 'home',
       builder: (context, state) => const HomeEmployeeScreen(),
       routes: [
+        GoRoute(
+            path: 'scan-qr',
+            name: 'scan_qr',
+            builder: (context, state) => const ScanQrScreen()),
         GoRoute(
           path: 'more-commodity',
           name: 'more_commodity',

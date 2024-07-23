@@ -28,6 +28,11 @@ class _MapsScreenState extends State<MapsScreen> {
   void initState() {
     super.initState();
     _initialLocation = widget.initialLocation;
+
+    if (_initialLocation != null) {
+      defineMarker(_initialLocation!);
+      setPlacemark(_initialLocation!);
+    }
   }
 
   @override
@@ -48,6 +53,27 @@ class _MapsScreenState extends State<MapsScreen> {
       ),
       body: _buildGoogleMap(),
     );
+  }
+
+  void setPlacemark(LatLng latLng) async {
+    try {
+      final info =
+          await geo.placemarkFromCoordinates(latLng.latitude, latLng.longitude);
+
+      if (info.isNotEmpty) {
+        setState(() {
+          placemark = info.first;
+          locationData = latLng;
+        });
+      } else {
+        debugPrint('placemark: No placemark found');
+      }
+    } catch (e) {
+      setState(() {
+        placemark = null;
+      });
+      debugPrint('Error fetching placemark: $e');
+    }
   }
 
   Widget _buildGoogleMap() {
@@ -75,24 +101,7 @@ class _MapsScreenState extends State<MapsScreen> {
             myLocationButtonEnabled: false,
             myLocationEnabled: true,
             onLongPress: (LatLng latLng) async {
-              try {
-                final info = await geo.placemarkFromCoordinates(
-                    latLng.latitude, latLng.longitude);
-
-                if (info.isNotEmpty) {
-                  setState(() {
-                    placemark = info.first;
-                    locationData = latLng;
-                  });
-                } else {
-                  debugPrint('placemark: No placemark found');
-                }
-              } catch (e) {
-                setState(() {
-                  placemark = null;
-                });
-                debugPrint('Error fetching placemark: $e');
-              }
+              setPlacemark(latLng);
 
               onLongPress(latLng);
             },

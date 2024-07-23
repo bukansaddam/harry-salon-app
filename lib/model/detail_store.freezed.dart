@@ -613,6 +613,7 @@ StoreImage _$StoreImageFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$StoreImage {
+  String get id => throw _privateConstructorUsedError;
   String get image => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -627,7 +628,7 @@ abstract class $StoreImageCopyWith<$Res> {
           StoreImage value, $Res Function(StoreImage) then) =
       _$StoreImageCopyWithImpl<$Res, StoreImage>;
   @useResult
-  $Res call({String image});
+  $Res call({String id, String image});
 }
 
 /// @nodoc
@@ -643,9 +644,14 @@ class _$StoreImageCopyWithImpl<$Res, $Val extends StoreImage>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? image = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       image: null == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
@@ -662,7 +668,7 @@ abstract class _$$StoreImageImplCopyWith<$Res>
       __$$StoreImageImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String image});
+  $Res call({String id, String image});
 }
 
 /// @nodoc
@@ -676,9 +682,14 @@ class __$$StoreImageImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? image = null,
   }) {
     return _then(_$StoreImageImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       image: null == image
           ? _value.image
           : image // ignore: cast_nullable_to_non_nullable
@@ -690,17 +701,19 @@ class __$$StoreImageImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$StoreImageImpl implements _StoreImage {
-  const _$StoreImageImpl({required this.image});
+  const _$StoreImageImpl({required this.id, required this.image});
 
   factory _$StoreImageImpl.fromJson(Map<String, dynamic> json) =>
       _$$StoreImageImplFromJson(json);
 
   @override
+  final String id;
+  @override
   final String image;
 
   @override
   String toString() {
-    return 'StoreImage(image: $image)';
+    return 'StoreImage(id: $id, image: $image)';
   }
 
   @override
@@ -708,12 +721,13 @@ class _$StoreImageImpl implements _StoreImage {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$StoreImageImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.image, image) || other.image == image));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, image);
+  int get hashCode => Object.hash(runtimeType, id, image);
 
   @JsonKey(ignore: true)
   @override
@@ -730,11 +744,15 @@ class _$StoreImageImpl implements _StoreImage {
 }
 
 abstract class _StoreImage implements StoreImage {
-  const factory _StoreImage({required final String image}) = _$StoreImageImpl;
+  const factory _StoreImage(
+      {required final String id,
+      required final String image}) = _$StoreImageImpl;
 
   factory _StoreImage.fromJson(Map<String, dynamic> json) =
       _$StoreImageImpl.fromJson;
 
+  @override
+  String get id;
   @override
   String get image;
   @override
