@@ -618,10 +618,16 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
         return;
       }
 
-      await provider.createPayslip(
-          name, employeeId, total, date, earnings, deductions);
-
-      if (mounted) {
+      await provider
+          .createPayslip(
+        name,
+        employeeId,
+        total,
+        date,
+        earnings,
+        deductions,
+      )
+          .then((_) {
         if (provider.uploadResponse!.success) {
           provider.refreshPayslip();
           context.pop();
@@ -629,7 +635,9 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
         } else {
           ToastMessage.show(context, provider.uploadResponse!.message);
         }
-      }
+      }).catchError((e) {
+        ToastMessage.show(context, e.toString());
+      });
     }
   }
 

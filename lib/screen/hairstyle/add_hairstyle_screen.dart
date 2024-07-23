@@ -125,25 +125,22 @@ class _AddHairstyleScreenState extends State<AddHairstyleScreen> {
       if (_imageProvider.imageUrls.isEmpty) {
         ToastMessage.show(context, 'Please add image');
       } else {
-        await provider.addHairstyle(
+        await provider
+            .addHairstyle(
           name: name,
           description: description,
-        );
-
-        if (mounted) {
-          provider.loadingState.when(
-            initial: () {},
-            loading: () {},
-            loaded: () {
-              provider.refreshHairstyle();
-              ToastMessage.show(context, 'Hairstyle added');
-              context.pop();
-            },
-            error: (error) {
-              ToastMessage.show(context, error);
-            },
-          );
-        }
+        )
+            .then((_) {
+          if (provider.uploadResponse!.success) {
+            provider.refreshHairstyle();
+            ToastMessage.show(context, 'Hairstyle added');
+            context.pop();
+          } else {
+            ToastMessage.show(context, provider.uploadResponse!.message);
+          }
+        }).catchError((error) {
+          ToastMessage.show(context, error.toString());
+        });
       }
     }
   }

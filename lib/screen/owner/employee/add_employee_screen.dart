@@ -226,29 +226,26 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         return;
       }
 
-      await provider.createEmployee(
+      await provider
+          .createEmployee(
         name,
         address,
         storeLocation,
         phoneNumber,
         email,
         password,
-      );
-
-      if (mounted) {
-        provider.loadingState.when(
-          initial: () {},
-          loading: () {},
-          loaded: () {
-            provider.refreshEmployee();
-            context.pop();
-            ToastMessage.show(context, provider.uploadResponse!.message);
-          },
-          error: (error) {
-            ToastMessage.show(context, error);
-          },
-        );
-      }
+      )
+          .then((_) {
+        if (provider.uploadResponse!.success) {
+          provider.refreshEmployee();
+          context.pop();
+          ToastMessage.show(context, provider.uploadResponse!.message);
+        } else {
+          ToastMessage.show(context, provider.uploadResponse!.message);
+        }
+      }).catchError((error) {
+        ToastMessage.show(context, error);
+      });
     }
   }
 }

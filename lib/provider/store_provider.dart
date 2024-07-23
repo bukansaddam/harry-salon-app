@@ -301,7 +301,9 @@ class StoreProvider extends ChangeNotifier {
     _images = [];
     _imageUrls = [];
     deletedImages = [];
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
   }
 
   void addExistingImage(DetailStore detailStore) {

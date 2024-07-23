@@ -313,7 +313,7 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
         setState(() {
           placemark = placemarks.first;
           _addressController.text =
-              '${placemark!.street}, ${placemark!.subLocality}, ${placemark!.locality}, ${placemark!.country}';
+              '${placemark!.name}, ${placemark!.subLocality}, ${placemark!.locality}, ${placemark!.country}';
         });
       }
     } catch (e) {
@@ -334,7 +334,8 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
       if (provider.imageUrls.isEmpty) {
         ToastMessage.show(context, 'Image cannot be empty');
       } else {
-        await provider.addStore(
+        await provider
+            .addStore(
           name,
           description,
           address,
@@ -348,21 +349,18 @@ class _AddStoreScreenState extends State<AddStoreScreen> {
             hour: int.parse(close.split(':')[0]),
             minute: int.parse(close.split(':')[1]),
           ),
-        );
-        if (mounted) {
-          provider.loadingState.when(
-            initial: () {},
-            loading: () {},
-            loaded: () {
-              provider.refreshOwnerStore();
-              ToastMessage.show(context, provider.uploadResponse!.message);
-              context.pop();
-            },
-            error: (error) {
-              ToastMessage.show(context, error);
-            },
-          );
-        }
+        )
+            .then((_) {
+          if (provider.uploadResponse!.success) {
+            provider.refreshOwnerStore();
+            ToastMessage.show(context, provider.uploadResponse!.message);
+            context.pop();
+          } else {
+            ToastMessage.show(context, provider.uploadResponse!.message);
+          }
+        }).catchError((error) {
+          ToastMessage.show(context, error.toString());
+        });
       }
     }
   }

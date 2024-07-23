@@ -343,7 +343,8 @@ class _EditStoreScreenState extends State<EditStoreScreen> {
       if (provider.imageUrls.isEmpty && provider.existingImages.isEmpty) {
         ToastMessage.show(context, 'Image cannot be empty');
       } else {
-        await provider.updateStore(
+        await provider
+            .updateStore(
           id: widget.detailStore.id,
           name: name,
           description: description,
@@ -358,8 +359,8 @@ class _EditStoreScreenState extends State<EditStoreScreen> {
             hour: int.parse(close.split(':')[0]),
             minute: int.parse(close.split(':')[1]),
           ),
-        );
-        if (mounted) {
+        )
+            .then((_) {
           if (provider.uploadResponse!.success) {
             provider.refreshOwnerStore();
             ToastMessage.show(context, provider.uploadResponse!.message);
@@ -367,7 +368,9 @@ class _EditStoreScreenState extends State<EditStoreScreen> {
           } else {
             ToastMessage.show(context, provider.uploadResponse!.message);
           }
-        }
+        }).catchError((e) {
+          ToastMessage.show(context, e.toString());
+        });
       }
     }
   }

@@ -296,14 +296,14 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
       final duration = _durationController.text;
       final storeId = widget.storeId;
 
-      await provider.createService(
+      await provider
+          .createService(
         name: name,
         price: price,
         duration: duration,
         storeId: storeId,
-      );
-
-      if (mounted) {
+      )
+          .then((_) {
         if (provider.uploadResponse!.success) {
           provider.refreshService(storeId: storeId);
           context.pop();
@@ -311,7 +311,9 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
         } else {
           ToastMessage.show(context, provider.uploadResponse!.message);
         }
-      }
+      }).catchError((error) {
+        ToastMessage.show(context, error.toString());
+      });
     }
   }
 }

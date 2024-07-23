@@ -320,14 +320,14 @@ class _AddCommodityScreenState extends State<AddCommodityScreen> {
       final stock = _stockController.text;
       final storeId = widget.storeId;
 
-      await provider.createCommodity(
+      await provider
+          .createCommodity(
         storeId: storeId,
         name: name,
         stock: stock.toString(),
         category: selectedCategory,
-      );
-
-      if (mounted) {
+      )
+          .then((_) {
         if (provider.uploadResponse!.success) {
           provider.refreshCommodity(storeId: storeId);
           context.pop();
@@ -335,7 +335,9 @@ class _AddCommodityScreenState extends State<AddCommodityScreen> {
         } else {
           ToastMessage.show(context, provider.uploadResponse!.message);
         }
-      }
+      }).catchError((error) {
+        ToastMessage.show(context, error.toString());
+      });
     }
   }
 }
