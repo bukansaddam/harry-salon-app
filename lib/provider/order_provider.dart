@@ -65,6 +65,9 @@ class OrderProvider extends ChangeNotifier {
                 order.isMe == true &&
                 order.status != "done" &&
                 order.status != "cancel");
+
+        currentTaskCustomer ??= null;
+
         waitingTime = orders.isNotEmpty
             ? orders.first.orderNumber != 0
                 ? (orders.first.orderNumber! - 1) * 15

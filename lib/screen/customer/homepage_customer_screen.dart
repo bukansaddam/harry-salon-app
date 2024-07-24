@@ -220,6 +220,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
   Widget _buildContentAppBar(BuildContext context, UserProvider userProvider,
       StoreProvider storeProvider, OrderProvider orderProvider) {
     final state = userProvider.loadingState;
+    final user = userProvider.userDetailResponse?.data;
     return FlexibleSpaceBar(
       collapseMode: CollapseMode.parallax,
       background: Padding(
@@ -232,7 +233,6 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                 initial: () => _buildProfileSection(),
                 loading: () => _buildProfileSection(),
                 loaded: () {
-                  final user = userProvider.userDetailResponse?.data;
                   return _buildProfileSection(user: user);
                 },
                 error: (e) => _buildProfileSection(),
@@ -242,7 +242,9 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                 children: [
                   Expanded(
                     child: InkWell(
-                      onTap: () => _buildBottomSheet(context, storeProvider),
+                      onTap: () => user == null
+                          ? ToastMessage.show(context, 'Please login first')
+                          : _buildBottomSheet(context, storeProvider),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: const BorderRadius.only(
@@ -269,6 +271,8 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                         ToastMessage.show(context, 'You already ordered');
                       } else if (dropdownValue != null) {
                         context.goNamed('order', extra: dropdownValue);
+                      } else if (user == null) {
+                        ToastMessage.show(context, 'Please login first');
                       } else {
                         ToastMessage.show(
                             context, 'Please choose location first');
