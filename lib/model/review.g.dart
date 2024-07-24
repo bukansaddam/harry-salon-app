@@ -45,6 +45,7 @@ _$ReviewImpl _$$ReviewImplFromJson(Map<String, dynamic> json) => _$ReviewImpl(
       rating: (json['rating'] as num?)?.toInt(),
       comment: json['comment'] as String?,
       date: DateTime.parse(json['date'] as String),
+      storeId: json['storeId'] as String,
     );
 
 Map<String, dynamic> _$$ReviewImplToJson(_$ReviewImpl instance) =>
@@ -56,4 +57,5 @@ Map<String, dynamic> _$$ReviewImplToJson(_$ReviewImpl instance) =>
       'rating': instance.rating,
       'comment': instance.comment,
       'date': instance.date.toIso8601String(),
+      'storeId': instance.storeId,
     };

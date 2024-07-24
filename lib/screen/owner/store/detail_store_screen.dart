@@ -687,6 +687,9 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
 
   Widget _buildRatingSection(
       DetailStore detailStore, ReviewProvider reviewProvider) {
+    bool isMyReview = reviewProvider.reviews
+        .any((element) => element.isMe && element.storeId == widget.id);
+    debugPrint('isMyReview: $isMyReview');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -705,15 +708,15 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                   const SizedBox(height: 8),
                   GestureDetector(
                     onTap: () {
-                      buildBottomSheet(reviewProvider);
-                      // if (reviewProvider.myRating == 0) {
-                      //   buildBottomSheet(reviewProvider);
-                      // } else {
-                      //   ToastMessage.show(context, 'You already left a review');
-                      // }
+                      if (!isMyReview) {
+                        buildBottomSheet(reviewProvider);
+                      } else {
+                        ToastMessage.show(context, 'You already left a review');
+                      }
                     },
                     child: RatingBarIndicator(
-                      rating: reviewProvider.myRating.toDouble(),
+                      rating:
+                          isMyReview ? reviewProvider.myRating.toDouble() : 0,
                       itemBuilder: (context, index) => const Icon(
                         Icons.star,
                         color: Colors.amber,
@@ -815,17 +818,12 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           rating: rating,
         )
             .then((_) {
-          if (reviewProvider.uploadResponse != null) {
-            if (reviewProvider.uploadResponse!.success) {
-              context.pop();
-              _reviewDescriptionController.clear();
-              ToastMessage.show(context, 'Your review has been submitted');
-            } else {
-              ToastMessage.show(
-                  context, reviewProvider.uploadResponse!.message);
-            }
+          if (reviewProvider.uploadResponse!.success) {
+            context.pop();
+            _reviewDescriptionController.clear();
+            ToastMessage.show(context, 'Your review has been submitted');
           } else {
-            ToastMessage.show(context, 'Failed to submit review');
+            ToastMessage.show(context, reviewProvider.uploadResponse!.message);
           }
         }).catchError((error) {
           ToastMessage.show(context, error.toString());
