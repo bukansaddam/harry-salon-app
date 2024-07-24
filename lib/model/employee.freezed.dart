@@ -206,9 +206,7 @@ EmployeeResult _$EmployeeResultFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$EmployeeResult {
-  @JsonKey(name: 'total_count')
   int? get totalCount => throw _privateConstructorUsedError;
-  @JsonKey(name: 'total_pages')
   int? get totalPages => throw _privateConstructorUsedError;
   List<Employee> get data => throw _privateConstructorUsedError;
 
@@ -224,10 +222,7 @@ abstract class $EmployeeResultCopyWith<$Res> {
           EmployeeResult value, $Res Function(EmployeeResult) then) =
       _$EmployeeResultCopyWithImpl<$Res, EmployeeResult>;
   @useResult
-  $Res call(
-      {@JsonKey(name: 'total_count') int? totalCount,
-      @JsonKey(name: 'total_pages') int? totalPages,
-      List<Employee> data});
+  $Res call({int? totalCount, int? totalPages, List<Employee> data});
 }
 
 /// @nodoc
@@ -272,10 +267,7 @@ abstract class _$$EmployeeResultImplCopyWith<$Res>
       __$$EmployeeResultImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(name: 'total_count') int? totalCount,
-      @JsonKey(name: 'total_pages') int? totalPages,
-      List<Employee> data});
+  $Res call({int? totalCount, int? totalPages, List<Employee> data});
 }
 
 /// @nodoc
@@ -314,8 +306,8 @@ class __$$EmployeeResultImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$EmployeeResultImpl implements _EmployeeResult {
   const _$EmployeeResultImpl(
-      {@JsonKey(name: 'total_count') required this.totalCount,
-      @JsonKey(name: 'total_pages') required this.totalPages,
+      {required this.totalCount,
+      required this.totalPages,
       required final List<Employee> data})
       : _data = data;
 
@@ -323,10 +315,8 @@ class _$EmployeeResultImpl implements _EmployeeResult {
       _$$EmployeeResultImplFromJson(json);
 
   @override
-  @JsonKey(name: 'total_count')
   final int? totalCount;
   @override
-  @JsonKey(name: 'total_pages')
   final int? totalPages;
   final List<Employee> _data;
   @override
@@ -375,18 +365,16 @@ class _$EmployeeResultImpl implements _EmployeeResult {
 
 abstract class _EmployeeResult implements EmployeeResult {
   const factory _EmployeeResult(
-      {@JsonKey(name: 'total_count') required final int? totalCount,
-      @JsonKey(name: 'total_pages') required final int? totalPages,
+      {required final int? totalCount,
+      required final int? totalPages,
       required final List<Employee> data}) = _$EmployeeResultImpl;
 
   factory _EmployeeResult.fromJson(Map<String, dynamic> json) =
       _$EmployeeResultImpl.fromJson;
 
   @override
-  @JsonKey(name: 'total_count')
   int? get totalCount;
   @override
-  @JsonKey(name: 'total_pages')
   int? get totalPages;
   @override
   List<Employee> get data;

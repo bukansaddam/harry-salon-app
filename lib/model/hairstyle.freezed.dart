@@ -206,9 +206,7 @@ HairstyleResult _$HairstyleResultFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$HairstyleResult {
-  @JsonKey(name: 'total_count')
   int? get totalCount => throw _privateConstructorUsedError;
-  @JsonKey(name: 'total_pages')
   int? get totalPages => throw _privateConstructorUsedError;
   List<Hairstyle> get data => throw _privateConstructorUsedError;
 
@@ -224,10 +222,7 @@ abstract class $HairstyleResultCopyWith<$Res> {
           HairstyleResult value, $Res Function(HairstyleResult) then) =
       _$HairstyleResultCopyWithImpl<$Res, HairstyleResult>;
   @useResult
-  $Res call(
-      {@JsonKey(name: 'total_count') int? totalCount,
-      @JsonKey(name: 'total_pages') int? totalPages,
-      List<Hairstyle> data});
+  $Res call({int? totalCount, int? totalPages, List<Hairstyle> data});
 }
 
 /// @nodoc
@@ -272,10 +267,7 @@ abstract class _$$HairstyleResultImplCopyWith<$Res>
       __$$HairstyleResultImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(name: 'total_count') int? totalCount,
-      @JsonKey(name: 'total_pages') int? totalPages,
-      List<Hairstyle> data});
+  $Res call({int? totalCount, int? totalPages, List<Hairstyle> data});
 }
 
 /// @nodoc
@@ -314,8 +306,8 @@ class __$$HairstyleResultImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$HairstyleResultImpl implements _HairstyleResult {
   const _$HairstyleResultImpl(
-      {@JsonKey(name: 'total_count') required this.totalCount,
-      @JsonKey(name: 'total_pages') required this.totalPages,
+      {required this.totalCount,
+      required this.totalPages,
       required final List<Hairstyle> data})
       : _data = data;
 
@@ -323,10 +315,8 @@ class _$HairstyleResultImpl implements _HairstyleResult {
       _$$HairstyleResultImplFromJson(json);
 
   @override
-  @JsonKey(name: 'total_count')
   final int? totalCount;
   @override
-  @JsonKey(name: 'total_pages')
   final int? totalPages;
   final List<Hairstyle> _data;
   @override
@@ -375,18 +365,16 @@ class _$HairstyleResultImpl implements _HairstyleResult {
 
 abstract class _HairstyleResult implements HairstyleResult {
   const factory _HairstyleResult(
-      {@JsonKey(name: 'total_count') required final int? totalCount,
-      @JsonKey(name: 'total_pages') required final int? totalPages,
+      {required final int? totalCount,
+      required final int? totalPages,
       required final List<Hairstyle> data}) = _$HairstyleResultImpl;
 
   factory _HairstyleResult.fromJson(Map<String, dynamic> json) =
       _$HairstyleResultImpl.fromJson;
 
   @override
-  @JsonKey(name: 'total_count')
   int? get totalCount;
   @override
-  @JsonKey(name: 'total_pages')
   int? get totalPages;
   @override
   List<Hairstyle> get data;

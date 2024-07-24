@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/model/detail_user.dart';
@@ -12,6 +16,7 @@ import 'package:tugas_akhir_app/provider/user_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_hairstyle.dart';
 import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
+import 'package:geocoding/geocoding.dart' as geo;
 import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class HomepageCustomerScreen extends StatefulWidget {
@@ -36,6 +41,11 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
   late UserProvider userProvider;
   late StoreProvider storeProvider;
   late OrderProvider orderProvider;
+
+  LatLng? locationData;
+  LatLng currentLocation = const LatLng(0, 0);
+
+  geo.Placemark? placemark;
 
   @override
   void initState() {
@@ -62,6 +72,8 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
     });
 
     initAnimation();
+
+    getMyLocation();
 
     _scrollController.addListener(() {
       final offset = _scrollController.offset;
@@ -101,6 +113,54 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
+  }
+
+  void getMyLocation() async {
+    late bool serviceEnabled;
+    late PermissionStatus permissionGranted;
+    final Location location = Location();
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        debugPrint("Location services are not available");
+        return;
+      }
+    }
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        debugPrint("Location permission not granted");
+        return;
+      }
+    }
+
+    final locationDataResult = await location.getLocation();
+    final latLng =
+        LatLng(locationDataResult.latitude!, locationDataResult.longitude!);
+
+    if (mounted) {
+      setState(() {
+        currentLocation = latLng;
+        locationData = latLng;
+      });
+    }
+  }
+
+  double calculateDistance(
+      storeLatitude, storeLongitude, userLatitude, userLongitude) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((userLatitude - storeLatitude) * p) / 2 +
+        c(storeLatitude * p) *
+            c(userLatitude * p) *
+            (1 - c((userLongitude - storeLongitude) * p)) /
+            2;
+    var radiusOfEarth = 6371;
+    return radiusOfEarth * 2 * asin(sqrt(a));
   }
 
   @override
@@ -619,6 +679,16 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
   }
 
   Widget _buildItemStore(Store store) {
+    final radius = calculateDistance(store.latitude, store.longitude,
+        currentLocation.latitude, currentLocation.longitude);
+
+    String distance = '';
+
+    if (radius * 1000 < 1000) {
+      distance = '${radius * 1000} m';
+    } else {
+      distance = '$radius km';
+    }
     return InkWell(
       onTap: () {
         setState(() {
@@ -657,7 +727,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   child: Text(
-                    '123 M',
+                    distance,
                     style: TextStyle(
                       color: Colors.blue[700],
                     ),

@@ -25,8 +25,8 @@ Map<String, dynamic> _$$HairstyleResponseImplToJson(
 _$HairstyleResultImpl _$$HairstyleResultImplFromJson(
         Map<String, dynamic> json) =>
     _$HairstyleResultImpl(
-      totalCount: (json['total_count'] as num?)?.toInt(),
-      totalPages: (json['total_pages'] as num?)?.toInt(),
+      totalCount: (json['totalCount'] as num?)?.toInt(),
+      totalPages: (json['totalPages'] as num?)?.toInt(),
       data: (json['data'] as List<dynamic>)
           .map((e) => Hairstyle.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -35,8 +35,8 @@ _$HairstyleResultImpl _$$HairstyleResultImplFromJson(
 Map<String, dynamic> _$$HairstyleResultImplToJson(
         _$HairstyleResultImpl instance) =>
     <String, dynamic>{
-      'total_count': instance.totalCount,
-      'total_pages': instance.totalPages,
+      'totalCount': instance.totalCount,
+      'totalPages': instance.totalPages,
       'data': instance.data,
     };
 

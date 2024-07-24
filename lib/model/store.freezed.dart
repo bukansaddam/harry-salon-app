@@ -205,9 +205,7 @@ StoreResult _$StoreResultFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$StoreResult {
-  @JsonKey(name: 'total_count')
   int? get totalCount => throw _privateConstructorUsedError;
-  @JsonKey(name: 'total_pages')
   int? get totalPages => throw _privateConstructorUsedError;
   List<Store> get data => throw _privateConstructorUsedError;
 
@@ -223,10 +221,7 @@ abstract class $StoreResultCopyWith<$Res> {
           StoreResult value, $Res Function(StoreResult) then) =
       _$StoreResultCopyWithImpl<$Res, StoreResult>;
   @useResult
-  $Res call(
-      {@JsonKey(name: 'total_count') int? totalCount,
-      @JsonKey(name: 'total_pages') int? totalPages,
-      List<Store> data});
+  $Res call({int? totalCount, int? totalPages, List<Store> data});
 }
 
 /// @nodoc
@@ -271,10 +266,7 @@ abstract class _$$StoreResultImplCopyWith<$Res>
       __$$StoreResultImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(name: 'total_count') int? totalCount,
-      @JsonKey(name: 'total_pages') int? totalPages,
-      List<Store> data});
+  $Res call({int? totalCount, int? totalPages, List<Store> data});
 }
 
 /// @nodoc
@@ -313,8 +305,8 @@ class __$$StoreResultImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$StoreResultImpl implements _StoreResult {
   const _$StoreResultImpl(
-      {@JsonKey(name: 'total_count') required this.totalCount,
-      @JsonKey(name: 'total_pages') required this.totalPages,
+      {required this.totalCount,
+      required this.totalPages,
       required final List<Store> data})
       : _data = data;
 
@@ -322,10 +314,8 @@ class _$StoreResultImpl implements _StoreResult {
       _$$StoreResultImplFromJson(json);
 
   @override
-  @JsonKey(name: 'total_count')
   final int? totalCount;
   @override
-  @JsonKey(name: 'total_pages')
   final int? totalPages;
   final List<Store> _data;
   @override
@@ -373,18 +363,16 @@ class _$StoreResultImpl implements _StoreResult {
 
 abstract class _StoreResult implements StoreResult {
   const factory _StoreResult(
-      {@JsonKey(name: 'total_count') required final int? totalCount,
-      @JsonKey(name: 'total_pages') required final int? totalPages,
+      {required final int? totalCount,
+      required final int? totalPages,
       required final List<Store> data}) = _$StoreResultImpl;
 
   factory _StoreResult.fromJson(Map<String, dynamic> json) =
       _$StoreResultImpl.fromJson;
 
   @override
-  @JsonKey(name: 'total_count')
   int? get totalCount;
   @override
-  @JsonKey(name: 'total_pages')
   int? get totalPages;
   @override
   List<Store> get data;
@@ -403,6 +391,8 @@ mixin _$Store {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get location => throw _privateConstructorUsedError;
+  double get latitude => throw _privateConstructorUsedError;
+  double get longitude => throw _privateConstructorUsedError;
   bool get isActive => throw _privateConstructorUsedError;
   int? get totalEmployees => throw _privateConstructorUsedError;
 
@@ -420,6 +410,8 @@ abstract class $StoreCopyWith<$Res> {
       {String id,
       String name,
       String location,
+      double latitude,
+      double longitude,
       bool isActive,
       int? totalEmployees});
 }
@@ -440,6 +432,8 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
     Object? id = null,
     Object? name = null,
     Object? location = null,
+    Object? latitude = null,
+    Object? longitude = null,
     Object? isActive = null,
     Object? totalEmployees = freezed,
   }) {
@@ -456,6 +450,14 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
       isActive: null == isActive
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
@@ -479,6 +481,8 @@ abstract class _$$StoreImplCopyWith<$Res> implements $StoreCopyWith<$Res> {
       {String id,
       String name,
       String location,
+      double latitude,
+      double longitude,
       bool isActive,
       int? totalEmployees});
 }
@@ -497,6 +501,8 @@ class __$$StoreImplCopyWithImpl<$Res>
     Object? id = null,
     Object? name = null,
     Object? location = null,
+    Object? latitude = null,
+    Object? longitude = null,
     Object? isActive = null,
     Object? totalEmployees = freezed,
   }) {
@@ -513,6 +519,14 @@ class __$$StoreImplCopyWithImpl<$Res>
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
       isActive: null == isActive
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
@@ -532,6 +546,8 @@ class _$StoreImpl implements _Store {
       {required this.id,
       required this.name,
       required this.location,
+      required this.latitude,
+      required this.longitude,
       required this.isActive,
       required this.totalEmployees});
 
@@ -545,13 +561,17 @@ class _$StoreImpl implements _Store {
   @override
   final String location;
   @override
+  final double latitude;
+  @override
+  final double longitude;
+  @override
   final bool isActive;
   @override
   final int? totalEmployees;
 
   @override
   String toString() {
-    return 'Store(id: $id, name: $name, location: $location, isActive: $isActive, totalEmployees: $totalEmployees)';
+    return 'Store(id: $id, name: $name, location: $location, latitude: $latitude, longitude: $longitude, isActive: $isActive, totalEmployees: $totalEmployees)';
   }
 
   @override
@@ -563,6 +583,10 @@ class _$StoreImpl implements _Store {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.location, location) ||
                 other.location == location) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
             (identical(other.isActive, isActive) ||
                 other.isActive == isActive) &&
             (identical(other.totalEmployees, totalEmployees) ||
@@ -571,8 +595,8 @@ class _$StoreImpl implements _Store {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, location, isActive, totalEmployees);
+  int get hashCode => Object.hash(runtimeType, id, name, location, latitude,
+      longitude, isActive, totalEmployees);
 
   @JsonKey(ignore: true)
   @override
@@ -593,6 +617,8 @@ abstract class _Store implements Store {
       {required final String id,
       required final String name,
       required final String location,
+      required final double latitude,
+      required final double longitude,
       required final bool isActive,
       required final int? totalEmployees}) = _$StoreImpl;
 
@@ -604,6 +630,10 @@ abstract class _Store implements Store {
   String get name;
   @override
   String get location;
+  @override
+  double get latitude;
+  @override
+  double get longitude;
   @override
   bool get isActive;
   @override

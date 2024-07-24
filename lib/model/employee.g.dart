@@ -24,8 +24,8 @@ Map<String, dynamic> _$$EmployeeResponseImplToJson(
 
 _$EmployeeResultImpl _$$EmployeeResultImplFromJson(Map<String, dynamic> json) =>
     _$EmployeeResultImpl(
-      totalCount: (json['total_count'] as num?)?.toInt(),
-      totalPages: (json['total_pages'] as num?)?.toInt(),
+      totalCount: (json['totalCount'] as num?)?.toInt(),
+      totalPages: (json['totalPages'] as num?)?.toInt(),
       data: (json['data'] as List<dynamic>)
           .map((e) => Employee.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -34,8 +34,8 @@ _$EmployeeResultImpl _$$EmployeeResultImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$EmployeeResultImplToJson(
         _$EmployeeResultImpl instance) =>
     <String, dynamic>{
-      'total_count': instance.totalCount,
-      'total_pages': instance.totalPages,
+      'totalCount': instance.totalCount,
+      'totalPages': instance.totalPages,
       'data': instance.data,
     };
 

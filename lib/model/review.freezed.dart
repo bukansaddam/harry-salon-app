@@ -206,9 +206,7 @@ ReviewResult _$ReviewResultFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ReviewResult {
-  @JsonKey(name: 'total_count')
   int? get totalCount => throw _privateConstructorUsedError;
-  @JsonKey(name: 'total_pages')
   int? get totalPages => throw _privateConstructorUsedError;
   List<Review> get data => throw _privateConstructorUsedError;
 
@@ -224,10 +222,7 @@ abstract class $ReviewResultCopyWith<$Res> {
           ReviewResult value, $Res Function(ReviewResult) then) =
       _$ReviewResultCopyWithImpl<$Res, ReviewResult>;
   @useResult
-  $Res call(
-      {@JsonKey(name: 'total_count') int? totalCount,
-      @JsonKey(name: 'total_pages') int? totalPages,
-      List<Review> data});
+  $Res call({int? totalCount, int? totalPages, List<Review> data});
 }
 
 /// @nodoc
@@ -272,10 +267,7 @@ abstract class _$$ReviewResultImplCopyWith<$Res>
       __$$ReviewResultImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@JsonKey(name: 'total_count') int? totalCount,
-      @JsonKey(name: 'total_pages') int? totalPages,
-      List<Review> data});
+  $Res call({int? totalCount, int? totalPages, List<Review> data});
 }
 
 /// @nodoc
@@ -314,8 +306,8 @@ class __$$ReviewResultImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ReviewResultImpl implements _ReviewResult {
   const _$ReviewResultImpl(
-      {@JsonKey(name: 'total_count') required this.totalCount,
-      @JsonKey(name: 'total_pages') required this.totalPages,
+      {required this.totalCount,
+      required this.totalPages,
       required final List<Review> data})
       : _data = data;
 
@@ -323,10 +315,8 @@ class _$ReviewResultImpl implements _ReviewResult {
       _$$ReviewResultImplFromJson(json);
 
   @override
-  @JsonKey(name: 'total_count')
   final int? totalCount;
   @override
-  @JsonKey(name: 'total_pages')
   final int? totalPages;
   final List<Review> _data;
   @override
@@ -374,18 +364,16 @@ class _$ReviewResultImpl implements _ReviewResult {
 
 abstract class _ReviewResult implements ReviewResult {
   const factory _ReviewResult(
-      {@JsonKey(name: 'total_count') required final int? totalCount,
-      @JsonKey(name: 'total_pages') required final int? totalPages,
+      {required final int? totalCount,
+      required final int? totalPages,
       required final List<Review> data}) = _$ReviewResultImpl;
 
   factory _ReviewResult.fromJson(Map<String, dynamic> json) =
       _$ReviewResultImpl.fromJson;
 
   @override
-  @JsonKey(name: 'total_count')
   int? get totalCount;
   @override
-  @JsonKey(name: 'total_pages')
   int? get totalPages;
   @override
   List<Review> get data;

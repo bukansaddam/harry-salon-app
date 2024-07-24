@@ -33,6 +33,8 @@ class Store with _$Store {
     required String id,
     required String name,
     required String location,
+    required double latitude,
+    required double longitude,
     required bool isActive,
     required int? totalEmployees,
   }) = _Store;
