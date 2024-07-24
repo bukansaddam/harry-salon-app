@@ -103,7 +103,7 @@ class FavoriteProvider extends ChangeNotifier {
       final token = repository?.token;
 
       if (token == null) {
-        loadingState = const LoadingState.error('Token not found');
+        loadingState = const LoadingState.error('You must login first');
         notifyListeners();
         return;
       }

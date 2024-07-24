@@ -24,6 +24,7 @@ import 'package:tugas_akhir_app/model/register.dart';
 import 'package:tugas_akhir_app/model/review.dart';
 import 'package:tugas_akhir_app/model/service.dart';
 import 'package:tugas_akhir_app/model/store.dart';
+import 'package:tugas_akhir_app/model/store_owner.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 
 class ApiService {
@@ -76,8 +77,10 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
+      debugPrint(response.body);
       return RegisterResponse.fromJson(jsonDecode(response.body));
     } else {
+      debugPrint(response.body);
       return RegisterResponse.fromJson(jsonDecode(response.body));
     }
   }
@@ -200,7 +203,7 @@ class ApiService {
     }
   }
 
-  Future<StoreResponse> getAllOwnerStore({
+  Future<StoreOwnerResponse> getAllOwnerStore({
     required String token,
     String name = '',
     int page = 1,
@@ -214,7 +217,8 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      return StoreResponse.fromJson(jsonDecode(response.body));
+      debugPrint(response.body);
+      return StoreOwnerResponse.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load store');
     }
@@ -321,7 +325,7 @@ class ApiService {
     required String id,
   }) async {
     final response = await http.get(
-      Uri.parse('$baseUrl$_employee/$id'),
+      Uri.parse('$baseUrl$_employee/owner/$id'),
       headers: <String, String>{
         'Authorization': 'Bearer $token',
       },
@@ -807,8 +811,10 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
+      debugPrint(response.body);
       return DetailUserResponse.fromJson(jsonDecode(response.body));
     } else {
+      debugPrint(response.body);
       throw DetailUserResponse.fromJson(jsonDecode(response.body));
     }
   }

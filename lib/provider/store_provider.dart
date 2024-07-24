@@ -7,6 +7,7 @@ import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/model/store.dart';
+import 'package:tugas_akhir_app/model/store_owner.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 import 'package:image/image.dart' as img;
 
@@ -29,11 +30,12 @@ class StoreProvider extends ChangeNotifier {
 
   UploadResponse? uploadResponse;
   StoreResponse? storeResponse;
+  StoreOwnerResponse? storeOwnerResponse;
 
   int? pageItems = 1;
   int sizeItems = 10;
 
-  List<Store> stores = [];
+  List<StoreOwner> stores = [];
   List<Store> storesCustomer = [];
   List<String> deletedImages = [];
   List<Map<String, dynamic>> existingImages = [];
@@ -103,22 +105,22 @@ class StoreProvider extends ChangeNotifier {
       final repository = await authRepository.getUser();
       final token = repository?.token;
 
-      storeResponse = await apiService.getAllOwnerStore(
+      storeOwnerResponse = await apiService.getAllOwnerStore(
           token: token!, page: pageItems!, size: sizeItems, name: searchValue);
 
-      if (storeResponse!.success) {
-        stores.addAll(storeResponse!.result.data);
+      if (storeOwnerResponse!.success) {
+        stores.addAll(storeOwnerResponse!.result.data);
 
         loadingState = const LoadingState.loaded();
         notifyListeners();
 
-        if (storeResponse!.result.data.length < sizeItems) {
+        if (storeOwnerResponse!.result.data.length < sizeItems) {
           pageItems = null;
         } else {
           pageItems = pageItems! + 1;
         }
       } else {
-        loadingState = LoadingState.error(storeResponse!.message);
+        loadingState = LoadingState.error(storeOwnerResponse!.message);
         notifyListeners();
       }
     } catch (e) {

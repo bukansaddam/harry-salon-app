@@ -13,7 +13,17 @@ class PaymentWebviewScreen extends StatelessWidget {
         title: const Text('Payment'),
       ),
       body: WebViewWidget(
-          controller: WebViewController()..loadRequest(Uri.parse(url))),
+        controller: WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..loadRequest(Uri.parse(url))
+          ..setNavigationDelegate(
+            NavigationDelegate(
+              onWebResourceError: (WebResourceError error) {
+                debugPrint("WebView error: ${error.description}");
+              },
+            ),
+          ),
+      ),
     );
   }
 }

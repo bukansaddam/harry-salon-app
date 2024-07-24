@@ -32,11 +32,17 @@ class Store with _$Store {
   const factory Store({
     required String id,
     required String name,
+    required String description,
     required String location,
-    required double latitude,
-    required double longitude,
+    required double? longitude,
+    required double? latitude,
+    required String openAt,
+    required String closeAt,
     required bool isActive,
-    required int? totalEmployees,
+    required String ownerId,
+    required bool isDeleted,
+    required DateTime createdAt,
+    required DateTime updatedAt,
   }) = _Store;
 
   factory Store.fromJson(Map<String, dynamic> json) => _$StoreFromJson(json);

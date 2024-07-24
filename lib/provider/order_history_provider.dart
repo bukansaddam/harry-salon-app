@@ -40,8 +40,14 @@ class OrderHistoryProvider extends ChangeNotifier {
       final repository = await authRepository.getUser();
       final token = repository?.token;
 
+      if (token == null) {
+        loadingState = const LoadingState.error('You must login first');
+        notifyListeners();
+        return;
+      }
+
       orderHistoryResponse = await apiService.getOrderHistory(
-        token: token!,
+        token: token,
         page: page,
         size: pageSize,
         storeId: storeId,

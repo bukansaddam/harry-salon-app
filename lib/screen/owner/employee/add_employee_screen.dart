@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/common/loading_state.dart';
-import 'package:tugas_akhir_app/model/store.dart';
+import 'package:tugas_akhir_app/model/store_owner.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
@@ -26,7 +26,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  Store? dropdownValue;
+  StoreOwner? dropdownValue;
 
   bool _isInitialLoad = true;
 
@@ -116,17 +116,17 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                     borderRadius: BorderRadius.circular(15),
                     color: Colors.grey[200],
                   ),
-                  child: DropdownButton<Store>(
+                  child: DropdownButton<StoreOwner>(
                     value: dropdownValue,
                     isExpanded: true,
                     underline: const SizedBox(),
                     items: context.watch<StoreProvider>().stores.map((store) {
-                      return DropdownMenuItem<Store>(
+                      return DropdownMenuItem<StoreOwner>(
                         value: store,
                         child: Text('${store.name} - ${store.location}'),
                       );
                     }).toList(),
-                    onChanged: (Store? newValue) {
+                    onChanged: (StoreOwner? newValue) {
                       setState(() {
                         dropdownValue = newValue!;
                       });
@@ -209,7 +209,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
     );
   }
 
-  void _onSubmit(Store? dropdownValue) async {
+  void _onSubmit(StoreOwner? dropdownValue) async {
     if (_formKey.currentState!.validate()) {
       final provider = context.read<EmployeeProvider>();
 

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tugas_akhir_app/model/store.dart';
+import 'package:tugas_akhir_app/model/store_owner.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/search_bar.dart';
 
@@ -109,7 +109,7 @@ class _HomeQrScreenState extends State<HomeQrScreen> {
     );
   }
 
-  Widget _buildItem(BuildContext context, Store store) {
+  Widget _buildItem(BuildContext context, StoreOwner store) {
     return ListTile(
       title: Text(store.name),
       subtitle: Text(store.location),

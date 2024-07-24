@@ -211,6 +211,7 @@ mixin _$DetailUser {
   String get email => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
   int? get phone => throw _privateConstructorUsedError;
+  String? get storeLocation => throw _privateConstructorUsedError;
   String get address => throw _privateConstructorUsedError;
   String get avatar => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -234,6 +235,7 @@ abstract class $DetailUserCopyWith<$Res> {
       String email,
       String password,
       int? phone,
+      String? storeLocation,
       String address,
       String avatar,
       DateTime createdAt,
@@ -258,6 +260,7 @@ class _$DetailUserCopyWithImpl<$Res, $Val extends DetailUser>
     Object? email = null,
     Object? password = null,
     Object? phone = freezed,
+    Object? storeLocation = freezed,
     Object? address = null,
     Object? avatar = null,
     Object? createdAt = null,
@@ -284,6 +287,10 @@ class _$DetailUserCopyWithImpl<$Res, $Val extends DetailUser>
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
               as int?,
+      storeLocation: freezed == storeLocation
+          ? _value.storeLocation
+          : storeLocation // ignore: cast_nullable_to_non_nullable
+              as String?,
       address: null == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
@@ -318,6 +325,7 @@ abstract class _$$DetailUserImplCopyWith<$Res>
       String email,
       String password,
       int? phone,
+      String? storeLocation,
       String address,
       String avatar,
       DateTime createdAt,
@@ -340,6 +348,7 @@ class __$$DetailUserImplCopyWithImpl<$Res>
     Object? email = null,
     Object? password = null,
     Object? phone = freezed,
+    Object? storeLocation = freezed,
     Object? address = null,
     Object? avatar = null,
     Object? createdAt = null,
@@ -366,6 +375,10 @@ class __$$DetailUserImplCopyWithImpl<$Res>
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
               as int?,
+      storeLocation: freezed == storeLocation
+          ? _value.storeLocation
+          : storeLocation // ignore: cast_nullable_to_non_nullable
+              as String?,
       address: null == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
@@ -395,6 +408,7 @@ class _$DetailUserImpl implements _DetailUser {
       required this.email,
       required this.password,
       required this.phone,
+      required this.storeLocation,
       required this.address,
       required this.avatar,
       required this.createdAt,
@@ -414,6 +428,8 @@ class _$DetailUserImpl implements _DetailUser {
   @override
   final int? phone;
   @override
+  final String? storeLocation;
+  @override
   final String address;
   @override
   final String avatar;
@@ -424,7 +440,7 @@ class _$DetailUserImpl implements _DetailUser {
 
   @override
   String toString() {
-    return 'DetailUser(id: $id, name: $name, email: $email, password: $password, phone: $phone, address: $address, avatar: $avatar, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'DetailUser(id: $id, name: $name, email: $email, password: $password, phone: $phone, storeLocation: $storeLocation, address: $address, avatar: $avatar, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -438,6 +454,8 @@ class _$DetailUserImpl implements _DetailUser {
             (identical(other.password, password) ||
                 other.password == password) &&
             (identical(other.phone, phone) || other.phone == phone) &&
+            (identical(other.storeLocation, storeLocation) ||
+                other.storeLocation == storeLocation) &&
             (identical(other.address, address) || other.address == address) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
             (identical(other.createdAt, createdAt) ||
@@ -449,7 +467,7 @@ class _$DetailUserImpl implements _DetailUser {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, email, password, phone,
-      address, avatar, createdAt, updatedAt);
+      storeLocation, address, avatar, createdAt, updatedAt);
 
   @JsonKey(ignore: true)
   @override
@@ -472,6 +490,7 @@ abstract class _DetailUser implements DetailUser {
       required final String email,
       required final String password,
       required final int? phone,
+      required final String? storeLocation,
       required final String address,
       required final String avatar,
       required final DateTime createdAt,
@@ -490,6 +509,8 @@ abstract class _DetailUser implements DetailUser {
   String get password;
   @override
   int? get phone;
+  @override
+  String? get storeLocation;
   @override
   String get address;
   @override

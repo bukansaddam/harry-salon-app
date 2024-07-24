@@ -23,6 +23,7 @@ class DetailUser with _$DetailUser {
     required String email,
     required String password,
     required int? phone,
+    required String? storeLocation,
     required String address,
     required String avatar,
     required DateTime createdAt,

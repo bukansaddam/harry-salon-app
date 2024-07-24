@@ -39,20 +39,32 @@ Map<String, dynamic> _$$StoreResultImplToJson(_$StoreResultImpl instance) =>
 _$StoreImpl _$$StoreImplFromJson(Map<String, dynamic> json) => _$StoreImpl(
       id: json['id'] as String,
       name: json['name'] as String,
+      description: json['description'] as String,
       location: json['location'] as String,
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['longitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      openAt: json['openAt'] as String,
+      closeAt: json['closeAt'] as String,
       isActive: json['isActive'] as bool,
-      totalEmployees: (json['totalEmployees'] as num?)?.toInt(),
+      ownerId: json['ownerId'] as String,
+      isDeleted: json['isDeleted'] as bool,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
 
 Map<String, dynamic> _$$StoreImplToJson(_$StoreImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'description': instance.description,
       'location': instance.location,
-      'latitude': instance.latitude,
       'longitude': instance.longitude,
+      'latitude': instance.latitude,
+      'openAt': instance.openAt,
+      'closeAt': instance.closeAt,
       'isActive': instance.isActive,
-      'totalEmployees': instance.totalEmployees,
+      'ownerId': instance.ownerId,
+      'isDeleted': instance.isDeleted,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
     };

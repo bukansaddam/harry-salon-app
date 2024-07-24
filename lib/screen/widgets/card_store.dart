@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tugas_akhir_app/model/store.dart';
+import 'package:tugas_akhir_app/model/store_owner.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 
 class StoreCard extends StatelessWidget {
-  final List<Store> stores;
+  final List<StoreOwner> stores;
   final StoreProvider storeProvider;
   final int count;
 

@@ -390,11 +390,17 @@ Store _$StoreFromJson(Map<String, dynamic> json) {
 mixin _$Store {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
   String get location => throw _privateConstructorUsedError;
-  double get latitude => throw _privateConstructorUsedError;
-  double get longitude => throw _privateConstructorUsedError;
+  double? get longitude => throw _privateConstructorUsedError;
+  double? get latitude => throw _privateConstructorUsedError;
+  String get openAt => throw _privateConstructorUsedError;
+  String get closeAt => throw _privateConstructorUsedError;
   bool get isActive => throw _privateConstructorUsedError;
-  int? get totalEmployees => throw _privateConstructorUsedError;
+  String get ownerId => throw _privateConstructorUsedError;
+  bool get isDeleted => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime get updatedAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -409,11 +415,17 @@ abstract class $StoreCopyWith<$Res> {
   $Res call(
       {String id,
       String name,
+      String description,
       String location,
-      double latitude,
-      double longitude,
+      double? longitude,
+      double? latitude,
+      String openAt,
+      String closeAt,
       bool isActive,
-      int? totalEmployees});
+      String ownerId,
+      bool isDeleted,
+      DateTime createdAt,
+      DateTime updatedAt});
 }
 
 /// @nodoc
@@ -431,11 +443,17 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
   $Res call({
     Object? id = null,
     Object? name = null,
+    Object? description = null,
     Object? location = null,
-    Object? latitude = null,
-    Object? longitude = null,
+    Object? longitude = freezed,
+    Object? latitude = freezed,
+    Object? openAt = null,
+    Object? closeAt = null,
     Object? isActive = null,
-    Object? totalEmployees = freezed,
+    Object? ownerId = null,
+    Object? isDeleted = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -446,26 +464,50 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
       location: null == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
+      longitude: freezed == longitude
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
+              as double?,
+      latitude: freezed == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      openAt: null == openAt
+          ? _value.openAt
+          : openAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      closeAt: null == closeAt
+          ? _value.closeAt
+          : closeAt // ignore: cast_nullable_to_non_nullable
+              as String,
       isActive: null == isActive
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
               as bool,
-      totalEmployees: freezed == totalEmployees
-          ? _value.totalEmployees
-          : totalEmployees // ignore: cast_nullable_to_non_nullable
-              as int?,
+      ownerId: null == ownerId
+          ? _value.ownerId
+          : ownerId // ignore: cast_nullable_to_non_nullable
+              as String,
+      isDeleted: null == isDeleted
+          ? _value.isDeleted
+          : isDeleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ) as $Val);
   }
 }
@@ -480,11 +522,17 @@ abstract class _$$StoreImplCopyWith<$Res> implements $StoreCopyWith<$Res> {
   $Res call(
       {String id,
       String name,
+      String description,
       String location,
-      double latitude,
-      double longitude,
+      double? longitude,
+      double? latitude,
+      String openAt,
+      String closeAt,
       bool isActive,
-      int? totalEmployees});
+      String ownerId,
+      bool isDeleted,
+      DateTime createdAt,
+      DateTime updatedAt});
 }
 
 /// @nodoc
@@ -500,11 +548,17 @@ class __$$StoreImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
+    Object? description = null,
     Object? location = null,
-    Object? latitude = null,
-    Object? longitude = null,
+    Object? longitude = freezed,
+    Object? latitude = freezed,
+    Object? openAt = null,
+    Object? closeAt = null,
     Object? isActive = null,
-    Object? totalEmployees = freezed,
+    Object? ownerId = null,
+    Object? isDeleted = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
   }) {
     return _then(_$StoreImpl(
       id: null == id
@@ -515,26 +569,50 @@ class __$$StoreImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
+      description: null == description
+          ? _value.description
+          : description // ignore: cast_nullable_to_non_nullable
+              as String,
       location: null == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
+      longitude: freezed == longitude
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
+              as double?,
+      latitude: freezed == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      openAt: null == openAt
+          ? _value.openAt
+          : openAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      closeAt: null == closeAt
+          ? _value.closeAt
+          : closeAt // ignore: cast_nullable_to_non_nullable
+              as String,
       isActive: null == isActive
           ? _value.isActive
           : isActive // ignore: cast_nullable_to_non_nullable
               as bool,
-      totalEmployees: freezed == totalEmployees
-          ? _value.totalEmployees
-          : totalEmployees // ignore: cast_nullable_to_non_nullable
-              as int?,
+      ownerId: null == ownerId
+          ? _value.ownerId
+          : ownerId // ignore: cast_nullable_to_non_nullable
+              as String,
+      isDeleted: null == isDeleted
+          ? _value.isDeleted
+          : isDeleted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
@@ -545,11 +623,17 @@ class _$StoreImpl implements _Store {
   const _$StoreImpl(
       {required this.id,
       required this.name,
+      required this.description,
       required this.location,
-      required this.latitude,
       required this.longitude,
+      required this.latitude,
+      required this.openAt,
+      required this.closeAt,
       required this.isActive,
-      required this.totalEmployees});
+      required this.ownerId,
+      required this.isDeleted,
+      required this.createdAt,
+      required this.updatedAt});
 
   factory _$StoreImpl.fromJson(Map<String, dynamic> json) =>
       _$$StoreImplFromJson(json);
@@ -559,19 +643,31 @@ class _$StoreImpl implements _Store {
   @override
   final String name;
   @override
+  final String description;
+  @override
   final String location;
   @override
-  final double latitude;
+  final double? longitude;
   @override
-  final double longitude;
+  final double? latitude;
+  @override
+  final String openAt;
+  @override
+  final String closeAt;
   @override
   final bool isActive;
   @override
-  final int? totalEmployees;
+  final String ownerId;
+  @override
+  final bool isDeleted;
+  @override
+  final DateTime createdAt;
+  @override
+  final DateTime updatedAt;
 
   @override
   String toString() {
-    return 'Store(id: $id, name: $name, location: $location, latitude: $latitude, longitude: $longitude, isActive: $isActive, totalEmployees: $totalEmployees)';
+    return 'Store(id: $id, name: $name, description: $description, location: $location, longitude: $longitude, latitude: $latitude, openAt: $openAt, closeAt: $closeAt, isActive: $isActive, ownerId: $ownerId, isDeleted: $isDeleted, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -581,22 +677,44 @@ class _$StoreImpl implements _Store {
             other is _$StoreImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.location, location) ||
                 other.location == location) &&
-            (identical(other.latitude, latitude) ||
-                other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.openAt, openAt) || other.openAt == openAt) &&
+            (identical(other.closeAt, closeAt) || other.closeAt == closeAt) &&
             (identical(other.isActive, isActive) ||
                 other.isActive == isActive) &&
-            (identical(other.totalEmployees, totalEmployees) ||
-                other.totalEmployees == totalEmployees));
+            (identical(other.ownerId, ownerId) || other.ownerId == ownerId) &&
+            (identical(other.isDeleted, isDeleted) ||
+                other.isDeleted == isDeleted) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, location, latitude,
-      longitude, isActive, totalEmployees);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      description,
+      location,
+      longitude,
+      latitude,
+      openAt,
+      closeAt,
+      isActive,
+      ownerId,
+      isDeleted,
+      createdAt,
+      updatedAt);
 
   @JsonKey(ignore: true)
   @override
@@ -616,11 +734,17 @@ abstract class _Store implements Store {
   const factory _Store(
       {required final String id,
       required final String name,
+      required final String description,
       required final String location,
-      required final double latitude,
-      required final double longitude,
+      required final double? longitude,
+      required final double? latitude,
+      required final String openAt,
+      required final String closeAt,
       required final bool isActive,
-      required final int? totalEmployees}) = _$StoreImpl;
+      required final String ownerId,
+      required final bool isDeleted,
+      required final DateTime createdAt,
+      required final DateTime updatedAt}) = _$StoreImpl;
 
   factory _Store.fromJson(Map<String, dynamic> json) = _$StoreImpl.fromJson;
 
@@ -629,15 +753,27 @@ abstract class _Store implements Store {
   @override
   String get name;
   @override
+  String get description;
+  @override
   String get location;
   @override
-  double get latitude;
+  double? get longitude;
   @override
-  double get longitude;
+  double? get latitude;
+  @override
+  String get openAt;
+  @override
+  String get closeAt;
   @override
   bool get isActive;
   @override
-  int? get totalEmployees;
+  String get ownerId;
+  @override
+  bool get isDeleted;
+  @override
+  DateTime get createdAt;
+  @override
+  DateTime get updatedAt;
   @override
   @JsonKey(ignore: true)
   _$$StoreImplCopyWith<_$StoreImpl> get copyWith =>

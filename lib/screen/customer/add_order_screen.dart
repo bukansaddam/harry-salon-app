@@ -61,9 +61,9 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
       await orderProvider.getQueue(storeId: widget.location.id);
       if (mounted) {
         setState(() {
-          dropdownValue = serviceProvider.services.isNotEmpty
-              ? serviceProvider.services.first
-              : null;
+          dropdownValue = serviceProvider.services.isEmpty
+              ? null
+              : serviceProvider.services.first;
           totalPrice = (serviceProvider.services.isNotEmpty
               ? serviceProvider.services.first.price
               : 0)!;
@@ -211,6 +211,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
               ),
             )
           : DropdownButton<Service>(
+              key: UniqueKey(),
               value: dropdownValue,
               isExpanded: true,
               underline: const SizedBox(),
