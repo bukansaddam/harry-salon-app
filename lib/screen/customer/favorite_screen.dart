@@ -105,30 +105,37 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: StaggeredGrid.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  children: List.generate(
-                    provider.favorites.length,
-                    (index) {
-                      final favorites = provider.favorites[index];
-                      final hairstyle = Hairstyle(
-                          id: favorites.hairstyleId,
-                          name: favorites.name,
-                          description: favorites.description,
-                          image: favorites.images);
-                      return CardHairstyle(
-                        index: index,
-                        onTap: () {
-                          context.goNamed('detail_hairstyle',
-                              pathParameters: {'id': hairstyle.id});
-                        },
-                        hairstyle: hairstyle,
-                      );
-                    },
-                  ),
-                ),
+                child: provider.favorites.isEmpty
+                    ? const SizedBox(
+                        height: 600,
+                        child: Center(
+                          child: Text('No favorite found'),
+                        ),
+                      )
+                    : StaggeredGrid.count(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        children: List.generate(
+                          provider.favorites.length,
+                          (index) {
+                            final favorites = provider.favorites[index];
+                            final hairstyle = Hairstyle(
+                                id: favorites.hairstyleId,
+                                name: favorites.name,
+                                description: favorites.description,
+                                image: favorites.images);
+                            return CardHairstyle(
+                              index: index,
+                              onTap: () {
+                                context.goNamed('detail_hairstyle',
+                                    pathParameters: {'id': hairstyle.id});
+                              },
+                              hairstyle: hairstyle,
+                            );
+                          },
+                        ),
+                      ),
               ),
             );
           },
