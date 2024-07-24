@@ -12,6 +12,7 @@ import 'package:tugas_akhir_app/provider/home_provider.dart';
 import 'package:tugas_akhir_app/provider/order_history_provider.dart';
 import 'package:tugas_akhir_app/provider/order_provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
+import 'package:tugas_akhir_app/provider/presence_provider.dart';
 import 'package:tugas_akhir_app/provider/review_provider.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
@@ -99,6 +100,9 @@ class OwnerApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => di.locator<UserProvider>(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => di.locator<PresenceProvider>(),
         ),
       ],
       child: MaterialApp.router(
@@ -314,13 +318,22 @@ final GoRouter _router = GoRouter(
           builder: (context, state) => const EmployeeScreen(),
         ),
         GoRoute(
-          path: 'detail-employee/:id',
-          name: 'detail_employee',
-          builder: (context, state) {
-            final id = state.pathParameters['id'];
-            return DetailEmployeeScreen(id: id!);
-          },
-        ),
+            path: 'detail-employee/:id',
+            name: 'detail_employee',
+            builder: (context, state) {
+              final id = state.pathParameters['id'];
+              return DetailEmployeeScreen(id: id!);
+            },
+            routes: [
+              GoRoute(
+                path: 'detail-payslip/:employeeId',
+                name: 'detail_payslip_employee',
+                builder: (context, state) {
+                  final id = state.pathParameters['employeeId'];
+                  return DetailPayslipScreen(id: id!);
+                },
+              ),
+            ]),
         GoRoute(
           path: 'add-employee',
           name: 'add_employee',

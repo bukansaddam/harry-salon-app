@@ -28,6 +28,7 @@ import 'package:tugas_akhir_app/model/upload.dart';
 
 class ApiService {
   static const String baseUrl = 'https://api.harrysalon.me';
+  // static const String baseUrl = 'http://192.168.1.8:3000';
   static const String _login = '/auth/owners/signin';
   static const String _register = '/auth/customers/signup';
   // static const String _logout = '/auth/owners/signout';
@@ -1180,6 +1181,47 @@ class ApiService {
       return PresenceResponse.fromJson(jsonDecode(response.body));
     } else {
       throw PresenceResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<PresenceResponse> getAttendaceByOwner({
+    required String token,
+    required String employeeId,
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_qrCode/$employeeId?page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      return PresenceResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw PresenceResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<PayslipResponse> getPayslipEmployeeByOwner({
+    required String token,
+    required String employeeId,
+    String name = '',
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse(
+          '$baseUrl$_payslip/employee/$employeeId?name=$name&page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return PayslipResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return PayslipResponse.fromJson(jsonDecode(response.body));
     }
   }
 }

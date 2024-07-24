@@ -1,10 +1,14 @@
 import 'package:contentsize_tabbarview/contentsize_tabbarview.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/provider/employee_detail_provider.dart';
+import 'package:tugas_akhir_app/provider/payslip_provider.dart';
+import 'package:tugas_akhir_app/provider/presence_provider.dart';
+import 'package:tugas_akhir_app/screen/widgets/card_attendance.dart';
+import 'package:tugas_akhir_app/screen/widgets/card_payslip.dart';
 import 'package:tugas_akhir_app/screen/widgets/tab_item.dart';
 
 class DetailEmployeeScreen extends StatefulWidget {
@@ -19,17 +23,28 @@ class DetailEmployeeScreen extends StatefulWidget {
 class _DetailEmployeeScreenState extends State<DetailEmployeeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  PresenceProvider? presenceProvider;
+  PayslipProvider? payslipProvider;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    presenceProvider = context.read<PresenceProvider>();
+    payslipProvider = context.read<PayslipProvider>();
+
+    Future.microtask(() async {
+      presenceProvider!.refreshAttendanceByOwner(employeeId: widget.id);
+      payslipProvider!.refreshPayslipEmployeeByOwner(employeeId: widget.id);
+    });
   }
 
   @override
   void dispose() {
-    super.dispose();
     _tabController.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -49,16 +64,10 @@ class _DetailEmployeeScreenState extends State<DetailEmployeeScreen>
               final state = provider.loadingState;
 
               return state.when(
-                initial: () => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                loading: () => const Center(
-                  child: CircularProgressIndicator(),
-                ),
+                initial: () => const Center(child: CircularProgressIndicator()),
+                loading: () => const Center(child: CircularProgressIndicator()),
                 loaded: () => _buildBody(context, provider),
-                error: (message) => Center(
-                  child: Text(message),
-                ),
+                error: (message) => Center(child: Text(message)),
               );
             },
           ),
@@ -67,6 +76,7 @@ class _DetailEmployeeScreenState extends State<DetailEmployeeScreen>
 
   Widget _buildBody(BuildContext context, EmployeeDetailProvider provider) {
     return SingleChildScrollView(
+      controller: _scrollController,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -139,8 +149,12 @@ class _DetailEmployeeScreenState extends State<DetailEmployeeScreen>
                 const SizedBox(width: 10),
                 provider.detailEmployeeResponse!.data.storeLocation == null
                     ? const Text('No Store')
-                    : Text(provider.detailEmployeeResponse!.data.storeLocation
-                        .toString()),
+                    : Text(
+                        provider.detailEmployeeResponse!.data.storeLocation
+                            .toString(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
               ],
             ),
             const SizedBox(height: 16),
@@ -200,177 +214,60 @@ class _DetailEmployeeScreenState extends State<DetailEmployeeScreen>
   }
 
   Widget _buildAttendance() {
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: 5,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFFE1EAF8)),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Column(
-              children: [
-                Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFC9DBF4),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          DateFormat('EEEE').format(DateTime.now()),
-                          style: const TextStyle(
-                              color: Color(0xFF293869),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
-                        ),
-                        Text(
-                          DateFormat('dd-MMM-yyyy').format(DateTime.now()),
-                          style: const TextStyle(
-                            color: Color(0xFF293869),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.access_time_outlined,
-                            color: Color(0xFF293869),
-                          ),
-                          SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Check In',
-                                style: TextStyle(
-                                  color: Color(0xFF293869),
-                                ),
-                              ),
-                              Text(
-                                '08:00 AM',
-                                style: TextStyle(
-                                  color: Color(0xFF293869),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.access_time_outlined,
-                            color: Color(0xFF293869),
-                          ),
-                          SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Check Out',
-                                style: TextStyle(
-                                  color: Color(0xFF293869),
-                                ),
-                              ),
-                              Text(
-                                '16:00 AM',
-                                style: TextStyle(
-                                  color: Color(0xFF293869),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
+    return Consumer<PresenceProvider>(
+      builder: (context, presenceProvider, child) {
+        final state = presenceProvider.loadingState;
+        return state.when(
+          initial: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          loaded: () => _buildListAttendance(presenceProvider),
+          error: (error) => Center(child: Text(error.toString())),
         );
       },
     );
   }
 
   Widget _buildPayslip() {
+    return Consumer<PayslipProvider>(
+      builder: (context, payslipProvider, child) {
+        final state = payslipProvider.loadingState;
+        return state.when(
+          initial: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          loaded: () => _buildListPayslip(payslipProvider),
+          error: (error) => Center(child: Text(error.toString())),
+        );
+      },
+    );
+  }
+
+  Widget _buildListAttendance(PresenceProvider presenceProvider) {
     return ListView.builder(
+      itemCount: presenceProvider.presences.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: 5,
       itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFFE1EAF8)),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFC9DBF4),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Salary',
-                          style: TextStyle(
-                              color: Color(0xFF293869),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
-                        ),
-                        Text(
-                          DateFormat('dd-MMM-yyyy').format(DateTime.now()),
-                          style: const TextStyle(
-                            color: Color(0xFF293869),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                    child: Text(
-                      'Rp. 5.000.000',
-                      style: TextStyle(
-                        color: Color(0xFF293869),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ))
-              ],
-            ),
-          ),
+        final attendance = presenceProvider.presences[index];
+        return CardAttendance(
+          attendance: attendance,
+        );
+      },
+    );
+  }
+
+  Widget _buildListPayslip(PayslipProvider payslipProvider) {
+    return ListView.builder(
+      itemCount: payslipProvider.payslips.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        final payslip = payslipProvider.payslips[index];
+        return CardPayslip(
+          onTap: () {
+            context.goNamed('detail_payslip_employee',
+                pathParameters: {'employeeId': payslip.id.toString()});
+          },
+          payslip: payslip,
         );
       },
     );

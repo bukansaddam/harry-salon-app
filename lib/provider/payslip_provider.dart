@@ -267,4 +267,67 @@ class PayslipProvider extends ChangeNotifier {
       notifyListeners();
     });
   }
+
+  Future<void> getPayslipEmployeeByOwner(
+      {String? searchValue, required String employeeId}) async {
+    try {
+      if (pageItems == 1) {
+        loadingState = const LoadingState.loading();
+        notifyListeners();
+      }
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        loadingState = const LoadingState.error('Token not found');
+        notifyListeners();
+        return;
+      }
+
+      payslipResponse = await apiService.getPayslipEmployeeByOwner(
+        token: token,
+        employeeId: employeeId,
+        page: pageItems!,
+        size: sizeItems,
+        name: searchValue ?? '',
+      );
+
+      if (payslipResponse == null) {
+        loadingState = const LoadingState.error('Payslip not found');
+        notifyListeners();
+        return;
+      }
+
+      if (payslipResponse!.success) {
+        if (pageItems == 1) {
+          payslips.clear();
+        }
+        payslips.addAll(payslipResponse!.result.data);
+
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+
+        if (payslipResponse!.result.data.length < sizeItems) {
+          pageItems = null;
+        } else {
+          pageItems = pageItems! + 1;
+        }
+      } else {
+        loadingState = LoadingState.error(payslipResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
+  Future<void> refreshPayslipEmployeeByOwner(
+      {String? searchValue, required String employeeId}) async {
+    pageItems = 1;
+    payslips.clear();
+    await getPayslipEmployeeByOwner(
+        searchValue: searchValue, employeeId: employeeId);
+  }
 }

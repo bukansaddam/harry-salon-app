@@ -112,4 +112,47 @@ class PresenceProvider extends ChangeNotifier {
     presences.clear();
     getAttendance();
   }
+
+  Future<void> getAttendanceByOwner({required String employeeId}) async {
+    try {
+      if (pageItems == 1) {
+        loadingState = const LoadingState.loading();
+        notifyListeners();
+      }
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      presenceResponse = await apiService.getAttendaceByOwner(
+        token: token!,
+        employeeId: employeeId,
+        page: pageItems!,
+        size: sizeItems,
+      );
+
+      if (presenceResponse!.success) {
+        presences.addAll(presenceResponse!.result.data);
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+
+        if (presenceResponse!.result.data.length < sizeItems) {
+          pageItems = null;
+        } else {
+          pageItems = pageItems! + 1;
+        }
+      } else {
+        loadingState = LoadingState.error(presenceResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
+  Future<void> refreshAttendanceByOwner({required String employeeId}) async {
+    pageItems = 1;
+    presences.clear();
+    getAttendanceByOwner(employeeId: employeeId);
+  }
 }

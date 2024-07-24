@@ -291,7 +291,11 @@ class _DetailPayslipScreenState extends State<DetailPayslipScreen> {
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
-                              '${ApiService.baseUrl}/${provider.detailPayslipResponse!.data.attachment}',
+                              provider.detailPayslipResponse!.data.attachment!
+                                      .contains('http')
+                                  ? provider
+                                      .detailPayslipResponse!.data.attachment!
+                                  : '${ApiService.baseUrl}/${provider.detailPayslipResponse!.data.attachment}',
                               height: 200,
                               width: 100,
                               fit: BoxFit.cover,
