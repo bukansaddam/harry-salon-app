@@ -228,8 +228,26 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                 ],
               ),
               loaded: () => _buildHairstyleSection(hairstyleProvider),
-              error: (error) => Center(
-                child: Text(error),
+              error: (error) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Popular Hairstyle',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    child: Center(
+                      child: Text(
+                        error.toString(),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

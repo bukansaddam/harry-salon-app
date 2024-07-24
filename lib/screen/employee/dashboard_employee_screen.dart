@@ -126,7 +126,27 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
                 ],
               ),
               loaded: () => _buildCommoditySection(commodityProvider),
-              error: (error) => Text(error.toString()),
+              error: (error) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Commodity',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 100,
+                    child: Center(
+                      child: Text(
+                        error.toString(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           const SliverToBoxAdapter(
