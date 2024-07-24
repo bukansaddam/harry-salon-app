@@ -326,11 +326,15 @@ final GoRouter _router = GoRouter(
             },
             routes: [
               GoRoute(
-                path: 'detail-payslip/:employeeId',
+                path: 'detail-payslip-employee/:employeeId',
                 name: 'detail_payslip_employee',
                 builder: (context, state) {
-                  final id = state.pathParameters['employeeId'];
-                  return DetailPayslipScreen(id: id!);
+                  final id = state.pathParameters['id'];
+                  final employeeId = state.pathParameters['employeeId'];
+                  return DetailPayslipScreen(
+                    id: id!,
+                    employeeId: employeeId!,
+                  );
                 },
               ),
             ]),
@@ -384,7 +388,10 @@ final GoRouter _router = GoRouter(
           name: 'detail_payslip',
           builder: (context, state) {
             final id = state.pathParameters['id'];
-            return DetailPayslipScreen(id: id!);
+            return DetailPayslipScreen(
+              id: id!,
+              employeeId: id,
+            );
           },
         ),
         GoRoute(

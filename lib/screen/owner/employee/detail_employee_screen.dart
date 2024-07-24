@@ -264,8 +264,10 @@ class _DetailEmployeeScreenState extends State<DetailEmployeeScreen>
         final payslip = payslipProvider.payslips[index];
         return CardPayslip(
           onTap: () {
-            context.goNamed('detail_payslip_employee',
-                pathParameters: {'employeeId': payslip.id.toString()});
+            context.goNamed('detail_payslip_employee', pathParameters: {
+              'employeeId': payslip.id.toString(),
+              'id': widget.id
+            });
           },
           payslip: payslip,
         );

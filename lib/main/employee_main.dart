@@ -143,7 +143,10 @@ final GoRouter _router = GoRouter(
           name: 'detail_payslip',
           builder: (context, state) {
             final id = state.pathParameters['id'];
-            return DetailPayslipScreen(id: id!);
+            return DetailPayslipScreen(
+              id: id!,
+              employeeId: id,
+            );
           },
         ),
         GoRoute(

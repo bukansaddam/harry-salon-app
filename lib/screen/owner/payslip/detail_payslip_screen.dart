@@ -7,9 +7,11 @@ import 'package:tugas_akhir_app/provider/payslip_detail_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
 
 class DetailPayslipScreen extends StatefulWidget {
-  const DetailPayslipScreen({super.key, required this.id});
+  const DetailPayslipScreen(
+      {super.key, required this.id, required this.employeeId});
 
   final String id;
+  final String employeeId;
 
   @override
   State<DetailPayslipScreen> createState() => _DetailPayslipScreenState();
@@ -30,7 +32,7 @@ class _DetailPayslipScreenState extends State<DetailPayslipScreen> {
       create: (context) => DetailPayslipProvider(
         apiService: ApiService(),
         authRepository: AuthRepository(),
-        id: widget.id,
+        id: widget.employeeId,
       ),
       child: Scaffold(
         appBar: AppBar(
