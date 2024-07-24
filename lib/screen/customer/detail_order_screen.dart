@@ -262,8 +262,7 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Image.network('${ApiService.baseUrl}/${order.serviceImage}',
-                fit: BoxFit.cover),
+            child: Image.network(order.serviceImage, fit: BoxFit.cover),
           ),
         ),
         const SizedBox(height: 4),
@@ -312,12 +311,7 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                     contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                     leading: CircleAvatar(
                       radius: 25,
-                      backgroundImage: order.employeeAvatar != null
-                          ? order.employeeAvatar!.contains('http')
-                              ? NetworkImage(order.employeeAvatar!)
-                              : NetworkImage(
-                                  '${ApiService.baseUrl}/${order.employeeAvatar}')
-                          : null,
+                      backgroundImage: NetworkImage(order.employeeAvatar!),
                     ),
                   ),
                   reference != null

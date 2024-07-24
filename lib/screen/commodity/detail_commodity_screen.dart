@@ -153,7 +153,7 @@ class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
         bottomRight: Radius.circular(20),
       ),
       child: Image.network(
-        '${ApiService.baseUrl}/${detailCommodity.image}',
+        detailCommodity.image,
         fit: BoxFit.cover,
         height: 600,
         width: double.infinity,

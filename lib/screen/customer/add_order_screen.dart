@@ -482,13 +482,15 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
           final provider = context.read<OrderProvider>();
 
           if (totalPrice != 0 && formKey.currentState!.validate()) {
-            await provider.createOrder(
+            await provider
+                .createOrder(
               storeId: widget.location.id,
               serviceId: dropdownValue!.id,
               description: _descriptionController.text,
               hairstyleId: referenceHairstyle?.id,
-            ).then((_) {
-              if (provider.uploadResponse!.success){
+            )
+                .then((_) {
+              if (provider.uploadResponse!.success) {
                 context.goNamed(
                   'payment',
                   extra: provider.uploadResponse!.data,

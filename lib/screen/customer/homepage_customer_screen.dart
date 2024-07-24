@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
-import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/model/detail_user.dart';
 import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
@@ -577,9 +576,7 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
             ? CircleAvatar(
                 radius: 25,
                 backgroundImage: Image.network(
-                  user.avatar.contains('http')
-                      ? user.avatar
-                      : '${ApiService.baseUrl}/${user.avatar}',
+                  user.avatar,
                 ).image,
               )
             : const Icon(Icons.person, color: Colors.white, size: 30),

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/provider/review_provider.dart';
 
 class ReviewScreen extends StatefulWidget {
@@ -205,12 +204,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             children: [
                               CircleAvatar(
                                 radius: 24,
-                                backgroundImage: employee.avatar
-                                        .contains('http')
-                                    ? Image.network(employee.avatar).image
-                                    : Image.asset(
-                                            '${ApiService.baseUrl}/${employee.avatar}')
-                                        .image,
+                                backgroundImage:
+                                    Image.network(employee.avatar).image,
                               ),
                               const SizedBox(width: 8),
                               Column(

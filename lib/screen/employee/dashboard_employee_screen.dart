@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/common/order_state.dart';
-import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/order.dart';
 import 'package:tugas_akhir_app/model/user.dart';
@@ -397,7 +396,7 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    '${ApiService.baseUrl}/${commodityProvider.commodities[index].image}',
+                    commodityProvider.commodities[index].image,
                     width: 100,
                     height: 100,
                     fit: BoxFit.cover,

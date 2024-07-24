@@ -235,9 +235,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                             color: Colors.black,
                           ),
                           child: Image.network(
-                            index.image.toString().contains('http')
-                                ? index.image
-                                : '${ApiService.baseUrl}/${index.image}',
+                            index.image,
                             fit: BoxFit.cover,
                           ));
                     },
@@ -601,7 +599,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           child: Row(
             children: [
               Image.network(
-                '${ApiService.baseUrl}/${serviceProvider.services[index].image}',
+                serviceProvider.services[index].image,
                 width: 16,
                 height: 16,
                 fit: BoxFit.cover,
@@ -945,12 +943,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
             children: [
               CircleAvatar(
                 radius: 24,
-                backgroundImage: reviewProvider.reviews[0].avatar
-                        .contains('http')
-                    ? Image.network(reviewProvider.reviews[0].avatar).image
-                    : Image.network(
-                            '${ApiService.baseUrl}/${reviewProvider.reviews[0].avatar}')
-                        .image,
+                backgroundImage:
+                    Image.network(reviewProvider.reviews[0].avatar).image,
               ),
               const SizedBox(width: 8),
               Column(
@@ -1068,7 +1062,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                    '${ApiService.baseUrl}/${commodityProvider.commodities[index].image}',
+                    commodityProvider.commodities[index].image,
                     width: 100,
                     height: 100,
                     fit: BoxFit.cover,

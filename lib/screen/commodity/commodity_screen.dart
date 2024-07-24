@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/search_bar.dart';
 
@@ -208,10 +207,8 @@ class _CommodityScreenState extends State<CommodityScreen> {
                       ClipRRect(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
-                        child: Image.network(
-                            '${ApiService.baseUrl}/${commodities.image}',
-                            height: 200,
-                            fit: BoxFit.cover),
+                        child: Image.network(commodities.image,
+                            height: 200, fit: BoxFit.cover),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),

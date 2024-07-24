@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/model/detail_user.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/user_provider.dart';
@@ -244,9 +243,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         CircleAvatar(
           radius: 50,
           backgroundImage: Image.network(
-            user.avatar.contains('http')
-                ? user.avatar
-                : '${ApiService.baseUrl}/${user.avatar}',
+            user.avatar,
           ).image,
         ),
         Positioned(

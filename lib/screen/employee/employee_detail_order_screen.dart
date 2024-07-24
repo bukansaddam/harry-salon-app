@@ -11,6 +11,7 @@ import 'package:tugas_akhir_app/provider/order_detail_provider.dart';
 import 'package:tugas_akhir_app/provider/order_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_hairstyle.dart';
+import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class EmployeeDetailOrderScreen extends StatefulWidget {
   const EmployeeDetailOrderScreen({super.key, required this.orderId});
@@ -230,11 +231,17 @@ class _EmployeeDetailOrderScreenState extends State<EmployeeDetailOrderScreen> {
                                                               id: widget
                                                                   .orderId,
                                                               isAccepted: true,
-                                                            );
-                                                        await detailProvider
-                                                            .getDetailOrder(
-                                                                id: widget
-                                                                    .orderId);
+                                                            )
+                                                            .then((_) async {
+                                                          await detailProvider
+                                                              .getDetailOrder(
+                                                                  id: widget
+                                                                      .orderId);
+                                                        }).catchError((error) {
+                                                          ToastMessage.show(
+                                                              context,
+                                                              error.toString());
+                                                        });
                                                       }
                                                     },
                                                     child: const Text('Ya'),
@@ -392,10 +399,7 @@ class _EmployeeDetailOrderScreenState extends State<EmployeeDetailOrderScreen> {
           leading: CircleAvatar(
             radius: 25,
             backgroundImage: order.employeeAvatar != null
-                ? order.employeeAvatar!.contains('http')
-                    ? NetworkImage(order.employeeAvatar!)
-                    : NetworkImage(
-                        '${ApiService.baseUrl}/${order.employeeAvatar}')
+                ? NetworkImage(order.employeeAvatar!)
                 : null,
           ),
           subtitle: Text(order.userPhone.toString()),
@@ -436,8 +440,7 @@ class _EmployeeDetailOrderScreenState extends State<EmployeeDetailOrderScreen> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Image.network('${ApiService.baseUrl}/${order.serviceImage}',
-                fit: BoxFit.cover),
+            child: Image.network(order.serviceImage, fit: BoxFit.cover),
           ),
         ),
         reference != null

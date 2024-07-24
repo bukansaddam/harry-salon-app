@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/search_bar.dart';
 
@@ -148,7 +147,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                 final service = provider.services[index];
                 return ListTile(
                     leading: Image.network(
-                      '${ApiService.baseUrl}/${service.image}',
+                      service.image,
                       height: 24,
                       width: 24,
                       fit: BoxFit.cover,
