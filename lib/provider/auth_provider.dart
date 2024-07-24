@@ -14,6 +14,9 @@ class AuthProvider extends ChangeNotifier {
     checkIsLoggedIn();
   }
 
+  RegisterResponse? registerResponse;
+  LoginResponse? loginResponse;
+
   LoadingState loadingState = const LoadingState.initial();
 
   String? _message;
@@ -48,7 +51,7 @@ class AuthProvider extends ChangeNotifier {
       loadingState = const LoadingState.loading();
       notifyListeners();
 
-      final RegisterResponse registerResponse = await apiService.register(
+      registerResponse = await apiService.register(
         email: email,
         password: password,
         name: name,
@@ -56,13 +59,13 @@ class AuthProvider extends ChangeNotifier {
         address: address,
       );
 
-      if (registerResponse.success) {
+      if (registerResponse!.success) {
         loadingState = const LoadingState.loaded();
-        _message = registerResponse.message;
+        _message = registerResponse!.message;
 
         final User user = User(
           email: email,
-          token: registerResponse.token,
+          token: registerResponse!.token,
         );
 
         await authRepository.saveUser(user);
@@ -71,8 +74,8 @@ class AuthProvider extends ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        _message = registerResponse.message;
-        loadingState = LoadingState.error(registerResponse.message);
+        _message = registerResponse!.message;
+        loadingState = LoadingState.error(registerResponse!.message);
         notifyListeners();
         return false;
       }
@@ -92,18 +95,18 @@ class AuthProvider extends ChangeNotifier {
       loadingState = const LoadingState.loading();
       notifyListeners();
 
-      final LoginResponse loginResponse = await apiService.login(
+      loginResponse = await apiService.login(
         email: email,
         password: password,
       );
 
-      if (loginResponse.success) {
+      if (loginResponse!.success) {
         loadingState = const LoadingState.loaded();
-        _message = loginResponse.message;
+        _message = loginResponse!.message;
 
         final User user = User(
           email: email,
-          token: loginResponse.token!,
+          token: loginResponse!.token!,
         );
 
         await authRepository.saveUser(user);
@@ -112,9 +115,9 @@ class AuthProvider extends ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        _message = loginResponse.message;
-        loadingState = LoadingState.error(loginResponse.message);
-        debugPrint(loginResponse.message);
+        _message = loginResponse!.message;
+        loadingState = LoadingState.error(loginResponse!.message);
+        debugPrint(loginResponse!.message);
         notifyListeners();
         return false;
       }

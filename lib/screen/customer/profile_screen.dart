@@ -206,11 +206,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
-                context.read<AuthProvider>().logout();
-                context.pop();
-                setState(() {
-                  _refreshData();
+              onPressed: () async {
+                await context.read<AuthProvider>().logout().then((_) {
+                  context.pop();
+                  setState(() {
+                    _refreshData();
+                  });
                 });
               },
               child: const Text('Logout'),

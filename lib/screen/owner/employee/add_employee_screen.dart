@@ -226,6 +226,16 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
         return;
       }
 
+      if (phoneNumber.length < 10) {
+        ToastMessage.show(context, 'Phone number must be at least 10 digits');
+        return;
+      }
+
+      if (password.length > 13) {
+        ToastMessage.show(context, 'Password must be at most 13 digits');
+        return;
+      }
+
       await provider
           .createEmployee(
         name,

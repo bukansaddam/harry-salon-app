@@ -175,7 +175,7 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
                 color: Colors.black,
               ),
               child: Image.network(
-                "${ApiService.baseUrl}/$index",
+                index,
                 fit: BoxFit.cover,
               ),
             );
@@ -185,7 +185,8 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
       options: CarouselOptions(
         aspectRatio: 1.2,
         viewportFraction: 1,
-        autoPlay: true,
+        autoPlay: detailHairstyle.images.length > 1 ? true : false,
+        enableInfiniteScroll: detailHairstyle.images.length > 1 ? true : false,
       ),
     );
   }

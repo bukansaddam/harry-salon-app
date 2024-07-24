@@ -1,6 +1,3 @@
-import 'package:delightful_toast/delight_toast.dart';
-import 'package:delightful_toast/toast/components/toast_card.dart';
-import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
+import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -23,6 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _addressController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -33,6 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _addressController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -82,9 +82,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           keyboardType: TextInputType.emailAddress),
                       const SizedBox(height: 12),
                       CustomTextField(
-                          controller: _passwordController,
-                          labelText: 'Password',
-                          isObscureText: true),
+                        controller: _passwordController,
+                        labelText: 'Password',
+                        isObscureText: true,
+                        counter: true,
+                      ),
+                      const SizedBox(height: 12),
+                      CustomTextField(
+                        controller: _confirmPasswordController,
+                        labelText: 'Confirm Password',
+                        isObscureText: true,
+                        counter: true,
+                      ),
                       const SizedBox(height: 60),
                       context.watch<AuthProvider>().loadingState.when(
                             initial: () => CustomButton(
@@ -128,35 +137,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _onRegister() async {
     final provider = context.read<AuthProvider>();
+
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+    final name = _nameController.text;
+    final phone = _phoneController.text;
+    final address = _addressController.text;
+
     if (formKey.currentState!.validate()) {
-      final result = await provider.register(
-        email: _emailController.text,
-        password: _passwordController.text,
-        name: _nameController.text,
-        phone: _phoneController.text,
-        address: _addressController.text,
-      );
-
-      if (result && mounted) {
-        _showMessage(context, 'Register Success');
-        context.goNamed('home');
-      } else {
-        if (mounted) {
-          _showMessage(context, provider.message!);
-        }
+      if (password != confirmPassword) {
+        ToastMessage.show(context, 'Password not match');
+        return;
       }
-    }
-  }
 
-  void _showMessage(BuildContext context, String message) {
-    DelightToastBar(
-      autoDismiss: true,
-      builder: (context) => ToastCard(
-        leading: const Icon(Icons.ac_unit_rounded),
-        title: Text(message),
-      ),
-      position: DelightSnackbarPosition.top,
-      snackbarDuration: const Duration(seconds: 5),
-    ).show(context);
+      if (phone.length < 10 || phone.length > 14) {
+        ToastMessage.show(context, 'Phone number not valid');
+        return;
+      }
+
+      await provider
+          .register(
+        email: email,
+        password: password,
+        name: name,
+        phone: phone,
+        address: address,
+      )
+          .then((_) {
+        if (provider.registerResponse!.success) {
+          context.goNamed('login');
+          ToastMessage.show(context, provider.registerResponse!.message);
+        } else {
+          ToastMessage.show(context, provider.registerResponse!.message);
+        }
+      }).catchError((error) {
+        ToastMessage.show(context, error.toString());
+      });
+    }
   }
 }
