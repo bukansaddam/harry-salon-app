@@ -50,20 +50,22 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
 
   Widget _buildList(
       List<OrderHistory> histories, OrderHistoryProvider historyProvider) {
-    return ListView.builder(
-      itemCount: histories.length,
-      itemBuilder: (context, index) {
-        final history = histories[index];
-        return CardHistory(
-            history: history,
-            onTap: () {
-              context.goNamed('detail_order',
-                  pathParameters: {
-                    'id': history.orderId.toString(),
-                  },
-                  extra: 'Detail History');
-            });
-      },
-    );
+    return histories.isEmpty
+        ? const Center(child: Text('No Orders found'))
+        : ListView.builder(
+            itemCount: histories.length,
+            itemBuilder: (context, index) {
+              final history = histories[index];
+              return CardHistory(
+                  history: history,
+                  onTap: () {
+                    context.goNamed('detail_order',
+                        pathParameters: {
+                          'id': history.orderId.toString(),
+                        },
+                        extra: 'Detail History');
+                  });
+            },
+          );
   }
 }
