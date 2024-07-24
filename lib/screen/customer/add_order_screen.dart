@@ -15,6 +15,7 @@ import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_hairstyle.dart';
 import 'package:tugas_akhir_app/screen/widgets/search_bar.dart';
 import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
+import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class AddOrderScreen extends StatefulWidget {
   const AddOrderScreen({super.key, required this.location});
@@ -305,7 +306,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                     ),
                     IconButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        context.pop();
                       },
                       icon: const Icon(Icons.close, size: 20),
                     ),
@@ -388,7 +389,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
   }
 
   Widget _buildTotal(OrderProvider orderProvider) {
-    final state = orderProvider.loadingState;
+    final state = orderProvider.queueLoadingState;
     final queue = orderProvider.queue;
     return Container(
       width: double.infinity,
@@ -441,11 +442,10 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                        loading: () => const Text(
-                          '-',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
+                        loading: () => const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator()),
                         loaded: () => Text(
                           '${queue?.totalOrder ?? 0} (${queue?.totalDuration ?? 0} min)',
                           style: const TextStyle(
@@ -482,24 +482,29 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
           final provider = context.read<OrderProvider>();
 
           if (totalPrice != 0 && formKey.currentState!.validate()) {
-            bool isSuccess = await provider.createOrder(
+            await provider.createOrder(
               storeId: widget.location.id,
               serviceId: dropdownValue!.id,
               description: _descriptionController.text,
               hairstyleId: referenceHairstyle?.id,
-            );
+            ).then((_) {
+              if (provider.uploadResponse!.success){
+                context.goNamed(
+                  'payment',
+                  extra: provider.uploadResponse!.data,
+                );
+              } else {
+                ToastMessage.show(context, provider.uploadResponse!.message);
+              }
+            }).catchError((e) {
+              ToastMessage.show(context, e.toString());
+            });
 
             // if (isSuccess && mounted) {
             //   provider.refreshOrder();
             //   ToastMessage.show(context, 'Order created');
             //   context.pop();
             // }
-            if (isSuccess && mounted) {
-              context.goNamed(
-                'payment',
-                extra: provider.uploadResponse!.data,
-              );
-            }
           }
         },
         text: 'Submit');

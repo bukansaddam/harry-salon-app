@@ -23,6 +23,7 @@ class OrderProvider extends ChangeNotifier {
   LoadingState loadingState = const LoadingState.initial();
   LoadingState currentOrderLoadingState = const LoadingState.initial();
   OrderState orderState = const OrderState.initial();
+  LoadingState queueLoadingState = const LoadingState.initial();
 
   List<Order> orders = [];
   Order? upcomingTask;
@@ -131,14 +132,14 @@ class OrderProvider extends ChangeNotifier {
 
   Future<void> getQueue({String? storeId}) async {
     try {
-      const LoadingState.loading();
+      queueLoadingState = const LoadingState.loading();
       notifyListeners();
 
       final repository = await authRepository.getUser();
       final token = repository?.token;
 
       if (token == null) {
-        loadingState = const LoadingState.error('You are not logged in');
+        queueLoadingState = const LoadingState.error('You are not logged in');
         notifyListeners();
         return;
       }
@@ -148,15 +149,15 @@ class OrderProvider extends ChangeNotifier {
 
       if (queueResponse != null && queueResponse!.success) {
         queue = queueResponse!.result;
-        loadingState = const LoadingState.loaded();
+        queueLoadingState = const LoadingState.loaded();
         notifyListeners();
       } else {
-        loadingState =
+        queueLoadingState =
             LoadingState.error(queueResponse?.message ?? "Unknown error");
         notifyListeners();
       }
     } catch (e) {
-      loadingState = LoadingState.error(e.toString());
+      queueLoadingState = LoadingState.error(e.toString());
       notifyListeners();
     }
   }
