@@ -113,19 +113,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 8),
                   _buildProfileItem('Full Name', user.name, () {
                     _navigateToEditProfile(user.name, 'Full Name');
-                  }),
+                  }, true),
                   _buildDivider(),
-                  _buildProfileItem('Email', user.email, () {
-                    _navigateToEditProfile(user.email, 'Email');
-                  }),
+                  _buildProfileItem('Email', user.email, () {}, false),
                   _buildDivider(),
                   _buildProfileItem('Address', user.address, () {
                     _navigateToEditProfile(user.address, 'Address');
-                  }),
+                  }, true),
                   _buildDivider(),
                   _buildProfileItem('Phone', user.phone.toString(), () {
                     _navigateToEditProfile(user.phone.toString(), 'Phone');
-                  }),
+                  }, true),
                   _buildDivider(),
                 ],
               ),
@@ -153,11 +151,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildProfileItem(String title, String subtitle, VoidCallback onTap) {
+  Widget _buildProfileItem(
+      String title, String subtitle, VoidCallback onTap, bool isEdited) {
     return ItemProfile(
       onTap: onTap,
       title: title,
       subtitle: subtitle,
+      isEdited: isEdited,
     );
   }
 

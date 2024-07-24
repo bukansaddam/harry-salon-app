@@ -90,6 +90,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return CustomButton(
         function: () async {
           if (_key.currentState!.validate()) {
+            if (widget.title == 'Phone') {
+              if (_dataController.text.length < 10) {
+                ToastMessage.show(context, 'Phone number must be 10 or more');
+                return;
+              } else if (_dataController.text.length > 15) {
+                ToastMessage.show(context, 'Phone number must be 15 or less');
+                return;
+              }
+            }
+
             await userProvider.updateProfile(
               data: _dataController.text,
               title: widget.title,
