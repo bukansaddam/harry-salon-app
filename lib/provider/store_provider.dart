@@ -46,6 +46,8 @@ class StoreProvider extends ChangeNotifier {
 
   bool? isActive = true;
 
+  int totalIncome = 0;
+
   Future<void> getAllStore({
     String searchValue = '',
   }) async {
@@ -133,11 +135,17 @@ class StoreProvider extends ChangeNotifier {
     _activeStoreCount = stores.where((store) => store.isActive).length;
   }
 
+  Future<void> getTotalIncome() async {
+    totalIncome = stores.fold(
+        0, (previousValue, store) => previousValue + int.parse(store.totalRevenue.toString()));
+  }
+
   Future<void> refreshOwnerStore({String searchValue = ''}) async {
     pageItems = 1;
     stores.clear();
     await getAllOwnerStore(searchValue: searchValue);
     await getTotalActiveStore();
+    await getTotalIncome();
   }
 
   Future<void> addStore(

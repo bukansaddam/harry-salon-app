@@ -18,7 +18,7 @@ class StoreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double aspectRatio = 1.2;
     if (count == 2) {
-      aspectRatio = 1.2;
+      aspectRatio = 1;
     } else if (count == 3) {
       aspectRatio = 1.3;
     } else if (count == 4) {
@@ -74,6 +74,8 @@ class StoreCard extends StatelessWidget {
                       children: [
                         Text(
                           store.name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

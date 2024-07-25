@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/store_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/card_store.dart';
@@ -90,22 +91,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child:
                     Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  const Expanded(
+                  Expanded(
                     flex: 2,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Total Income',
                           style: TextStyle(
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
-                          'Rp 1.000.000',
-                          style: TextStyle(
+                          NumberFormat.currency(
+                            locale: 'id',
+                            symbol: 'Rp ',
+                            decimalDigits: 0,
+                          ).format(
+                            context.watch<StoreProvider>().totalIncome,
+                          ),
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
