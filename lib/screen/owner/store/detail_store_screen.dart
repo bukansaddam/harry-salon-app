@@ -159,7 +159,37 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
         );
         break;
       case 'Delete':
-        ToastMessage.show(context, value);
+        showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              title: const Text('Delete Store'),
+              content: const Text('Are you sure to delete this store?'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    context.pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Provider.of<StoreDetailProvider>(context, listen: false)
+                        .deleteStore(id: detailStore.id)
+                        .then((_) {
+                      context.pop();
+                      context.goNamed('home');
+                    }).catchError((error) {
+                      ToastMessage.show(context, error);
+                    });
+                    ToastMessage.show(context, 'Store Deleted');
+                  },
+                  child: const Text('Delete'),
+                ),
+              ],
+            );
+          },
+        );
         break;
     }
   }

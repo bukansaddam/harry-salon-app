@@ -4,6 +4,7 @@ import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/model/employee.dart';
+import 'package:tugas_akhir_app/model/upload.dart';
 
 class StoreDetailProvider extends ChangeNotifier {
   final AuthRepository authRepository;
@@ -21,6 +22,7 @@ class StoreDetailProvider extends ChangeNotifier {
 
   DetailStoreResponse? detailStoreResponse;
   EmployeeResponse? employeeResponse;
+  UploadResponse? deleteResponse;
 
   LoadingState loadingState = const LoadingState.initial();
   LoadingState employeeLoadingState = const LoadingState.initial();
@@ -147,6 +149,35 @@ class StoreDetailProvider extends ChangeNotifier {
       }
     } catch (e) {
       _message = e.toString();
+      notifyListeners();
+    }
+  }
+
+  Future<void> deleteStore({required String id}) async {
+    try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        loadingState = const LoadingState.error('You must login first');
+        notifyListeners();
+        return;
+      }
+
+      deleteResponse = await apiService.deleteStore(token: token, id: id);
+
+      if (deleteResponse!.success) {
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(deleteResponse!.message);
+        notifyListeners();
+      }
+    } catch (error) {
+      loadingState = LoadingState.error(error.toString());
       notifyListeners();
     }
   }

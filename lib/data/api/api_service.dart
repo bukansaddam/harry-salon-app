@@ -300,6 +300,22 @@ class ApiService {
     }
   }
 
+  Future<UploadResponse> deleteStore(
+      {required String token, required String id}) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl$_store/$id'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
   Future<EmployeeResponse> getAllEmployee({
     required String token,
     String name = '',
