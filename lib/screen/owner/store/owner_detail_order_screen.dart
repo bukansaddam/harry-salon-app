@@ -123,18 +123,82 @@ class _OwnerDetailHistoryScreenState extends State<OwnerDetailHistoryScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ListTile(
-          title: Text(
-            order.userName,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                provider.orderState.when(
+                    initial: () => 'Unpaid',
+                    unpaid: () => 'Unpaid',
+                    pending: () => 'Pending',
+                    waiting: () => 'Waiting',
+                    onProcress: () => 'On Process',
+                    done: () => 'Done',
+                    canceled: () => 'Canceled',
+                    error: (message) => message),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: provider.orderState.when(
+                    initial: () => Colors.black,
+                    unpaid: () => Colors.yellow[500],
+                    pending: () => Colors.yellow[500],
+                    waiting: () => Colors.green,
+                    onProcress: () => Colors.green,
+                    done: () => Colors.green,
+                    canceled: () => Colors.red,
+                    error: (message) => Colors.red,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  provider.orderState.when(
+                    initial: () => 'Please wait a moment',
+                    unpaid: () => 'Please wait a moment',
+                    pending: () => 'Please wait a moment',
+                    waiting: () => 'Please wait a moment',
+                    onProcress: () => 'Please wait a moment',
+                    done: () => 'Order has been completed',
+                    canceled: () => 'Order has been canceled',
+                    error: (message) => message,
+                  ),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              Text(
+                order.id,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-          leading: CircleAvatar(
-            radius: 25,
-            backgroundImage: NetworkImage(order.employeeAvatar!),
-          ),
-          subtitle: Text(order.userPhone.toString()),
         ),
+        order.employeeAvatar == null
+            ? const SizedBox.shrink()
+            : ListTile(
+                title: Text(
+                  order.userName,
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                leading: CircleAvatar(
+                  radius: 25,
+                  backgroundImage: NetworkImage(order.employeeAvatar!),
+                ),
+                subtitle: Text(order.userPhone.toString()),
+              ),
         const SizedBox(height: 16),
         const Text(
           'Detail',

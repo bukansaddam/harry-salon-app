@@ -165,7 +165,8 @@ class _DetailStatisticScreenState extends State<DetailStatisticScreen> {
                   if (value != null && value.duration.inDays <= 7) {
                     setState(() {
                       firstDate = value.start;
-                      lastDate = value.end;
+                      lastDate = value.end.add(
+                          const Duration(hours: 23, minutes: 59, seconds: 59));
                       debugPrint(firstDate.toString());
                       debugPrint(lastDate.toString());
                     });
