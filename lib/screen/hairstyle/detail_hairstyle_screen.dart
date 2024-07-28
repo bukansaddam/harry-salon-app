@@ -236,10 +236,47 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
                 ? IconButton(
                     onPressed: () async {
                       if (favoriteProvider.isFavorite) {
-                        await favoriteProvider.removeFromFavorite(widget.id);
+                        await favoriteProvider
+                            .removeFromFavorite(widget.id)
+                            .then(
+                          (_) {
+                            if (favoriteProvider.loadingState ==
+                                const LoadingState.loaded()) {
+                              ToastMessage.show(context, 'Add to favorite');
+                            } else if (favoriteProvider.loadingState ==
+                                const LoadingState.error(
+                                    'You must login first')) {
+                              ToastMessage.show(
+                                  context, 'You must login first');
+                            } else {
+                              ToastMessage.show(context,
+                                  favoriteProvider.uploadResponse!.message);
+                            }
+                          },
+                        ).catchError((error) {
+                          ToastMessage.show(context, error.toString());
+                        });
                         debugPrint('Remove from favorite');
                       } else {
-                        await favoriteProvider.addToFavorite(widget.id);
+                        await favoriteProvider.addToFavorite(widget.id).then(
+                          (_) {
+                            if (favoriteProvider.loadingState ==
+                                const LoadingState.loaded()) {
+                              ToastMessage.show(context, 'Add to favorite');
+                            } else if (favoriteProvider.loadingState ==
+                                const LoadingState.error(
+                                    'You must login first')) {
+                              ToastMessage.show(
+                                  context, 'You must login first');
+                            } else {
+                              ToastMessage.show(context,
+                                  favoriteProvider.uploadResponse!.message);
+                            }
+                          },
+                        ).catchError((error) {
+                          debugPrint(error.toString());
+                          ToastMessage.show(context, error.toString());
+                        });
                         debugPrint('Add to favorite');
                       }
                     },

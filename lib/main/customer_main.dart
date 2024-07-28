@@ -98,22 +98,23 @@ final GoRouter _router = GoRouter(
       builder: (context, state) => const SplashScreen(),
     ),
     GoRoute(
-      path: '/login',
-      name: 'login',
-      builder: (context, state) => const LoginScreen(),
-    ),
-    GoRoute(
-      path: '/register',
-      name: 'register',
-      builder: (context, state) => const RegisterScreen(),
-    ),
-    GoRoute(
       path: '/home',
       name: 'home',
       builder: (context, state) {
         return const HomeCustomerScreen();
       },
       routes: [
+        GoRoute(
+            path: 'login',
+            name: 'login',
+            builder: (context, state) => const LoginScreen(),
+            routes: [
+              GoRoute(
+                path: 'register',
+                name: 'register',
+                builder: (context, state) => const RegisterScreen(),
+              ),
+            ]),
         GoRoute(
           path: 'all/hairstyle',
           name: 'more_hairstyle',

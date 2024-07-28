@@ -137,7 +137,9 @@ class StoreProvider extends ChangeNotifier {
 
   Future<void> getTotalIncome() async {
     totalIncome = stores.fold(
-        0, (previousValue, store) => previousValue + int.parse(store.totalRevenue.toString()));
+        0,
+        (previousValue, store) =>
+            previousValue + int.parse(store.totalRevenue.toString()));
   }
 
   Future<void> refreshOwnerStore({String searchValue = ''}) async {

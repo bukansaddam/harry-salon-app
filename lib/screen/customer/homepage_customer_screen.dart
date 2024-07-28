@@ -461,8 +461,13 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
                               size: 16,
                             ),
                             const SizedBox(width: 4),
-                            Text(
-                                '${myOrder.storeName}, ${myOrder.storeLocation}'),
+                            Flexible(
+                              child: Text(
+                                '${myOrder.storeName}, ${myOrder.storeLocation}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 8),
@@ -703,9 +708,9 @@ class _HomepageCustomerScreenState extends State<HomepageCustomerScreen>
     String distance = '';
 
     if (radius * 1000 < 1000) {
-      distance = '${radius * 1000} m';
+      distance = '${(radius * 1000).round()} m';
     } else {
-      distance = '$radius km';
+      distance = '${radius.toStringAsFixed(1)} km';
     }
     return InkWell(
       onTap: () {

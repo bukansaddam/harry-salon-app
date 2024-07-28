@@ -19,6 +19,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final ScrollController _scrollController = ScrollController();
   late UserProvider userProvider;
+  late AuthProvider authProvider;
+  late Future<bool> isLoggedInFuture;
 
   final actor = const String.fromEnvironment('actor', defaultValue: 'customer');
 
@@ -30,9 +32,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     userProvider = context.read<UserProvider>();
+    authProvider = context.read<AuthProvider>();
 
-    Future.microtask(() async {
-      await _refreshData();
+    isLoggedInFuture = Future.microtask(() async {
+      if (isCustomer) return await authProvider.authRepository.getState();
+      return false;
+    }).then((isLoggedIn) {
+      if (!isLoggedIn && isCustomer) {
+        context.goNamed('login');
+      } else {
+        userProvider.getDetailUser();
+      }
+      return isLoggedIn;
     });
   }
 
@@ -67,7 +78,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 final user = userProvider.userDetailResponse!.data;
                 return _buildBody(user);
               },
-              error: (error) => _buildDialogLogin(error),
+              error: (error) {
+                if (error.contains('Token')) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  return _buildDialogLogin(error);
+                }
+              },
             );
           },
         ));
