@@ -129,6 +129,50 @@ class ServiceProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> updateService({
+    required String id,
+    String? name,
+    String? price,
+    String? duration,
+  }) async {
+    try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      List<int> compressedImage = [];
+      String filename = '';
+
+      if (_image != null) {
+        var bytes = await _image!.readAsBytes();
+        compressedImage = await compressImage(bytes);
+        filename = _image!.name;
+      }
+
+      uploadResponse = await apiService.updateService(
+          token: token!,
+          id: id,
+          name: name,
+          price: price,
+          duration: duration,
+          images: compressedImage,
+          filenames: filename);
+
+      if (uploadResponse!.success) {
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(uploadResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
   Future<List<int>> compressImage(List<int> bytes) async {
     int imageLength = bytes.length;
     if (imageLength < 1000000) return bytes;

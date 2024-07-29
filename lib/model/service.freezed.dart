@@ -393,6 +393,7 @@ mixin _$Service {
   String get image => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   int? get price => throw _privateConstructorUsedError;
+  int get duration => throw _privateConstructorUsedError;
   String get storeId => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
@@ -412,6 +413,7 @@ abstract class $ServiceCopyWith<$Res> {
       String image,
       String name,
       int? price,
+      int duration,
       String storeId,
       DateTime createdAt,
       DateTime updatedAt});
@@ -434,6 +436,7 @@ class _$ServiceCopyWithImpl<$Res, $Val extends Service>
     Object? image = null,
     Object? name = null,
     Object? price = freezed,
+    Object? duration = null,
     Object? storeId = null,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -455,6 +458,10 @@ class _$ServiceCopyWithImpl<$Res, $Val extends Service>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int?,
+      duration: null == duration
+          ? _value.duration
+          : duration // ignore: cast_nullable_to_non_nullable
+              as int,
       storeId: null == storeId
           ? _value.storeId
           : storeId // ignore: cast_nullable_to_non_nullable
@@ -483,6 +490,7 @@ abstract class _$$ServiceImplCopyWith<$Res> implements $ServiceCopyWith<$Res> {
       String image,
       String name,
       int? price,
+      int duration,
       String storeId,
       DateTime createdAt,
       DateTime updatedAt});
@@ -503,6 +511,7 @@ class __$$ServiceImplCopyWithImpl<$Res>
     Object? image = null,
     Object? name = null,
     Object? price = freezed,
+    Object? duration = null,
     Object? storeId = null,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -524,6 +533,10 @@ class __$$ServiceImplCopyWithImpl<$Res>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int?,
+      duration: null == duration
+          ? _value.duration
+          : duration // ignore: cast_nullable_to_non_nullable
+              as int,
       storeId: null == storeId
           ? _value.storeId
           : storeId // ignore: cast_nullable_to_non_nullable
@@ -548,6 +561,7 @@ class _$ServiceImpl implements _Service {
       required this.image,
       required this.name,
       required this.price,
+      required this.duration,
       required this.storeId,
       required this.createdAt,
       required this.updatedAt});
@@ -564,6 +578,8 @@ class _$ServiceImpl implements _Service {
   @override
   final int? price;
   @override
+  final int duration;
+  @override
   final String storeId;
   @override
   final DateTime createdAt;
@@ -572,7 +588,7 @@ class _$ServiceImpl implements _Service {
 
   @override
   String toString() {
-    return 'Service(id: $id, image: $image, name: $name, price: $price, storeId: $storeId, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Service(id: $id, image: $image, name: $name, price: $price, duration: $duration, storeId: $storeId, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -584,6 +600,8 @@ class _$ServiceImpl implements _Service {
             (identical(other.image, image) || other.image == image) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.price, price) || other.price == price) &&
+            (identical(other.duration, duration) ||
+                other.duration == duration) &&
             (identical(other.storeId, storeId) || other.storeId == storeId) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
@@ -593,8 +611,8 @@ class _$ServiceImpl implements _Service {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, image, name, price, storeId, createdAt, updatedAt);
+  int get hashCode => Object.hash(runtimeType, id, image, name, price, duration,
+      storeId, createdAt, updatedAt);
 
   @JsonKey(ignore: true)
   @override
@@ -616,6 +634,7 @@ abstract class _Service implements Service {
       required final String image,
       required final String name,
       required final int? price,
+      required final int duration,
       required final String storeId,
       required final DateTime createdAt,
       required final DateTime updatedAt}) = _$ServiceImpl;
@@ -630,6 +649,8 @@ abstract class _Service implements Service {
   String get name;
   @override
   int? get price;
+  @override
+  int get duration;
   @override
   String get storeId;
   @override

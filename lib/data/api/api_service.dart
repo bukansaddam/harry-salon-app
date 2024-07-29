@@ -28,8 +28,8 @@ import 'package:tugas_akhir_app/model/store_owner.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://api.harrysalon.me';
-  // static const String baseUrl = 'http://localhost:3000';
+  // static const String baseUrl = 'https://api.harrysalon.me';
+  static const String baseUrl = 'http://192.168.1.9:3000';
   static const String _login = '/auth/owners/signin';
   static const String _register = '/auth/users/signup';
   // static const String _logout = '/auth/owners/signout';
@@ -724,6 +724,48 @@ class ApiService {
 
     request.headers.addAll({
       'Authorization': 'Bearer $token',
+    });
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<UploadResponse> updateService({
+    required String token,
+    required String id,
+    List<int>? images,
+    String? filenames,
+    String? name,
+    String? price,
+    String? duration,
+  }) async {
+    var request = http.MultipartRequest(
+      'PUT',
+      Uri.parse('$baseUrl$_service/$id'),
+    );
+
+    if (images != null) {
+      var multipartFile = http.MultipartFile.fromBytes(
+        'image',
+        images,
+        filename: filenames,
+      );
+      request.files.add(multipartFile);
+    }
+
+    if (name != null) request.fields['name'] = name;
+    if (price != null) request.fields['price'] = price;
+    if (duration != null) request.fields['duration'] = duration;
+
+    request.headers.addAll({
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'multipart/form-data',
     });
 
     final streamedResponse = await request.send();

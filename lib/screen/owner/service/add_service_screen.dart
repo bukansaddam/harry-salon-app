@@ -6,15 +6,18 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir_app/model/service.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
 import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class AddServiceScreen extends StatefulWidget {
-  const AddServiceScreen({super.key, required this.storeId});
+  const AddServiceScreen(
+      {super.key, required this.storeId, required this.service});
 
   final String storeId;
+  final Service? service;
 
   @override
   State<AddServiceScreen> createState() => _AddServiceScreenState();
@@ -32,6 +35,17 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   void didChangeDependencies() {
     _serviceProvider = Provider.of<ServiceProvider>(context, listen: false);
     super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.service != null) {
+      _nameController.text = widget.service!.name;
+      _priceController.text = widget.service!.price.toString();
+      _durationController.text = widget.service!.duration.toString();
+    }
   }
 
   @override
@@ -144,6 +158,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
 
   Widget _buildImage(BuildContext context) {
     final provider = context.watch<ServiceProvider>();
+    final image = widget.service?.image;
     return provider.imageUrl != null
         ? Padding(
             padding: const EdgeInsets.only(right: 8),
@@ -186,26 +201,68 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
               ),
             ),
           )
-        : InkWell(
-            onTap: () {
-              _buildBottomSheet(context);
-            },
-            child: Container(
-              height: 150,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Center(
-                child: Icon(
-                  Icons.image_outlined,
-                  size: 50,
-                  color: Colors.grey,
+        : image != null
+            ? Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: InkWell(
+                  onLongPress: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) {
+                        return AlertDialog(
+                          title: const Text('Change Image'),
+                          content: const Text(
+                              'Are you sure want to change this image?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                context.pop();
+                              },
+                              child: const Text('No'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                context.pop();
+                                _buildBottomSheet(context);
+                              },
+                              child: const Text('Yes'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      image,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          );
+              )
+            : InkWell(
+                onTap: () {
+                  _buildBottomSheet(context);
+                },
+                child: Container(
+                  height: 150,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.image_outlined,
+                      size: 50,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              );
   }
 
   Future<void> _buildBottomSheet(BuildContext context) {
@@ -296,24 +353,45 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
       final duration = _durationController.text;
       final storeId = widget.storeId;
 
-      await provider
-          .createService(
-        name: name,
-        price: price,
-        duration: duration,
-        storeId: storeId,
-      )
-          .then((_) {
-        if (provider.uploadResponse!.success) {
-          provider.refreshService(storeId: storeId);
-          context.pop();
-          ToastMessage.show(context, 'Service added');
-        } else {
-          ToastMessage.show(context, provider.uploadResponse!.message);
-        }
-      }).catchError((error) {
-        ToastMessage.show(context, error.toString());
-      });
+      if (widget.service == null) {
+        await provider
+            .createService(
+          name: name,
+          price: price,
+          duration: duration,
+          storeId: storeId,
+        )
+            .then((_) {
+          if (provider.uploadResponse!.success) {
+            provider.refreshService(storeId: storeId);
+            context.pop();
+            ToastMessage.show(context, 'Service added');
+          } else {
+            ToastMessage.show(context, provider.uploadResponse!.message);
+          }
+        }).catchError((error) {
+          ToastMessage.show(context, error.toString());
+        });
+      } else {
+        await provider
+            .updateService(
+          id: widget.service!.id,
+          name: name,
+          price: price,
+          duration: duration,
+        )
+            .then((_) {
+          if (provider.uploadResponse!.success) {
+            provider.refreshService(storeId: storeId);
+            context.pop();
+            ToastMessage.show(context, 'Service updated');
+          } else {
+            ToastMessage.show(context, provider.uploadResponse!.message);
+          }
+        }).catchError((error) {
+          ToastMessage.show(context, error.toString());
+        });
+      }
     }
   }
 }

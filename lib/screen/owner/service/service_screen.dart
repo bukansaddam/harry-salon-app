@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir_app/model/service.dart';
 import 'package:tugas_akhir_app/provider/service_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/search_bar.dart';
 
@@ -60,10 +61,14 @@ class _ServiceScreenState extends State<ServiceScreen> {
     });
   }
 
-  void _onSelected(value) {
+  void _onSelected(value, Service service) {
     switch (value) {
       case 'edit':
-        // do something
+        context.goNamed(
+          'add_service',
+          pathParameters: {'id': widget.storeId},
+          extra: service,
+        );
         break;
       case 'delete':
         // do something
@@ -116,8 +121,8 @@ class _ServiceScreenState extends State<ServiceScreen> {
       ),
       child: FloatingActionButton(
         onPressed: () {
-          context
-              .goNamed('add_service', pathParameters: {'id': widget.storeId});
+          context.goNamed('add_service',
+              pathParameters: {'id': widget.storeId}, extra: null);
         },
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -168,7 +173,9 @@ class _ServiceScreenState extends State<ServiceScreen> {
                           ),
                         ];
                       },
-                      onSelected: _onSelected,
+                      onSelected: (String value) {
+                        _onSelected(value, service);
+                      },
                     ));
               },
             );

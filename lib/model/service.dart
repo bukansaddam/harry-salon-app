@@ -34,6 +34,7 @@ class Service with _$Service {
     required String image,
     required String name,
     required int? price,
+    required int duration,
     required String storeId,
     required DateTime createdAt,
     required DateTime updatedAt,

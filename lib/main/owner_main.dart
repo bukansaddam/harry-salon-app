@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
+import 'package:tugas_akhir_app/model/service.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
 import 'package:tugas_akhir_app/provider/commodity_provider.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
@@ -287,7 +288,8 @@ final GoRouter _router = GoRouter(
                   name: 'add_service',
                   builder: (context, state) {
                     final storeId = state.pathParameters['id'];
-                    return AddServiceScreen(storeId: storeId!);
+                    final extra = state.extra as Service?;
+                    return AddServiceScreen(storeId: storeId!, service: extra);
                   },
                 )
               ],
