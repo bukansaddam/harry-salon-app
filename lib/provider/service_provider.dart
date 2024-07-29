@@ -173,6 +173,32 @@ class ServiceProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> deleteService(String id) async {
+    try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      uploadResponse = await apiService.deleteService(
+        token: token!,
+        id: id,
+      );
+
+      if (serviceResponse!.success) {
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(serviceResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
   Future<List<int>> compressImage(List<int> bytes) async {
     int imageLength = bytes.length;
     if (imageLength < 1000000) return bytes;
