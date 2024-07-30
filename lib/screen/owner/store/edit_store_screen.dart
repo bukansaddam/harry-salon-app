@@ -418,6 +418,10 @@ class _EditStoreScreenState extends State<EditStoreScreen> {
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: InkWell(
+                      onTap: () {
+                        ToastMessage.show(
+                            context, 'Long press to delete image');
+                      },
                       onLongPress: () {
                         showDialog(
                           context: context,

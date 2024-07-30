@@ -30,8 +30,9 @@ _$DetailHairstyleImpl _$$DetailHairstyleImplFromJson(
       description: json['description'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
-      images:
-          (json['images'] as List<dynamic>).map((e) => e as String).toList(),
+      images: (json['images'] as List<dynamic>)
+          .map((e) => HairstyleImage.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$DetailHairstyleImplToJson(
@@ -43,4 +44,17 @@ Map<String, dynamic> _$$DetailHairstyleImplToJson(
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       'images': instance.images,
+    };
+
+_$HairstyleImageImpl _$$HairstyleImageImplFromJson(Map<String, dynamic> json) =>
+    _$HairstyleImageImpl(
+      id: json['id'] as String,
+      image: json['image'] as String,
+    );
+
+Map<String, dynamic> _$$HairstyleImageImplToJson(
+        _$HairstyleImageImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'image': instance.image,
     };

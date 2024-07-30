@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tugas_akhir_app/common/loading_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
+import 'package:tugas_akhir_app/model/detail_hairstyle.dart';
 import 'package:tugas_akhir_app/model/hairstyle.dart';
 import 'package:image/image.dart' as img;
 import 'package:tugas_akhir_app/model/upload.dart';
@@ -27,6 +28,10 @@ class HairstyleProvider extends ChangeNotifier {
   UploadResponse? uploadResponse;
 
   List<Hairstyle> hairstyles = [];
+
+  List<String> deletedImages = [];
+  List<Map<String, dynamic>> existingImages = [];
+  List<Map<String, dynamic>> combinedImages = [];
 
   int? pageItems = 1;
   int sizeItems = 10;
@@ -121,6 +126,57 @@ class HairstyleProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> updateHairstyle(
+      {required String id,
+      required String name,
+      required String description}) async {
+    try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        loadingState = const LoadingState.error('You must login first');
+        notifyListeners();
+        return;
+      }
+
+      List<List<int>> compressedImages = [];
+      List<String> filenames = [];
+
+      for (var image in _images) {
+        var bytes = await image.readAsBytes();
+        var compressedBytes = await compressImage(bytes);
+        var filename = image.name;
+        filenames.add(filename);
+        compressedImages.add(compressedBytes);
+      }
+
+      uploadResponse = await apiService.updateHairstyle(
+        token: token,
+        id: id,
+        images: compressedImages,
+        filenames: filenames,
+        name: name,
+        description: description,
+        deletedImages: deletedImages,
+      );
+
+      if (uploadResponse!.success) {
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(uploadResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
   Future<void> deleteHairstyle(String id) async {
     try {
       loadingState = const LoadingState.loading();
@@ -200,5 +256,35 @@ class HairstyleProvider extends ChangeNotifier {
   void clearImage() {
     _images = [];
     _imageUrls = [];
+  }
+
+  void addExistingImage(DetailHairstyle detailHairstyle) {
+    existingImages = detailHairstyle.images
+        .map((image) => {
+              'isProvider': false,
+              'url': image.image.toString().contains('http')
+                  ? image.image
+                  : '${ApiService.baseUrl}/${image.image}',
+              'id': image.id
+            })
+        .toList();
+    notifyListeners();
+  }
+
+  void combineImages() {
+    combinedImages = [
+      ...existingImages,
+      ..._imageUrls.map(
+        (url) => {'isProvider': true, 'url': url},
+      ),
+    ];
+    notifyListeners();
+    debugPrint(combinedImages.toString());
+  }
+
+  void deleteExistingImage(String id) {
+    existingImages.removeWhere((image) => image['id'] == id);
+    deletedImages.add(id);
+    notifyListeners();
   }
 }

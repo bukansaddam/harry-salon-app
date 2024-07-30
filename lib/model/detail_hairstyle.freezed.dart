@@ -216,7 +216,7 @@ mixin _$DetailHairstyle {
   String get description => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
-  List<String> get images => throw _privateConstructorUsedError;
+  List<HairstyleImage> get images => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -236,7 +236,7 @@ abstract class $DetailHairstyleCopyWith<$Res> {
       String description,
       DateTime createdAt,
       DateTime updatedAt,
-      List<String> images});
+      List<HairstyleImage> images});
 }
 
 /// @nodoc
@@ -283,7 +283,7 @@ class _$DetailHairstyleCopyWithImpl<$Res, $Val extends DetailHairstyle>
       images: null == images
           ? _value.images
           : images // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<HairstyleImage>,
     ) as $Val);
   }
 }
@@ -302,7 +302,7 @@ abstract class _$$DetailHairstyleImplCopyWith<$Res>
       String description,
       DateTime createdAt,
       DateTime updatedAt,
-      List<String> images});
+      List<HairstyleImage> images});
 }
 
 /// @nodoc
@@ -347,7 +347,7 @@ class __$$DetailHairstyleImplCopyWithImpl<$Res>
       images: null == images
           ? _value._images
           : images // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<HairstyleImage>,
     ));
   }
 }
@@ -361,7 +361,7 @@ class _$DetailHairstyleImpl implements _DetailHairstyle {
       required this.description,
       required this.createdAt,
       required this.updatedAt,
-      required final List<String> images})
+      required final List<HairstyleImage> images})
       : _images = images;
 
   factory _$DetailHairstyleImpl.fromJson(Map<String, dynamic> json) =>
@@ -377,9 +377,9 @@ class _$DetailHairstyleImpl implements _DetailHairstyle {
   final DateTime createdAt;
   @override
   final DateTime updatedAt;
-  final List<String> _images;
+  final List<HairstyleImage> _images;
   @override
-  List<String> get images {
+  List<HairstyleImage> get images {
     if (_images is EqualUnmodifiableListView) return _images;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_images);
@@ -433,7 +433,7 @@ abstract class _DetailHairstyle implements DetailHairstyle {
       required final String description,
       required final DateTime createdAt,
       required final DateTime updatedAt,
-      required final List<String> images}) = _$DetailHairstyleImpl;
+      required final List<HairstyleImage> images}) = _$DetailHairstyleImpl;
 
   factory _DetailHairstyle.fromJson(Map<String, dynamic> json) =
       _$DetailHairstyleImpl.fromJson;
@@ -449,9 +449,164 @@ abstract class _DetailHairstyle implements DetailHairstyle {
   @override
   DateTime get updatedAt;
   @override
-  List<String> get images;
+  List<HairstyleImage> get images;
   @override
   @JsonKey(ignore: true)
   _$$DetailHairstyleImplCopyWith<_$DetailHairstyleImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+HairstyleImage _$HairstyleImageFromJson(Map<String, dynamic> json) {
+  return _HairstyleImage.fromJson(json);
+}
+
+/// @nodoc
+mixin _$HairstyleImage {
+  String get id => throw _privateConstructorUsedError;
+  String get image => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $HairstyleImageCopyWith<HairstyleImage> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $HairstyleImageCopyWith<$Res> {
+  factory $HairstyleImageCopyWith(
+          HairstyleImage value, $Res Function(HairstyleImage) then) =
+      _$HairstyleImageCopyWithImpl<$Res, HairstyleImage>;
+  @useResult
+  $Res call({String id, String image});
+}
+
+/// @nodoc
+class _$HairstyleImageCopyWithImpl<$Res, $Val extends HairstyleImage>
+    implements $HairstyleImageCopyWith<$Res> {
+  _$HairstyleImageCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? image = null,
+  }) {
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      image: null == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$HairstyleImageImplCopyWith<$Res>
+    implements $HairstyleImageCopyWith<$Res> {
+  factory _$$HairstyleImageImplCopyWith(_$HairstyleImageImpl value,
+          $Res Function(_$HairstyleImageImpl) then) =
+      __$$HairstyleImageImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String id, String image});
+}
+
+/// @nodoc
+class __$$HairstyleImageImplCopyWithImpl<$Res>
+    extends _$HairstyleImageCopyWithImpl<$Res, _$HairstyleImageImpl>
+    implements _$$HairstyleImageImplCopyWith<$Res> {
+  __$$HairstyleImageImplCopyWithImpl(
+      _$HairstyleImageImpl _value, $Res Function(_$HairstyleImageImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? image = null,
+  }) {
+    return _then(_$HairstyleImageImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      image: null == image
+          ? _value.image
+          : image // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$HairstyleImageImpl implements _HairstyleImage {
+  const _$HairstyleImageImpl({required this.id, required this.image});
+
+  factory _$HairstyleImageImpl.fromJson(Map<String, dynamic> json) =>
+      _$$HairstyleImageImplFromJson(json);
+
+  @override
+  final String id;
+  @override
+  final String image;
+
+  @override
+  String toString() {
+    return 'HairstyleImage(id: $id, image: $image)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$HairstyleImageImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.image, image) || other.image == image));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, image);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$HairstyleImageImplCopyWith<_$HairstyleImageImpl> get copyWith =>
+      __$$HairstyleImageImplCopyWithImpl<_$HairstyleImageImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$HairstyleImageImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _HairstyleImage implements HairstyleImage {
+  const factory _HairstyleImage(
+      {required final String id,
+      required final String image}) = _$HairstyleImageImpl;
+
+  factory _HairstyleImage.fromJson(Map<String, dynamic> json) =
+      _$HairstyleImageImpl.fromJson;
+
+  @override
+  String get id;
+  @override
+  String get image;
+  @override
+  @JsonKey(ignore: true)
+  _$$HairstyleImageImplCopyWith<_$HairstyleImageImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

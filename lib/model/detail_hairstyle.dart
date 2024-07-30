@@ -23,9 +23,20 @@ class DetailHairstyle with _$DetailHairstyle {
     required String description,
     required DateTime createdAt,
     required DateTime updatedAt,
-    required List<String> images,
+    required List<HairstyleImage> images,
   }) = _DetailHairstyle;
 
   factory DetailHairstyle.fromJson(Map<String, dynamic> json) =>
       _$DetailHairstyleFromJson(json);
+}
+
+@freezed
+class HairstyleImage with _$HairstyleImage {
+  const factory HairstyleImage({
+    required String id,
+    required String image,
+  }) = _HairstyleImage;
+
+  factory HairstyleImage.fromJson(Map<String, dynamic> json) =>
+      _$HairstyleImageFromJson(json);
 }

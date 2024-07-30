@@ -497,6 +497,50 @@ class ApiService {
     }
   }
 
+  Future<UploadResponse> updateHairstyle({
+    required String token,
+    required String id,
+    List<List<int>>? images,
+    List<String>? filenames,
+    String? name,
+    String? description,
+    List<String>? deletedImages,
+  }) async {
+    var request =
+        http.MultipartRequest('PUT', Uri.parse('$baseUrl$_hairstyle/$id'));
+
+    if (images != null) {
+      for (int i = 0; i < images.length; i++) {
+        var multipartFile = http.MultipartFile.fromBytes(
+          'image',
+          images[i],
+          filename: filenames![i],
+        );
+        request.files.add(multipartFile);
+      }
+    }
+
+    if (name != null) request.fields['name'] = name;
+    if (description != null) request.fields['description'] = description;
+    if (deletedImages != null) {
+      request.fields['deletedImagesId'] = deletedImages.join(',');
+    }
+
+    request.headers.addAll({
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer $token',
+    });
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
   Future<UploadResponse> deleteHairstyle({
     required String token,
     required String id,

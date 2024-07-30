@@ -39,10 +39,11 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
     });
   }
 
-  void _onSelected(value, String id) {
+  void _onSelected(value, String id, DetailHairstyle? detailHairstyle) {
     switch (value) {
       case 'Edit':
-        ToastMessage.show(context, 'Edit');
+        context.goNamed('edit_hairstyle',
+            pathParameters: {'id': id}, extra: detailHairstyle);
         break;
       case 'Delete':
         showDialog(
@@ -90,8 +91,12 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
           body: Consumer2<HairstyleDetailProvider, FavoriteProvider>(
             builder: (context, hairstyleProvider, favoriteProvider, child) {
               final state = hairstyleProvider.loadingState;
-              return _buildBody(
-                  context, hairstyleProvider, favoriteProvider, state);
+              return RefreshIndicator(
+                onRefresh: () =>
+                    hairstyleProvider.getDetailHairstyle(widget.id),
+                child: _buildBody(
+                    context, hairstyleProvider, favoriteProvider, state),
+              );
             },
           ),
         );
@@ -133,10 +138,14 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
             loading: () => const SizedBox.shrink(),
             loaded: () {
               final detailHairstyle =
-                  hairstyleProvider.detailHairstyleResponse!.data;
+                  hairstyleProvider.detailHairstyleResponse?.data;
 
-              return _buildCarousel(
-                  context, hairstyleProvider, detailHairstyle);
+              if (detailHairstyle != null) {
+                return _buildCarousel(
+                    context, hairstyleProvider, detailHairstyle);
+              } else {
+                return const Center(child: Text('Failed to load data'));
+              }
             },
             error: (message) => Center(
               child: Text(message),
@@ -158,7 +167,7 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
         SafeArea(
           child: Stack(
             children: [
-              _buildAppBar(context, favoriteProvider),
+              _buildAppBar(context, favoriteProvider, hairstyleProvider),
               Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 250),
@@ -174,9 +183,13 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
                     ),
                     loaded: () {
                       final detailHairstyle =
-                          hairstyleProvider.detailHairstyleResponse!.data;
+                          hairstyleProvider.detailHairstyleResponse?.data;
 
-                      return _buildDetailHairstyle(context, detailHairstyle);
+                      if (detailHairstyle != null) {
+                        return _buildDetailHairstyle(context, detailHairstyle);
+                      } else {
+                        return const Center(child: Text('Failed to load data'));
+                      }
                     },
                     error: (message) => Center(
                       child: Text(message),
@@ -203,7 +216,7 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
                 color: Colors.black,
               ),
               child: Image.network(
-                index,
+                index.image,
                 fit: BoxFit.cover,
               ),
             );
@@ -219,7 +232,9 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context, FavoriteProvider favoriteProvider) {
+  Widget _buildAppBar(BuildContext context, FavoriteProvider favoriteProvider,
+      HairstyleDetailProvider hairstyleProvider) {
+    final state = favoriteProvider.loadingState;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -241,27 +256,38 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
           ),
         ),
         isOwner
-            ? PopupMenuButton(
-                onSelected: (String value) {
-                  _onSelected(value, widget.id);
-                },
-                itemBuilder: (BuildContext context) {
-                  return [
-                    const PopupMenuItem(
-                      value: 'Edit',
-                      child: Text('Edit'),
-                    ),
-                    const PopupMenuItem(
-                      value: 'Delete',
-                      child:
-                          Text('Delete', style: TextStyle(color: Colors.red)),
-                    ),
-                  ];
-                },
-                icon: const Icon(
-                  Icons.more_vert,
-                  color: Colors.white,
+            ? state.when(
+                initial: () => const SizedBox.shrink(),
+                loading: () => const SizedBox(
+                  width: 36,
                 ),
+                loaded: () {
+                  final hairstyle =
+                      hairstyleProvider.detailHairstyleResponse?.data;
+                  return PopupMenuButton(
+                    onSelected: (String value) {
+                      _onSelected(value, widget.id, hairstyle);
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        const PopupMenuItem(
+                          value: 'Edit',
+                          child: Text('Edit'),
+                        ),
+                        const PopupMenuItem(
+                          value: 'Delete',
+                          child: Text('Delete',
+                              style: TextStyle(color: Colors.red)),
+                        ),
+                      ];
+                    },
+                    icon: const Icon(
+                      Icons.more_vert,
+                      color: Colors.white,
+                    ),
+                  );
+                },
+                error: (message) => const SizedBox.shrink(),
               )
             : isCustomer
                 ? IconButton(
@@ -273,7 +299,8 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
                           (_) {
                             if (favoriteProvider.loadingState ==
                                 const LoadingState.loaded()) {
-                              ToastMessage.show(context, 'Add to favorite');
+                              ToastMessage.show(
+                                  context, 'Removed from favorite');
                             } else if (favoriteProvider.loadingState ==
                                 const LoadingState.error(
                                     'You must login first')) {
@@ -287,13 +314,13 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
                         ).catchError((error) {
                           ToastMessage.show(context, error.toString());
                         });
-                        debugPrint('Remove from favorite');
+                        debugPrint('Removed from favorite');
                       } else {
                         await favoriteProvider.addToFavorite(widget.id).then(
                           (_) {
                             if (favoriteProvider.loadingState ==
                                 const LoadingState.loaded()) {
-                              ToastMessage.show(context, 'Add to favorite');
+                              ToastMessage.show(context, 'Added to favorite');
                             } else if (favoriteProvider.loadingState ==
                                 const LoadingState.error(
                                     'You must login first')) {
@@ -308,7 +335,7 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
                           debugPrint(error.toString());
                           ToastMessage.show(context, error.toString());
                         });
-                        debugPrint('Add to favorite');
+                        debugPrint('Added to favorite');
                       }
                     },
                     icon: Icon(
@@ -327,6 +354,7 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
   Widget _buildDetailHairstyle(
       BuildContext context, DetailHairstyle detailHairstyle) {
     return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

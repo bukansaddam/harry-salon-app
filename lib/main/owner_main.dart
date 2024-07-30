@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/model/detail_commodity.dart';
+import 'package:tugas_akhir_app/model/detail_hairstyle.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/model/service.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
@@ -26,6 +27,7 @@ import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/detail_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/update_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/customer/edit_profile_screen.dart';
+import 'package:tugas_akhir_app/screen/hairstyle/edit_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/employee/add_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/employee/detail_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/employee/employee_screen.dart';
@@ -387,13 +389,25 @@ final GoRouter _router = GoRouter(
           builder: (context, state) => const HairstyleScreen(),
         ),
         GoRoute(
-          path: 'detail-hairstyle/:id',
-          name: 'detail_hairstyle',
-          builder: (context, state) {
-            final id = state.pathParameters['id'];
-            return DetailHairstyleScreen(id: id!);
-          },
-        ),
+            path: 'detail-hairstyle/:id',
+            name: 'detail_hairstyle',
+            builder: (context, state) {
+              final id = state.pathParameters['id'];
+              return DetailHairstyleScreen(id: id!);
+            },
+            routes: [
+              GoRoute(
+                path: 'edit-hairstyle',
+                name: 'edit_hairstyle',
+                builder: (context, state) {
+                  state.pathParameters['id'];
+                  final extra = state.extra as DetailHairstyle?;
+                  return EditHairstyleScreen(
+                    detailHairstyle: extra,
+                  );
+                },
+              )
+            ]),
         GoRoute(
           path: 'add-hairstyle',
           name: 'add_hairstyle',
