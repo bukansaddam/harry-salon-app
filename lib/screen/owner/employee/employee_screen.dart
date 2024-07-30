@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir_app/model/employee.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/search_bar.dart';
-import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class EmployeeScreen extends StatefulWidget {
   const EmployeeScreen({super.key});
@@ -53,10 +53,38 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
     });
   }
 
-  void _onSelected(value) {
+  void _onSelected(value, Employee employee) {
     switch (value) {
       case 'Delete':
-        ToastMessage.show(context, 'Delete');
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Delete Employee'),
+                content:
+                    const Text('Are you sure want to delete this employee?'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      context
+                          .read<EmployeeProvider>()
+                          .deleteEmployee(employee.id);
+                    },
+                    child: const Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ],
+              );
+            });
         break;
     }
   }
@@ -92,72 +120,80 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
   }
 
   Widget _buildList(BuildContext context) {
-    return Consumer<EmployeeProvider>(
-      builder: (context, provider, _) {
-        final state = provider.loadingState;
-        return state.when(
-          initial: () {
-            return const SizedBox.shrink();
-          },
-          loading: () {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-          loaded: () {
-            return ListView.builder(
-              controller: _scrollController,
-              itemCount: provider.employees.length +
-                  (provider.pageItems != null ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == provider.employees.length &&
-                    provider.pageItems != null) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                final employee = provider.employees[index];
-                return ListTile(
-                  onTap: () {
-                    context.pushNamed('detail_employee', pathParameters: {
-                      'id': employee.id,
-                    });
-                  },
-                  leading: CircleAvatar(
-                    radius: 20,
-                    backgroundImage: Image.network(employee.avatar).image,
-                  ),
-                  title: Text(employee.name),
-                  trailing: PopupMenuButton(
-                      icon: const Icon(Icons.more_vert),
-                      elevation: 1,
-                      padding: EdgeInsets.zero,
-                      itemBuilder: (context) {
-                        return [
-                          const PopupMenuItem(
-                            height: 30,
-                            value: 'Delete',
-                            child: Text(
-                              'Delete',
-                              style: TextStyle(
-                                color: Colors.red,
+    return RefreshIndicator(
+      onRefresh: () {
+        return context.read<EmployeeProvider>().refreshEmployee();
+      },
+      child: Consumer<EmployeeProvider>(
+        builder: (context, provider, _) {
+          final state = provider.loadingState;
+          return state.when(
+            initial: () {
+              return const SizedBox.shrink();
+            },
+            loading: () {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+            loaded: () {
+              return ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                controller: _scrollController,
+                itemCount: provider.employees.length +
+                    (provider.pageItems != null ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index == provider.employees.length &&
+                      provider.pageItems != null) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  final employee = provider.employees[index];
+                  return ListTile(
+                    onTap: () {
+                      context.pushNamed('detail_employee', pathParameters: {
+                        'id': employee.id,
+                      });
+                    },
+                    leading: CircleAvatar(
+                      radius: 20,
+                      backgroundImage: Image.network(employee.avatar).image,
+                    ),
+                    title: Text(employee.name),
+                    trailing: PopupMenuButton(
+                        icon: const Icon(Icons.more_vert),
+                        elevation: 1,
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context) {
+                          return [
+                            const PopupMenuItem(
+                              height: 30,
+                              value: 'Delete',
+                              child: Text(
+                                'Delete',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                ),
                               ),
                             ),
-                          ),
-                        ];
-                      },
-                      onSelected: _onSelected),
-                );
-              },
-            );
-          },
-          error: (e) {
-            return Center(
-              child: Text(e.toString()),
-            );
-          },
-        );
-      },
+                          ];
+                        },
+                        onSelected: (value) {
+                          _onSelected(value, employee);
+                        }),
+                  );
+                },
+              );
+            },
+            error: (e) {
+              return Center(
+                child: Text(e.toString()),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 

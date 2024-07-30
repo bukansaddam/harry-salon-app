@@ -220,7 +220,14 @@ class _DetailEmployeeScreenState extends State<DetailEmployeeScreen>
         return state.when(
           initial: () => const Center(child: CircularProgressIndicator()),
           loading: () => const Center(child: CircularProgressIndicator()),
-          loaded: () => _buildListAttendance(presenceProvider),
+          loaded: () {
+            if (presenceProvider.presences.isEmpty) {
+              return const SizedBox(
+                  height: 200,
+                  child: Center(child: Text('No attendance data')));
+            }
+            return _buildListAttendance(presenceProvider);
+          },
           error: (error) => Center(child: Text(error.toString())),
         );
       },
@@ -235,7 +242,8 @@ class _DetailEmployeeScreenState extends State<DetailEmployeeScreen>
           initial: () => const Center(child: CircularProgressIndicator()),
           loading: () => const Center(child: CircularProgressIndicator()),
           loaded: () => _buildListPayslip(payslipProvider),
-          error: (error) => Center(child: Text(error.toString())),
+          error: (error) => SizedBox(
+              height: 200, child: Center(child: Text(error.toString()))),
         );
       },
     );
