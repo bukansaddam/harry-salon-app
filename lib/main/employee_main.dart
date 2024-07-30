@@ -106,7 +106,8 @@ final GoRouter _router = GoRouter(
           path: 'more-commodity',
           name: 'more_commodity',
           builder: (context, state) {
-            final storeId = state.extra as String;
+            final extra = state.extra as Map<String, String?>;
+            final storeId = extra['id']!;
             return CommodityScreen(storeId: storeId);
           },
           routes: [
@@ -115,7 +116,8 @@ final GoRouter _router = GoRouter(
               name: 'detail_commodity',
               builder: (context, state) {
                 final id = state.pathParameters['commodityId'];
-                final storeId = state.extra as String;
+                final extra = state.extra as Map<String, String?>;
+                final storeId = extra['id']!;
                 return DetailCommodityScreen(id: id!, storeId: storeId);
               },
             ),
@@ -126,7 +128,7 @@ final GoRouter _router = GoRouter(
                 final storeId = state.extra as String;
                 return AddCommodityScreen(storeId: storeId);
               },
-            )
+            ),
           ],
         ),
         GoRoute(
@@ -134,8 +136,8 @@ final GoRouter _router = GoRouter(
           name: 'detail_commodity_2',
           builder: (context, state) {
             final id = state.pathParameters['commodityId'];
-            final storeId = state.pathParameters['id'];
-            return DetailCommodityScreen(id: id!, storeId: storeId!);
+            final storeId = state.extra as String;
+            return DetailCommodityScreen(id: id!, storeId: storeId);
           },
         ),
         GoRoute(

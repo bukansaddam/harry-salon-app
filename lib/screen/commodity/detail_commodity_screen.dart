@@ -24,6 +24,11 @@ class DetailCommodityScreen extends StatefulWidget {
 class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
   late CommodityProvider _commodityProvider;
 
+  final actor = const String.fromEnvironment('actor', defaultValue: 'owner');
+
+  bool get isOwner => actor == 'owner';
+  bool get isEmployee => actor == 'employee';
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -31,10 +36,16 @@ class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
     _commodityProvider = Provider.of<CommodityProvider>(context, listen: false);
   }
 
-  void _onSelected(value) {
+  void _onSelected(value, DetailCommodity detailCommodity) {
     switch (value) {
       case 'Edit':
-        ToastMessage.show(context, 'Edit');
+        context.goNamed('update_commodity', pathParameters: {
+          'commodityId': widget.id,
+          'id': widget.storeId
+        }, extra: {
+          'id': widget.storeId,
+          'commodity': detailCommodity,
+        });
         break;
       case 'Delete':
         ToastMessage.show(context, 'Delete');
@@ -54,7 +65,11 @@ class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
         body: Consumer<DetailCommodityProvider>(
           builder: (context, provider, child) {
             final state = provider.loadingState;
-            return _buildBody(context, provider, state);
+            return RefreshIndicator(
+                onRefresh: () {
+                  return provider.getDetail(id: widget.id);
+                },
+                child: _buildBody(context, provider, state));
           },
         ),
       ),
@@ -71,6 +86,7 @@ class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
           loaded: () {
             final detailCommodity = provider.detailCommodityResponse!.data;
             return SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   _buildImage(provider, detailCommodity),
@@ -94,13 +110,14 @@ class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
           ),
         ),
         SafeArea(
-          child: _buildAppBar(),
+          child: _buildAppBar(provider),
         ),
       ],
     );
   }
 
-  Widget _buildAppBar() {
+  Widget _buildAppBar(DetailCommodityProvider provider) {
+    final detailCommodity = provider.detailCommodityResponse?.data;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -115,32 +132,38 @@ class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
           ),
         ),
         const Text(
-          'Detail Hairstyle',
+          'Detail Commodity',
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        PopupMenuButton(
-          onSelected: _onSelected,
-          itemBuilder: (BuildContext context) {
-            return [
-              const PopupMenuItem(
-                value: 'Edit',
-                child: Text('Edit'),
+        isOwner
+            ? PopupMenuButton(
+                onSelected: (String value) {
+                  _onSelected(value, detailCommodity!);
+                },
+                itemBuilder: (BuildContext context) {
+                  return [
+                    const PopupMenuItem(
+                      value: 'Edit',
+                      child: Text('Edit'),
+                    ),
+                    const PopupMenuItem(
+                      value: 'Delete',
+                      child: Text('Delete'),
+                    ),
+                  ];
+                },
+                icon: const Icon(
+                  Icons.more_vert,
+                  color: Colors.white,
+                ),
+              )
+            : const SizedBox(
+                width: 24,
               ),
-              const PopupMenuItem(
-                value: 'Delete',
-                child: Text('Delete'),
-              ),
-            ];
-          },
-          icon: const Icon(
-            Icons.more_vert,
-            color: Colors.white,
-          ),
-        ),
       ],
     );
   }

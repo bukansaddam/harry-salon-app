@@ -379,7 +379,7 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
               onPressed: () {
                 context.goNamed(
                   'more_commodity',
-                  extra: user!.storeId,
+                  extra: {'id': user!.storeId},
                 );
               },
               child: const Text(
@@ -408,7 +408,13 @@ class _DashboardEmployeeScreenState extends State<DashboardEmployeeScreen> {
           padding: const EdgeInsets.only(right: 8),
           child: InkWell(
             onTap: () {
-              //do something
+              context.goNamed(
+                'detail_commodity_2',
+                pathParameters: {
+                  'commodityId': commodityProvider.commodities[index].id
+                },
+                extra: user!.storeId.toString(),
+              );
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

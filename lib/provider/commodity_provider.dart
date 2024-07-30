@@ -139,6 +139,56 @@ class CommodityProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> updateCommodity({
+    required String id,
+    required String name,
+    required String stock,
+    required String category,
+  }) async {
+    try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        loadingState = const LoadingState.error('Token is null');
+        notifyListeners();
+        return;
+      }
+
+      List<int> compressedImage = [];
+      String filename = '';
+
+      if (_image != null) {
+        var bytes = await _image!.readAsBytes();
+        compressedImage = await compressImage(bytes);
+        filename = _image!.name;
+      }
+
+      uploadResponse = await apiService.updateCommodity(
+          token: token,
+          id: id,
+          name: name,
+          stock: stock,
+          category: category,
+          images: compressedImage,
+          filenames: filename);
+
+      if (uploadResponse!.success) {
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(uploadResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
   Future<List<int>> compressImage(List<int> bytes) async {
     int imageLength = bytes.length;
     if (imageLength < 1000000) return bytes;

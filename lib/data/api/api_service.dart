@@ -649,6 +649,48 @@ class ApiService {
     }
   }
 
+  Future<UploadResponse> updateCommodity({
+    required String token,
+    required String id,
+    List<int>? images,
+    String? filenames,
+    String? name,
+    String? stock,
+    String? category,
+  }) async {
+    var request = http.MultipartRequest(
+      'PUT',
+      Uri.parse('$baseUrl$_commodity/$id'),
+    );
+
+    if (images != null) {
+      var multipartFile = http.MultipartFile.fromBytes(
+        'image',
+        images,
+        filename: filenames,
+      );
+      request.files.add(multipartFile);
+    }
+
+    if (name != null) request.fields['name'] = name;
+    if (stock != null) request.fields['stock'] = stock;
+    if (category != null) request.fields['category'] = category;
+
+    request.headers.addAll({
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'multipart/form-data',
+    });
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
   Future<UploadResponse> updateCommodityStock({
     required String token,
     required String id,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir_app/model/detail_commodity.dart';
 import 'package:tugas_akhir_app/model/detail_store.dart';
 import 'package:tugas_akhir_app/model/service.dart';
 import 'package:tugas_akhir_app/provider/auth_provider.dart';
@@ -23,6 +24,7 @@ import 'package:tugas_akhir_app/screen/auth/register_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/add_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/detail_commodity_screen.dart';
+import 'package:tugas_akhir_app/screen/commodity/update_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/customer/edit_profile_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/employee/add_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/employee/detail_employee_screen.dart';
@@ -248,33 +250,67 @@ final GoRouter _router = GoRouter(
               },
               routes: [
                 GoRoute(
-                  path: 'detail-commodity/:commodityId',
-                  name: 'detail_commodity',
-                  builder: (context, state) {
-                    final id = state.pathParameters['commodityId'];
-                    final storeId = state.pathParameters['id'];
-                    return DetailCommodityScreen(id: id!, storeId: storeId!);
-                  },
-                ),
+                    path: 'detail-commodity/:commodityId',
+                    name: 'detail_commodity',
+                    builder: (context, state) {
+                      final id = state.pathParameters['commodityId'];
+                      final storeId = state.pathParameters['id'];
+                      return DetailCommodityScreen(id: id!, storeId: storeId!);
+                    },
+                    routes: [
+                      GoRoute(
+                        path: 'update-commodity',
+                        name: 'update_commodity',
+                        builder: (context, state) {
+                          state.pathParameters['commodityId'];
+                          final storeId = state.pathParameters['id'];
+                          final extra =
+                              (state.extra as Map<String, dynamic>)['commodity']
+                                  as DetailCommodity?;
+                          return UpdateCommodityScreen(
+                            storeId: storeId!,
+                            commodity: extra,
+                          );
+                        },
+                      )
+                    ]),
                 GoRoute(
                   path: 'add-commodity',
                   name: 'add_commodity',
                   builder: (context, state) {
                     final storeId = state.pathParameters['id'];
-                    return AddCommodityScreen(storeId: storeId!);
+                    return AddCommodityScreen(
+                      storeId: storeId!,
+                    );
                   },
                 )
               ],
             ),
             GoRoute(
-              path: 'detail-commodity/:commodityId',
-              name: 'detail_commodity_2',
-              builder: (context, state) {
-                final id = state.pathParameters['commodityId'];
-                final storeId = state.pathParameters['id'];
-                return DetailCommodityScreen(id: id!, storeId: storeId!);
-              },
-            ),
+                path: 'detail-commodity-2/:commodityId',
+                name: 'detail_commodity_2',
+                builder: (context, state) {
+                  final id = state.pathParameters['commodityId'];
+                  final storeId = state.pathParameters['id'];
+                  return DetailCommodityScreen(id: id!, storeId: storeId!);
+                },
+                routes: [
+                  GoRoute(
+                    path: 'update-commodity-2',
+                    name: 'update_commodity_2',
+                    builder: (context, state) {
+                      final storeId = state.pathParameters['id'];
+                      state.pathParameters['commodityId'];
+                      final extra =
+                          (state.extra as Map<String, dynamic>)['commodity']
+                              as DetailCommodity?;
+                      return UpdateCommodityScreen(
+                        storeId: storeId!,
+                        commodity: extra,
+                      );
+                    },
+                  )
+                ]),
             GoRoute(
               path: 'more-service',
               name: 'more_service',

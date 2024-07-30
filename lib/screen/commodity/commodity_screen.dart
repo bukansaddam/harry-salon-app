@@ -132,7 +132,7 @@ class _CommodityScreenState extends State<CommodityScreen> {
           ),
         ],
       ),
-      floatingActionButton: _buildFAB(),
+      floatingActionButton: isOwner ? _buildFAB() : null,
     );
   }
 
@@ -149,11 +149,16 @@ class _CommodityScreenState extends State<CommodityScreen> {
       child: FloatingActionButton(
         onPressed: () {
           if (isOwner) {
-            context.goNamed('add_commodity', pathParameters: {
-              'id': widget.storeId,
-            });
+            context.goNamed('update_commodity',
+                pathParameters: {
+                  'id': widget.storeId,
+                },
+                extra: null);
           } else {
-            context.goNamed('add_commodity', extra: widget.storeId);
+            context.goNamed('update_commodity', extra: {
+              'id': widget.storeId,
+              'commodity': null,
+            });
           }
         },
         backgroundColor: Colors.transparent,
@@ -194,11 +199,11 @@ class _CommodityScreenState extends State<CommodityScreen> {
                         'commodityId': commodities.id,
                       });
                     } else {
-                      context.goNamed('detail_commodity',
-                          pathParameters: {
-                            'commodityId': commodities.id,
-                          },
-                          extra: widget.storeId);
+                      context.goNamed('detail_commodity', pathParameters: {
+                        'commodityId': commodities.id,
+                      }, extra: {
+                        'id': widget.storeId,
+                      });
                     }
                   },
                   child: Column(
@@ -217,6 +222,8 @@ class _CommodityScreenState extends State<CommodityScreen> {
                           children: [
                             Text(
                               commodities.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

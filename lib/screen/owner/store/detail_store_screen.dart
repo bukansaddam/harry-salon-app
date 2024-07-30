@@ -1103,7 +1103,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                     fontWeight: FontWeight.bold,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 2,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   'stock : ${commodityProvider.commodities[index].stock}',
