@@ -121,6 +121,35 @@ class HairstyleProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> deleteHairstyle(String id) async {
+    try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        loadingState = const LoadingState.error('You must login first');
+        notifyListeners();
+        return;
+      }
+
+      final response = await apiService.deleteHairstyle(token: token, id: id);
+
+      if (response.success) {
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(response.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
   Future<List<int>> compressImage(List<int> bytes) async {
     int imageLength = bytes.length;
     if (imageLength < 1000000) return bytes;

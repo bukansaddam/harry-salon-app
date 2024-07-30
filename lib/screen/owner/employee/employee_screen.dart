@@ -66,13 +66,13 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      context.pop();
                     },
                     child: const Text('Cancel'),
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      context.pop();
                       context
                           .read<EmployeeProvider>()
                           .deleteEmployee(employee.id);

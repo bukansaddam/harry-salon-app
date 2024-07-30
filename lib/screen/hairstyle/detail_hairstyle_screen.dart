@@ -8,6 +8,7 @@ import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/detail_hairstyle.dart';
 import 'package:tugas_akhir_app/provider/favorite_provider.dart';
 import 'package:tugas_akhir_app/provider/hairstyle_detail_provider.dart';
+import 'package:tugas_akhir_app/provider/hairstyle_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/toast_message.dart';
 
 class DetailHairstyleScreen extends StatefulWidget {
@@ -38,13 +39,40 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
     });
   }
 
-  void _onSelected(value) {
+  void _onSelected(value, String id) {
     switch (value) {
       case 'Edit':
         ToastMessage.show(context, 'Edit');
         break;
       case 'Delete':
-        ToastMessage.show(context, 'Delete');
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Delete'),
+                content:
+                    const Text('Are you sure want to delete this hairstyle?'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      context.pop();
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      context.pop();
+                      context.read<HairstyleProvider>().deleteHairstyle(id);
+                      context.pop();
+                      context.read<HairstyleProvider>().refreshHairstyle();
+                      ToastMessage.show(context, 'Hairstyle deleted');
+                    },
+                    child: const Text('Delete',
+                        style: TextStyle(color: Colors.red)),
+                  ),
+                ],
+              );
+            });
         break;
     }
   }
@@ -214,7 +242,9 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
         ),
         isOwner
             ? PopupMenuButton(
-                onSelected: _onSelected,
+                onSelected: (String value) {
+                  _onSelected(value, widget.id);
+                },
                 itemBuilder: (BuildContext context) {
                   return [
                     const PopupMenuItem(
@@ -223,7 +253,8 @@ class _DetailHairstyleScreenState extends State<DetailHairstyleScreen> {
                     ),
                     const PopupMenuItem(
                       value: 'Delete',
-                      child: Text('Delete'),
+                      child:
+                          Text('Delete', style: TextStyle(color: Colors.red)),
                     ),
                   ];
                 },

@@ -95,51 +95,57 @@ class _HairstyleScreenState extends State<HairstyleScreen> {
   }
 
   Widget _buildList(BuildContext context) {
-    return Consumer<HairstyleProvider>(
-      builder: (context, provider, _) {
-        final state = provider.loadingState;
-        return state.when(
-          initial: () {
-            return const SizedBox.shrink();
-          },
-          loading: () {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-          loaded: () {
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: StaggeredGrid.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  children: List.generate(
-                    provider.hairstyles.length,
-                    (index) {
-                      final hairstyle = provider.hairstyles[index];
-                      return CardHairstyle(
-                        index: index,
-                        onTap: () {
-                          context.goNamed('detail_hairstyle',
-                              pathParameters: {'id': hairstyle.id});
-                        },
-                        hairstyle: hairstyle,
-                      );
-                    },
+    return RefreshIndicator(
+      onRefresh: () {
+        return context.read<HairstyleProvider>().refreshHairstyle();
+      },
+      child: Consumer<HairstyleProvider>(
+        builder: (context, provider, _) {
+          final state = provider.loadingState;
+          return state.when(
+            initial: () {
+              return const SizedBox.shrink();
+            },
+            loading: () {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+            loaded: () {
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: StaggeredGrid.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    children: List.generate(
+                      provider.hairstyles.length,
+                      (index) {
+                        final hairstyle = provider.hairstyles[index];
+                        return CardHairstyle(
+                          index: index,
+                          onTap: () {
+                            context.goNamed('detail_hairstyle',
+                                pathParameters: {'id': hairstyle.id});
+                          },
+                          hairstyle: hairstyle,
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
-          error: (e) {
-            return Center(
-              child: Text(e.toString()),
-            );
-          },
-        );
-      },
+              );
+            },
+            error: (e) {
+              return Center(
+                child: Text(e.toString()),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
