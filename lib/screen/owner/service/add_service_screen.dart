@@ -61,7 +61,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Service'),
+        title: Text(widget.service == null ? 'Add Service' : 'Edit Service'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

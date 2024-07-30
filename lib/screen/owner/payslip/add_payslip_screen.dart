@@ -618,6 +618,11 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
         return;
       }
 
+      if (provider.imageUrl == null) {
+        ToastMessage.show(context, 'Attachment must be filled');
+        return;
+      }
+
       await provider
           .createPayslip(
         name,

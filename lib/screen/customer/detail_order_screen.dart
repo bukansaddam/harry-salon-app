@@ -116,15 +116,17 @@ class _DetailOrderScreenState extends State<DetailOrderScreen> {
                       bottom: 40,
                       left: 16,
                       right: 16,
-                      child: detailProvider.orderState ==
-                              const OrderState.pending()
-                          ? context.watch<DetailOrderProvider>().isOnLocation
-                              ? const SizedBox()
-                              : _buildButton(detailProvider)
-                          : detailProvider.orderState ==
-                                  const OrderState.unpaid()
-                              ? _buildButtonPayment(detailProvider)
-                              : const SizedBox(),
+                      child: context.watch<DetailOrderProvider>().isOnLocation
+                          ? const SizedBox()
+                          : (detailProvider.orderState ==
+                                      const OrderState.pending() ||
+                                  detailProvider.orderState ==
+                                      const OrderState.waiting())
+                              ? _buildButton(detailProvider)
+                              : detailProvider.orderState ==
+                                      const OrderState.unpaid()
+                                  ? _buildButtonPayment(detailProvider)
+                                  : const SizedBox(),
                     ),
                   ],
                 ),
