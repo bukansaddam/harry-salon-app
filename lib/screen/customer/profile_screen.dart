@@ -224,10 +224,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             TextButton(
               onPressed: () async {
                 await context.read<AuthProvider>().logout().then((_) {
-                  context.pop();
-                  setState(() {
-                    _refreshData();
-                  });
+                  if (isOwner) {
+                    context.goNamed('login');
+                  } else if (isEmployee) {
+                    context.goNamed('login');
+                  } else {
+                    context.pop();
+                    setState(() {
+                      _refreshData();
+                    });
+                  }
                 });
               },
               child: const Text('Logout'),

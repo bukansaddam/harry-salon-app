@@ -1382,6 +1382,7 @@ class ApiService {
       },
     );
     if (response.statusCode == 200) {
+      debugPrint(response.body);
       return PresenceResponse.fromJson(jsonDecode(response.body));
     } else {
       throw PresenceResponse.fromJson(jsonDecode(response.body));

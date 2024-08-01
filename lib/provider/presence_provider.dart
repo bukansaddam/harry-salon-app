@@ -92,6 +92,8 @@ class PresenceProvider extends ChangeNotifier {
         loadingState = const LoadingState.loaded();
         notifyListeners();
 
+        debugPrint(presenceResponse!.result.data.toString());
+
         if (presenceResponse!.result.data.length < sizeItems) {
           pageItems = null;
         } else {
