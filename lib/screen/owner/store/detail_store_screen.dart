@@ -247,7 +247,10 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () {
-          return detailProvider.getDetailStore(widget.id);
+          return Future.wait([
+            detailProvider.getDetailStore(widget.id),
+            reviewProvider.refreshReview(storeId: widget.id),
+          ]);
         },
         child: Stack(
           children: [
@@ -364,6 +367,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                       borderRadius: BorderRadius.circular(13),
                     ),
                     child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -444,7 +448,10 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                                   orderHistoryProvider,
                                 )
                               : _buildCustomerSection(
-                                  detailStore, serviceProvider, reviewProvider),
+                                  detailStore,
+                                  serviceProvider,
+                                  reviewProvider,
+                                  detailProvider),
                         ],
                       ),
                     ),
@@ -550,7 +557,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
         const SizedBox(height: 12),
         _buildEmployeeSection(detailStore, detailProvider),
         const SizedBox(height: 12),
-        _buildRatingSection(detailStore, reviewProvider),
+        _buildRatingSection(detailStore, reviewProvider, detailProvider),
         const SizedBox(height: 12),
         isOwner
             ? Consumer<CommodityProvider>(
@@ -715,8 +722,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Widget _buildRatingSection(
-      DetailStore detailStore, ReviewProvider reviewProvider) {
+  Widget _buildRatingSection(DetailStore detailStore,
+      ReviewProvider reviewProvider, StoreDetailProvider detailProvider) {
     bool isMyReview = reviewProvider.reviews
         .any((element) => element.isMe && element.storeId == widget.id);
     debugPrint('isMyReview: $isMyReview');
@@ -739,7 +746,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                   GestureDetector(
                     onTap: () {
                       if (!isMyReview) {
-                        buildBottomSheet(reviewProvider);
+                        buildBottomSheet(reviewProvider, detailProvider);
                       } else {
                         ToastMessage.show(context, 'You already left a review');
                       }
@@ -815,7 +822,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     );
   }
 
-  Future<void> buildBottomSheet(ReviewProvider reviewProvider) {
+  Future<void> buildBottomSheet(
+      ReviewProvider reviewProvider, StoreDetailProvider detailProvider) {
     return showModalBottomSheet(
         useSafeArea: true,
         isScrollControlled: true,
@@ -827,14 +835,15 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
               children: [
                 Padding(
                     padding: const EdgeInsets.all(16),
-                    child: _buildReviewSection(reviewProvider)),
+                    child: _buildReviewSection(reviewProvider, detailProvider)),
               ],
             ),
           );
         });
   }
 
-  Widget _buildReviewSection(ReviewProvider reviewProvider) {
+  Widget _buildReviewSection(
+      ReviewProvider reviewProvider, StoreDetailProvider detailProvider) {
     int rating = 0;
 
     void handleSubmit() {
@@ -852,6 +861,8 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
             context.pop();
             _reviewDescriptionController.clear();
             ToastMessage.show(context, 'Your review has been submitted');
+            reviewProvider.refreshReview(storeId: widget.id);
+            detailProvider.getDetailStore(widget.id);
           } else {
             ToastMessage.show(context, reviewProvider.uploadResponse!.message);
           }
@@ -1276,6 +1287,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
     DetailStore detailStore,
     ServiceProvider serviceProvider,
     ReviewProvider reviewProvider,
+    StoreDetailProvider detailProvider,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1292,7 +1304,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
         const SizedBox(height: 12),
         _buildServiceSection(detailStore, serviceProvider),
         const SizedBox(height: 12),
-        _buildRatingSection(detailStore, reviewProvider)
+        _buildRatingSection(detailStore, reviewProvider, detailProvider)
       ],
     );
   }

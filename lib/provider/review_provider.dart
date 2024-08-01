@@ -34,6 +34,9 @@ class ReviewProvider extends ChangeNotifier {
     required int rating,
   }) async {
     try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
       final repository = await authRepository.getUser();
       final token = repository?.token;
       uploadResponse = await apiService.createReview(
@@ -42,6 +45,7 @@ class ReviewProvider extends ChangeNotifier {
         comment: comment,
         rating: rating.toString(),
       );
+
       if (reviewResponse == null) {
         loadingState = const LoadingState.error('Review not found');
         notifyListeners();

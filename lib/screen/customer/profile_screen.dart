@@ -361,7 +361,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     if (mounted) {
-      Navigator.pop(context);
+      context.pop();
     }
   }
 

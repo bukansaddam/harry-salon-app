@@ -125,7 +125,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Services*',
+                          'Services',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,
@@ -448,7 +448,7 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                             width: 20,
                             child: CircularProgressIndicator()),
                         loaded: () => Text(
-                          '${queue?.totalOrder ?? 0} (${queue?.totalDuration ?? 0} min)',
+                          '${queue?.totalOrder ?? 1} (${queue?.totalDuration ?? 0} min)',
                           style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),

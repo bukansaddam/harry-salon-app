@@ -29,7 +29,7 @@ import 'package:tugas_akhir_app/model/upload.dart';
 
 class ApiService {
   // static const String baseUrl = 'https://api.harrysalon.me';
-  static const String baseUrl = 'http://192.168.1.11:3000';
+  static const String baseUrl = 'http://192.168.1.5:3000';
   static const String _login = '/auth/owners/signin';
   static const String _register = '/auth/users/signup';
   // static const String _logout = '/auth/owners/signout';
