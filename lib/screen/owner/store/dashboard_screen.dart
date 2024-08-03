@@ -178,6 +178,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildScrollView(BuildContext context, int count) {
     return CustomScrollView(
       controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
       slivers: [
         const SliverToBoxAdapter(
           child: Text(

@@ -30,7 +30,7 @@ class DetailPayslip with _$DetailPayslip {
     required DateTime createdAt,
     required DateTime updatedAt,
     required List<SubDetailPayslip> earnings,
-    required List<SubDetailPayslip> deductions,
+    required List<SubDetailPayslip>? deductions,
   }) = _DetailPayslip;
 
   factory DetailPayslip.fromJson(Map<String, dynamic> json) =>

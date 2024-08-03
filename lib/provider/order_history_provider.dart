@@ -58,49 +58,26 @@ class OrderHistoryProvider extends ChangeNotifier {
       if (orderHistoryResponse!.success) {
         weeklyData = [];
         orderHistories = orderHistoryResponse!.result.data;
+
         getDataGraph();
-        totalIncome = orderHistoryResponse!.result.data.fold(0,
+
+        totalIncome = orderHistoryResponse!.result.data.where(
+          (element) {
+            return element.status == 'done';
+          },
+        ).fold(0,
             (previousValue, element) => previousValue + element.servicePrice);
-        totalOrder = orderHistoryResponse!.result.data.length;
+        notifyListeners();
+
+        totalOrder = orderHistoryResponse!.result.data.where(
+          (element) {
+            return element.storeId == storeId;
+          },
+        ).length;
+        notifyListeners();
+
         loadingState = const LoadingState.loaded();
         debugPrint(weeklyData.toString());
-        notifyListeners();
-      } else {
-        loadingState = LoadingState.error(orderHistoryResponse!.message);
-        notifyListeners();
-      }
-    } catch (e) {
-      loadingState = LoadingState.error(e.toString());
-      notifyListeners();
-    }
-  }
-
-  Future<void> getGraphData(
-      {String storeId = '', String dateStart = '', String dateEnd = ''}) async {
-    try {
-      if (page == 1) {
-        loadingState = const LoadingState.loading();
-        notifyListeners();
-      }
-
-      final repository = await authRepository.getUser();
-      final token = repository?.token;
-
-      orderHistoryResponse = await apiService.getOrderHistory(
-        token: token!,
-        page: page,
-        size: pageSize,
-        storeId: storeId,
-        dateStart: dateStart,
-        dateEnd: dateEnd,
-      );
-
-      if (orderHistoryResponse!.success) {
-        getDataGraph();
-        totalIncome = orderHistoryResponse!.result.data.fold(0,
-            (previousValue, element) => previousValue + element.servicePrice);
-        totalOrder = orderHistoryResponse!.result.data.length;
-        loadingState = const LoadingState.loaded();
         notifyListeners();
       } else {
         loadingState = LoadingState.error(orderHistoryResponse!.message);

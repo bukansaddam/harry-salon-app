@@ -21,6 +21,9 @@ class DetailPayslipProvider extends ChangeNotifier {
 
   LoadingState loadingState = const LoadingState.initial();
 
+  List<SubDetailPayslip> earnings = [];
+  List<SubDetailPayslip> deductions = [];
+
   int totalEarning = 0;
   int totalDeduction = 0;
 
@@ -44,14 +47,21 @@ class DetailPayslipProvider extends ChangeNotifier {
       );
 
       if (detailPayslipResponse!.success) {
+        earnings.addAll(detailPayslipResponse!.data.earnings);
+        if (detailPayslipResponse!.data.deductions != null) {
+          deductions.addAll(detailPayslipResponse!.data.deductions!);
+        }
+
+        calculateTotal();
+
         loadingState = const LoadingState.loaded();
         notifyListeners();
-        calculateTotal();
       } else {
         loadingState = LoadingState.error(detailPayslipResponse!.message);
         notifyListeners();
       }
     } catch (e) {
+      debugPrint('Error: $e');
       loadingState = LoadingState.error(e.toString());
       notifyListeners();
     }
@@ -60,10 +70,15 @@ class DetailPayslipProvider extends ChangeNotifier {
   void calculateTotal() {
     totalEarning = detailPayslipResponse!.data.earnings
         .map((e) => e.amount ?? 0)
-        .reduce((value, element) => value + element);
-    totalDeduction = detailPayslipResponse!.data.deductions
-        .map((e) => e.amount ?? 0)
-        .reduce((value, element) => value + element);
+        .fold(0, (value, element) => value + element);
+
+    totalDeduction = detailPayslipResponse!.data.deductions != null &&
+            detailPayslipResponse!.data.deductions!.isNotEmpty
+        ? detailPayslipResponse!.data.deductions!
+            .map((e) => e.amount ?? 0)
+            .fold(0, (value, element) => value + element)
+        : 0;
+
     notifyListeners();
   }
 }

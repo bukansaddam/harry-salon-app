@@ -141,8 +141,7 @@ class _DetailPayslipScreenState extends State<DetailPayslipScreen> {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    final earning =
-                        provider.detailPayslipResponse!.data.earnings[index];
+                    final earning = provider.earnings[index];
                     return Column(
                       children: [
                         Padding(
@@ -167,8 +166,7 @@ class _DetailPayslipScreenState extends State<DetailPayslipScreen> {
                       ],
                     );
                   },
-                  childCount:
-                      provider.detailPayslipResponse!.data.earnings.length,
+                  childCount: provider.earnings.length,
                 ),
               ),
               SliverToBoxAdapter(
@@ -215,8 +213,14 @@ class _DetailPayslipScreenState extends State<DetailPayslipScreen> {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    final deduction =
-                        provider.detailPayslipResponse!.data.deductions[index];
+                    if (provider.deductions.isEmpty) {
+                      return const Center(
+                          child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text('No deductions'),
+                      ));
+                    }
+                    final deduction = provider.deductions[index];
                     return Column(
                       children: [
                         Padding(
@@ -241,8 +245,9 @@ class _DetailPayslipScreenState extends State<DetailPayslipScreen> {
                       ],
                     );
                   },
-                  childCount:
-                      provider.detailPayslipResponse!.data.deductions.length,
+                  childCount: provider.deductions.isNotEmpty
+                      ? provider.deductions.length
+                      : 1,
                 ),
               ),
               SliverToBoxAdapter(
@@ -262,7 +267,7 @@ class _DetailPayslipScreenState extends State<DetailPayslipScreen> {
                       Text(
                         NumberFormat.currency(
                           locale: 'id',
-                          symbol: '- Rp ',
+                          symbol: provider.deductions.isEmpty ? 'Rp ' : '- Rp ',
                           decimalDigits: 0,
                         ).format(provider.totalDeduction),
                         style: const TextStyle(

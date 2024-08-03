@@ -174,15 +174,21 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                 ),
                 TextButton(
                   onPressed: () {
+                    context.pop();
                     Provider.of<StoreDetailProvider>(context, listen: false)
                         .deleteStore(id: detailStore.id)
                         .then((_) {
-                      context.pop();
-                      context.goNamed('home');
+                      if (context
+                          .read<StoreDetailProvider>()
+                          .deleteResponse!
+                          .success) {
+                        context.read<StoreProvider>().refreshStore();
+                        context.goNamed('home');
+                        ToastMessage.show(context, 'Store Deleted');
+                      }
                     }).catchError((error) {
                       ToastMessage.show(context, error);
                     });
-                    ToastMessage.show(context, 'Store Deleted');
                   },
                   child: const Text('Delete'),
                 ),
@@ -1228,9 +1234,7 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
                     ),
                   ),
                   Text(
-                    orderHistoryProvider.orderHistoryResponse?.result.totalCount
-                            .toString() ??
-                        '0',
+                    orderHistoryProvider.totalOrder.toString(),
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 24,
@@ -1276,7 +1280,17 @@ class _DetailStoreScreenState extends State<DetailStoreScreen>
           loading: () => const Center(
             child: CircularProgressIndicator(),
           ),
-          loaded: () => _buildListHistory(data, orderHistoryProvider),
+          loaded: () {
+            if (data.isEmpty) {
+              return const SizedBox(
+                height: 100,
+                child: Center(
+                  child: Text('No order history found'),
+                ),
+              );
+            }
+            return _buildListHistory(data, orderHistoryProvider);
+          },
           error: (e) => Text(e.toString()),
         ),
       ],

@@ -173,6 +173,9 @@ class _AddCommodityScreenState extends State<AddCommodityScreen> {
         ? Padding(
             padding: const EdgeInsets.only(right: 8),
             child: InkWell(
+              onTap: () {
+                ToastMessage.show(context, 'Long press to delete image');
+              },
               onLongPress: () {
                 showDialog(
                   context: context,
@@ -331,7 +334,7 @@ class _AddCommodityScreenState extends State<AddCommodityScreen> {
         if (provider.uploadResponse!.success) {
           provider.refreshCommodity(storeId: storeId);
           context.pop();
-          ToastMessage.show(context, 'Service added');
+          ToastMessage.show(context, 'Commodity added');
         } else {
           ToastMessage.show(context, provider.uploadResponse!.message);
         }

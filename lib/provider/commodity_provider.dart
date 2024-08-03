@@ -189,6 +189,38 @@ class CommodityProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> deleteCommodity({required String id}) async {
+    try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        loadingState = const LoadingState.error('Token is null');
+        notifyListeners();
+        return;
+      }
+
+      uploadResponse = await apiService.deleteCommodity(
+        token: token,
+        id: id,
+      );
+
+      if (uploadResponse!.success) {
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(uploadResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
   Future<List<int>> compressImage(List<int> bytes) async {
     int imageLength = bytes.length;
     if (imageLength < 1000000) return bytes;

@@ -38,8 +38,8 @@ _$DetailPayslipImpl _$$DetailPayslipImplFromJson(Map<String, dynamic> json) =>
       earnings: (json['earnings'] as List<dynamic>)
           .map((e) => SubDetailPayslip.fromJson(e as Map<String, dynamic>))
           .toList(),
-      deductions: (json['deductions'] as List<dynamic>)
-          .map((e) => SubDetailPayslip.fromJson(e as Map<String, dynamic>))
+      deductions: (json['deductions'] as List<dynamic>?)
+          ?.map((e) => SubDetailPayslip.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

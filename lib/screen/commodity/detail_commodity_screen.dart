@@ -48,7 +48,45 @@ class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
         });
         break;
       case 'Delete':
-        ToastMessage.show(context, 'Delete');
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Delete Confirmation'),
+            content: const Text('Are you sure want to delete this item?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  context.pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  _commodityProvider
+                      .deleteCommodity(id: widget.id)
+                      .then((value) {
+                    if (context
+                        .read<CommodityProvider>()
+                        .uploadResponse!
+                        .success) {
+                      context.pop();
+                      context.goNamed('more_commodity',
+                          pathParameters: {'id': widget.storeId});
+                      context
+                          .read<CommodityProvider>()
+                          .refreshCommodity(storeId: widget.storeId);
+                      ToastMessage.show(context, 'Commodity deleted');
+                    } else {
+                      ToastMessage.show(context, 'Failed to delete commodity');
+                    }
+                  });
+                },
+                child:
+                    const Text('Delete', style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
+        );
         break;
     }
   }
@@ -152,7 +190,8 @@ class _DetailCommodityScreenState extends State<DetailCommodityScreen> {
                     ),
                     const PopupMenuItem(
                       value: 'Delete',
-                      child: Text('Delete'),
+                      child:
+                          Text('Delete', style: TextStyle(color: Colors.red)),
                     ),
                   ];
                 },

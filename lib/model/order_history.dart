@@ -33,6 +33,7 @@ class OrderHistory with _$OrderHistory {
   const factory OrderHistory({
     required String id,
     required String orderId,
+    required String storeId,
     required String serviceName,
     required int servicePrice,
     required DateTime orderDate,

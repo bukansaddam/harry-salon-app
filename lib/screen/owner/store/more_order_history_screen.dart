@@ -35,21 +35,27 @@ class _MoreOrderHistoryScreenState extends State<MoreOrderHistoryScreen> {
                     child: CircularProgressIndicator(),
                   ),
               loaded: () {
-                return ListView.builder(
-                  itemCount: historyProvider.orderHistories.length,
-                  itemBuilder: (context, index) {
-                    return CardHistory(
-                      history: historyProvider.orderHistories[index],
-                      onTap: () {
-                        context.goNamed('detail_order', pathParameters: {
-                          'id': widget.storeId,
-                          'orderId':
-                              historyProvider.orderHistories[index].orderId
-                        });
-                      },
-                    );
-                  },
-                );
+                if (historyProvider.orderHistories.isEmpty) {
+                  return const Center(
+                    child: Text('No order history found'),
+                  );
+                } else {
+                  return ListView.builder(
+                    itemCount: historyProvider.orderHistories.length,
+                    itemBuilder: (context, index) {
+                      return CardHistory(
+                        history: historyProvider.orderHistories[index],
+                        onTap: () {
+                          context.goNamed('detail_order', pathParameters: {
+                            'id': widget.storeId,
+                            'orderId':
+                                historyProvider.orderHistories[index].orderId
+                          });
+                        },
+                      );
+                    },
+                  );
+                }
               },
               error: (error) {
                 return Center(

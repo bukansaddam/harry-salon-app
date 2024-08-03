@@ -113,6 +113,8 @@ class StoreProvider extends ChangeNotifier {
       if (storeOwnerResponse!.success) {
         stores.addAll(storeOwnerResponse!.result.data);
 
+        debugPrint(storeOwnerResponse.toString());
+
         loadingState = const LoadingState.loaded();
         notifyListeners();
 

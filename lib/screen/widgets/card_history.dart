@@ -33,11 +33,12 @@ class CardHistory extends StatelessWidget {
               Text(
                 NumberFormat.currency(
                   locale: 'id',
-                  symbol: 'Rp ',
+                  symbol: history.status == 'done' ? 'Rp ' : 'Rp',
                   decimalDigits: 0,
                 ).format(history.servicePrice),
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
+                  color: history.status == 'done' ? Colors.green : Colors.red,
                 ),
               ),
             ],

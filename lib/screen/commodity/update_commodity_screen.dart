@@ -190,6 +190,9 @@ class _UpdateCommodityScreenState extends State<UpdateCommodityScreen> {
         ? Padding(
             padding: const EdgeInsets.only(right: 8),
             child: InkWell(
+              onTap: () {
+                ToastMessage.show(context, 'Long press to delete image');
+              },
               onLongPress: () {
                 showDialog(
                   context: context,
@@ -232,6 +235,8 @@ class _UpdateCommodityScreenState extends State<UpdateCommodityScreen> {
             ? Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: InkWell(
+                  onTap: () =>
+                      ToastMessage.show(context, 'Long press to change image'),
                   onLongPress: () {
                     showDialog(
                       context: context,
@@ -389,7 +394,7 @@ class _UpdateCommodityScreenState extends State<UpdateCommodityScreen> {
         if (provider.uploadResponse!.success) {
           provider.refreshCommodity(storeId: storeId);
           context.pop();
-          ToastMessage.show(context, 'Service added');
+          ToastMessage.show(context, 'Commodity updated');
         } else {
           ToastMessage.show(context, provider.uploadResponse!.message);
         }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
@@ -67,6 +68,9 @@ class _AddEarningScreenState extends State<AddEarningScreen> {
                     labelText: 'Amount',
                     hintText: 'Input earning amount here',
                     keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
                   ),
                 ],
               ),

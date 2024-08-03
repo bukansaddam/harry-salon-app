@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir_app/common/loading_state.dart';
@@ -146,6 +147,8 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                   controller: _phoneNumberController,
                   hintText: 'Input employee phone number here',
                   labelText: 'Phone Number',
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 ),
                 const SizedBox(height: 16),
                 const Text(
@@ -233,6 +236,11 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
 
       if (password.length > 13) {
         ToastMessage.show(context, 'Password must be at most 13 digits');
+        return;
+      }
+
+      if (!email.contains('@')) {
+        ToastMessage.show(context, 'Email not valid');
         return;
       }
 

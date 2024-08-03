@@ -222,7 +222,7 @@ mixin _$DetailPayslip {
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
   List<SubDetailPayslip> get earnings => throw _privateConstructorUsedError;
-  List<SubDetailPayslip> get deductions => throw _privateConstructorUsedError;
+  List<SubDetailPayslip>? get deductions => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -249,7 +249,7 @@ abstract class $DetailPayslipCopyWith<$Res> {
       DateTime createdAt,
       DateTime updatedAt,
       List<SubDetailPayslip> earnings,
-      List<SubDetailPayslip> deductions});
+      List<SubDetailPayslip>? deductions});
 }
 
 /// @nodoc
@@ -277,7 +277,7 @@ class _$DetailPayslipCopyWithImpl<$Res, $Val extends DetailPayslip>
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? earnings = null,
-    Object? deductions = null,
+    Object? deductions = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -328,10 +328,10 @@ class _$DetailPayslipCopyWithImpl<$Res, $Val extends DetailPayslip>
           ? _value.earnings
           : earnings // ignore: cast_nullable_to_non_nullable
               as List<SubDetailPayslip>,
-      deductions: null == deductions
+      deductions: freezed == deductions
           ? _value.deductions
           : deductions // ignore: cast_nullable_to_non_nullable
-              as List<SubDetailPayslip>,
+              as List<SubDetailPayslip>?,
     ) as $Val);
   }
 }
@@ -357,7 +357,7 @@ abstract class _$$DetailPayslipImplCopyWith<$Res>
       DateTime createdAt,
       DateTime updatedAt,
       List<SubDetailPayslip> earnings,
-      List<SubDetailPayslip> deductions});
+      List<SubDetailPayslip>? deductions});
 }
 
 /// @nodoc
@@ -383,7 +383,7 @@ class __$$DetailPayslipImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? earnings = null,
-    Object? deductions = null,
+    Object? deductions = freezed,
   }) {
     return _then(_$DetailPayslipImpl(
       id: null == id
@@ -434,10 +434,10 @@ class __$$DetailPayslipImplCopyWithImpl<$Res>
           ? _value._earnings
           : earnings // ignore: cast_nullable_to_non_nullable
               as List<SubDetailPayslip>,
-      deductions: null == deductions
+      deductions: freezed == deductions
           ? _value._deductions
           : deductions // ignore: cast_nullable_to_non_nullable
-              as List<SubDetailPayslip>,
+              as List<SubDetailPayslip>?,
     ));
   }
 }
@@ -458,7 +458,7 @@ class _$DetailPayslipImpl implements _DetailPayslip {
       required this.createdAt,
       required this.updatedAt,
       required final List<SubDetailPayslip> earnings,
-      required final List<SubDetailPayslip> deductions})
+      required final List<SubDetailPayslip>? deductions})
       : _earnings = earnings,
         _deductions = deductions;
 
@@ -495,12 +495,14 @@ class _$DetailPayslipImpl implements _DetailPayslip {
     return EqualUnmodifiableListView(_earnings);
   }
 
-  final List<SubDetailPayslip> _deductions;
+  final List<SubDetailPayslip>? _deductions;
   @override
-  List<SubDetailPayslip> get deductions {
+  List<SubDetailPayslip>? get deductions {
+    final value = _deductions;
+    if (value == null) return null;
     if (_deductions is EqualUnmodifiableListView) return _deductions;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_deductions);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -581,7 +583,7 @@ abstract class _DetailPayslip implements DetailPayslip {
       required final DateTime createdAt,
       required final DateTime updatedAt,
       required final List<SubDetailPayslip> earnings,
-      required final List<SubDetailPayslip> deductions}) = _$DetailPayslipImpl;
+      required final List<SubDetailPayslip>? deductions}) = _$DetailPayslipImpl;
 
   factory _DetailPayslip.fromJson(Map<String, dynamic> json) =
       _$DetailPayslipImpl.fromJson;
@@ -611,7 +613,7 @@ abstract class _DetailPayslip implements DetailPayslip {
   @override
   List<SubDetailPayslip> get earnings;
   @override
-  List<SubDetailPayslip> get deductions;
+  List<SubDetailPayslip>? get deductions;
   @override
   @JsonKey(ignore: true)
   _$$DetailPayslipImplCopyWith<_$DetailPayslipImpl> get copyWith =>

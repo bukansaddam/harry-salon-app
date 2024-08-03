@@ -49,6 +49,7 @@ _$OrderHistoryImpl _$$OrderHistoryImplFromJson(Map<String, dynamic> json) =>
     _$OrderHistoryImpl(
       id: json['id'] as String,
       orderId: json['orderId'] as String,
+      storeId: json['storeId'] as String,
       serviceName: json['serviceName'] as String,
       servicePrice: (json['servicePrice'] as num).toInt(),
       orderDate: DateTime.parse(json['orderDate'] as String),
@@ -60,6 +61,7 @@ Map<String, dynamic> _$$OrderHistoryImplToJson(_$OrderHistoryImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'orderId': instance.orderId,
+      'storeId': instance.storeId,
       'serviceName': instance.serviceName,
       'servicePrice': instance.servicePrice,
       'orderDate': instance.orderDate.toIso8601String(),
