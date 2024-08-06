@@ -230,9 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     context.goNamed('login');
                   } else {
                     context.pop();
-                    setState(() {
-                      _refreshData();
-                    });
+                    context.pushReplacementNamed('home');
                   }
                 });
               },

@@ -60,7 +60,7 @@ class _EditHairstyleScreenState extends State<EditHairstyleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Hairstyle'),
+        title: const Text('Edit Hairstyle'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

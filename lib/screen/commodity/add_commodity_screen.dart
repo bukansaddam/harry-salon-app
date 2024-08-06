@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -140,6 +141,8 @@ class _AddCommodityScreenState extends State<AddCommodityScreen> {
                   controller: _stockController,
                   hintText: 'Input commodity stock here',
                   labelText: 'Stock',
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 ),
                 const SizedBox(height: 60),
                 context.watch<CommodityProvider>().loadingState.when(

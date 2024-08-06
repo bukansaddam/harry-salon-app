@@ -212,8 +212,12 @@ class _CommodityScreenState extends State<CommodityScreen> {
                       ClipRRect(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
-                        child: Image.network(commodities.image,
-                            height: 200, fit: BoxFit.cover),
+                        child: Image.network(
+                          commodities.image,
+                          height: 200,
+                          fit: BoxFit.cover,
+                          width: double.infinity, 
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),

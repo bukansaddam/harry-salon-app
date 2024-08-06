@@ -218,7 +218,7 @@ class OrderProvider extends ChangeNotifier {
         return;
       }
 
-      orderResponse = await apiService.getCurrentOrder(
+      orderResponse = await apiService.getOrderEmployee(
         token: token,
         page: pageItems,
         size: sizeItems,
@@ -256,7 +256,7 @@ class OrderProvider extends ChangeNotifier {
         return;
       }
 
-      orderResponse = await apiService.getCurrentOrder(
+      orderResponse = await apiService.getOrderEmployee(
         token: token,
         page: pageItems,
         size: sizeItems,

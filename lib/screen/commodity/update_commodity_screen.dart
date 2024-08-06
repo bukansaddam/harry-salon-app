@@ -70,7 +70,7 @@ class _UpdateCommodityScreenState extends State<UpdateCommodityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Update Commodity'),
+        title: const Text('Edit Commodity'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

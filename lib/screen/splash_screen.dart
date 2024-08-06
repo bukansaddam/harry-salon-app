@@ -50,15 +50,10 @@ class _SplashScreenState extends State<SplashScreen> {
           end: Alignment.bottomCenter,
         ),
       ),
-      child: const Center(
-        child: Text(
-          'Harry Salon',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 52,
-            fontWeight: FontWeight.bold,
-            decoration: TextDecoration.none,
-          ),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 64),
+          child: Image.asset('assets/images/logo.png'),
         ),
       ),
     );
