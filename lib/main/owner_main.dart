@@ -30,6 +30,7 @@ import 'package:tugas_akhir_app/screen/customer/edit_profile_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/edit_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/employee/add_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/employee/detail_employee_screen.dart';
+import 'package:tugas_akhir_app/screen/owner/employee/edit_employee_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/employee/employee_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/add_hairstyle_screen.dart';
 import 'package:tugas_akhir_app/screen/hairstyle/detail_hairstyle_screen.dart';
@@ -374,6 +375,16 @@ final GoRouter _router = GoRouter(
                   return DetailPayslipScreen(
                     id: id!,
                     employeeId: employeeId!,
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'change-store',
+                name: 'change_store',
+                builder: (context, state) {
+                  final id = state.pathParameters['id'];
+                  return EditEmployeeScreen(
+                    id: id!,
                   );
                 },
               ),

@@ -58,6 +58,16 @@ class _DetailEmployeeScreenState extends State<DetailEmployeeScreen>
         child: Scaffold(
           appBar: AppBar(
             title: const Text('Detail Employee'),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  context.goNamed('change_store', pathParameters: {
+                    'id': widget.id,
+                  });
+                },
+              ),
+            ],
           ),
           body: Consumer<EmployeeDetailProvider>(
             builder: (context, provider, child) {

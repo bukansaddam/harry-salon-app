@@ -28,8 +28,8 @@ import 'package:tugas_akhir_app/model/store_owner.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://api.harrysalon.me';
-  // static const String baseUrl = 'http://192.168.1.13:3000';
+  // static const String baseUrl = 'https://api.harrysalon.me';
+  static const String baseUrl = 'http://192.168.1.7:3000';
   static const String _login = '/auth/owners/signin';
   static const String _register = '/auth/users/signup';
   // static const String _logout = '/auth/owners/signout';
@@ -406,6 +406,29 @@ class ApiService {
       return EmployeeResponse.fromJson(jsonDecode(response.body));
     } else {
       return EmployeeResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<UploadResponse> changeStoreEmployee({
+    required String token,
+    required String id,
+    required String storeId,
+  }) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl$_employee/$id'),
+      body: jsonEncode(<String, String>{
+        'storeId': storeId,
+      }),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return UploadResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return UploadResponse.fromJson(jsonDecode(response.body));
     }
   }
 

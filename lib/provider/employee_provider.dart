@@ -187,6 +187,39 @@ class EmployeeProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> changeStoreEmployee(String id, String storeId) async {
+    try {
+      loadingState = const LoadingState.loading();
+      notifyListeners();
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        loadingState = const LoadingState.error('Token not found');
+        notifyListeners();
+        return;
+      }
+
+      uploadResponse = await apiService.changeStoreEmployee(
+        token: token,
+        id: id,
+        storeId: storeId,
+      );
+
+      if (uploadResponse!.success) {
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(uploadResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
+  }
+
   Future<void> deleteEmployee(String id) async {
     try {
       loadingState = const LoadingState.loading();
