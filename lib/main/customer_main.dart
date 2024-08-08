@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -25,9 +27,34 @@ import 'package:tugas_akhir_app/screen/owner/store/detail_store_screen.dart';
 import 'package:tugas_akhir_app/screen/splash_screen.dart';
 import '../config/injection.dart' as di;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   di.init();
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    debugPrint("onMessageOpenedApp : ${message.data}");
+    _router.goNamed("detail_order", pathParameters: {"id": message.data['id']});
+  });
+
+  FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+    debugPrint("getInitialMessage : ${message?.data}");
+    if (message != null) {
+      _router
+          .goNamed("detail_order", pathParameters: {"id": message.data['id']});
+    }
+  });
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   runApp(const CustomerApp());
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+
+  debugPrint("onBackgroundMessage : ${message.data}");
 }
 
 class CustomerApp extends StatelessWidget {

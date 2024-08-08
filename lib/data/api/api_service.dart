@@ -88,6 +88,7 @@ class ApiService {
   Future<LoginResponse> login({
     required String email,
     required String password,
+    required String deviceToken,
   }) async {
     final response = await http.post(
       isOwner
@@ -98,6 +99,7 @@ class ApiService {
       body: jsonEncode(<String, String>{
         'email': email,
         'password': password,
+        'deviceToken': deviceToken,
       }),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -114,12 +116,14 @@ class ApiService {
   Future<LoginResponse> loginEmployee({
     required String email,
     required String password,
+    required String deviceToken,
   }) async {
     final response = await http.post(
       Uri.parse('$baseUrl$_loginEmployee'),
       body: jsonEncode(<String, String>{
         'email': email,
         'password': password,
+        'deviceToken': deviceToken,
       }),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

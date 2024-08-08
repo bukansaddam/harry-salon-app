@@ -13,10 +13,11 @@ dependencies:
   contentsize_tabbarview: ^0.0.2
   cupertino_icons: ^1.0.6
   delightful_toast: ^1.1.0
+  firebase_core: ^3.3.0
+  firebase_messaging: ^15.0.4
   fl_chart: ^0.68.0
   flutter:
     sdk: flutter
-  # flutter_barcode_scanner: ^2.0.0
   flutter_hooks: ^0.20.5
   flutter_launcher_icons: ^0.13.1
   flutter_rating_bar: ^4.0.1

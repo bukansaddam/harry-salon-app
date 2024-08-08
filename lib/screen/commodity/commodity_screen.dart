@@ -216,7 +216,7 @@ class _CommodityScreenState extends State<CommodityScreen> {
                           commodities.image,
                           height: 200,
                           fit: BoxFit.cover,
-                          width: double.infinity, 
+                          width: double.infinity,
                         ),
                       ),
                       Padding(

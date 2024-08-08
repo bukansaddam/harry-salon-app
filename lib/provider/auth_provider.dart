@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:tugas_akhir_app/common/loading_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
@@ -23,6 +24,8 @@ class AuthProvider extends ChangeNotifier {
   String? get message => _message;
 
   bool isLoggedIn = false;
+
+  String? deviceToken;
 
   Future<bool> checkIsLoggedIn() async {
     loadingState = const LoadingState.loading();
@@ -95,9 +98,12 @@ class AuthProvider extends ChangeNotifier {
       loadingState = const LoadingState.loading();
       notifyListeners();
 
+      deviceToken = await FirebaseMessaging.instance.getToken();
+
       loginResponse = await apiService.login(
         email: email,
         password: password,
+        deviceToken: deviceToken!,
       );
 
       if (loginResponse!.success) {
@@ -144,9 +150,12 @@ class AuthProvider extends ChangeNotifier {
       loadingState = const LoadingState.loading();
       notifyListeners();
 
+      deviceToken = await FirebaseMessaging.instance.getToken();
+
       final LoginResponse loginResponse = await apiService.loginEmployee(
         email: email,
         password: password,
+        deviceToken: deviceToken!,
       );
 
       if (loginResponse.success) {
