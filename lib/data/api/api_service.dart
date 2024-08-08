@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tugas_akhir_app/model/commodity.dart';
+import 'package:tugas_akhir_app/model/commodity_history.dart';
 import 'package:tugas_akhir_app/model/detail_commodity.dart';
 import 'package:tugas_akhir_app/model/detail_employee.dart';
 import 'package:tugas_akhir_app/model/detail_hairstyle.dart';
@@ -693,6 +694,28 @@ class ApiService {
       return CommodityResponse.fromJson(jsonDecode(response.body));
     } else {
       return CommodityResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<CommodityHistoryResponse> getCommodityHistory({
+    required String token,
+    required String storeId,
+    int page = 1,
+    int size = 10,
+  }) async {
+    final response = await http.get(
+      Uri.parse(
+          '$baseUrl$_commodity/store/history/$storeId?page=$page&pageSize=$size'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint('Api History Result Service : ${response.body}');
+      return CommodityHistoryResponse.fromJson(jsonDecode(response.body));
+    } else {
+      return CommodityHistoryResponse.fromJson(jsonDecode(response.body));
     }
   }
 

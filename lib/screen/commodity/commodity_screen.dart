@@ -66,11 +66,42 @@ class _CommodityScreenState extends State<CommodityScreen> {
     });
   }
 
+  void _onSelected(BuildContext context, String value) {
+    switch (value) {
+      case 'History':
+        context.goNamed('history_commodity', pathParameters: {
+          'id': widget.storeId,
+        });
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Commodity'),
+        actions: [
+          isOwner
+              ? PopupMenuButton(
+                  onSelected: (value) {
+                    _onSelected(context, value);
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      const PopupMenuItem(
+                        value: 'History',
+                        child: Text('Log History'),
+                      ),
+                    ];
+                  },
+                  icon: const Icon(
+                    Icons.more_vert,
+                    color: Colors.black,
+                  ),
+                )
+              : const SizedBox(),
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,

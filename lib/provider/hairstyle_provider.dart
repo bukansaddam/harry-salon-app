@@ -50,7 +50,7 @@ class HairstyleProvider extends ChangeNotifier {
       );
 
       if (hairstyleResponse == null) {
-        loadingState = const LoadingState.error('Payslip not found');
+        loadingState = const LoadingState.error('Hairstyle not found');
         notifyListeners();
         return;
       }

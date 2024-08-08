@@ -23,6 +23,7 @@ import 'package:tugas_akhir_app/provider/user_provider.dart';
 import 'package:tugas_akhir_app/screen/auth/login_screen.dart';
 import 'package:tugas_akhir_app/screen/auth/register_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/add_commodity_screen.dart';
+import 'package:tugas_akhir_app/screen/commodity/commodity_history_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/detail_commodity_screen.dart';
 import 'package:tugas_akhir_app/screen/commodity/update_commodity_screen.dart';
@@ -286,7 +287,15 @@ final GoRouter _router = GoRouter(
                       storeId: storeId!,
                     );
                   },
-                )
+                ),
+                GoRoute(
+                  path: 'history-commodity',
+                  name: 'history_commodity',
+                  builder: (context, state) {
+                    final id = state.pathParameters['id'];
+                    return CommodityHistoryScreen(storeId: id!);
+                  },
+                ),
               ],
             ),
             GoRoute(
