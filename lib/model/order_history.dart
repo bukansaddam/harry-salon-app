@@ -34,6 +34,7 @@ class OrderHistory with _$OrderHistory {
     required String id,
     required String orderId,
     required String storeId,
+    required String handledBy,
     required String serviceName,
     required int servicePrice,
     required DateTime orderDate,

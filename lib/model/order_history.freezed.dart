@@ -434,6 +434,7 @@ mixin _$OrderHistory {
   String get id => throw _privateConstructorUsedError;
   String get orderId => throw _privateConstructorUsedError;
   String get storeId => throw _privateConstructorUsedError;
+  String get handledBy => throw _privateConstructorUsedError;
   String get serviceName => throw _privateConstructorUsedError;
   int get servicePrice => throw _privateConstructorUsedError;
   DateTime get orderDate => throw _privateConstructorUsedError;
@@ -456,6 +457,7 @@ abstract class $OrderHistoryCopyWith<$Res> {
       {String id,
       String orderId,
       String storeId,
+      String handledBy,
       String serviceName,
       int servicePrice,
       DateTime orderDate,
@@ -479,6 +481,7 @@ class _$OrderHistoryCopyWithImpl<$Res, $Val extends OrderHistory>
     Object? id = null,
     Object? orderId = null,
     Object? storeId = null,
+    Object? handledBy = null,
     Object? serviceName = null,
     Object? servicePrice = null,
     Object? orderDate = null,
@@ -497,6 +500,10 @@ class _$OrderHistoryCopyWithImpl<$Res, $Val extends OrderHistory>
       storeId: null == storeId
           ? _value.storeId
           : storeId // ignore: cast_nullable_to_non_nullable
+              as String,
+      handledBy: null == handledBy
+          ? _value.handledBy
+          : handledBy // ignore: cast_nullable_to_non_nullable
               as String,
       serviceName: null == serviceName
           ? _value.serviceName
@@ -534,6 +541,7 @@ abstract class _$$OrderHistoryImplCopyWith<$Res>
       {String id,
       String orderId,
       String storeId,
+      String handledBy,
       String serviceName,
       int servicePrice,
       DateTime orderDate,
@@ -555,6 +563,7 @@ class __$$OrderHistoryImplCopyWithImpl<$Res>
     Object? id = null,
     Object? orderId = null,
     Object? storeId = null,
+    Object? handledBy = null,
     Object? serviceName = null,
     Object? servicePrice = null,
     Object? orderDate = null,
@@ -573,6 +582,10 @@ class __$$OrderHistoryImplCopyWithImpl<$Res>
       storeId: null == storeId
           ? _value.storeId
           : storeId // ignore: cast_nullable_to_non_nullable
+              as String,
+      handledBy: null == handledBy
+          ? _value.handledBy
+          : handledBy // ignore: cast_nullable_to_non_nullable
               as String,
       serviceName: null == serviceName
           ? _value.serviceName
@@ -605,6 +618,7 @@ class _$OrderHistoryImpl implements _OrderHistory {
       {required this.id,
       required this.orderId,
       required this.storeId,
+      required this.handledBy,
       required this.serviceName,
       required this.servicePrice,
       required this.orderDate,
@@ -621,6 +635,8 @@ class _$OrderHistoryImpl implements _OrderHistory {
   @override
   final String storeId;
   @override
+  final String handledBy;
+  @override
   final String serviceName;
   @override
   final int servicePrice;
@@ -633,7 +649,7 @@ class _$OrderHistoryImpl implements _OrderHistory {
 
   @override
   String toString() {
-    return 'OrderHistory(id: $id, orderId: $orderId, storeId: $storeId, serviceName: $serviceName, servicePrice: $servicePrice, orderDate: $orderDate, orderDescription: $orderDescription, status: $status)';
+    return 'OrderHistory(id: $id, orderId: $orderId, storeId: $storeId, handledBy: $handledBy, serviceName: $serviceName, servicePrice: $servicePrice, orderDate: $orderDate, orderDescription: $orderDescription, status: $status)';
   }
 
   @override
@@ -644,6 +660,8 @@ class _$OrderHistoryImpl implements _OrderHistory {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.orderId, orderId) || other.orderId == orderId) &&
             (identical(other.storeId, storeId) || other.storeId == storeId) &&
+            (identical(other.handledBy, handledBy) ||
+                other.handledBy == handledBy) &&
             (identical(other.serviceName, serviceName) ||
                 other.serviceName == serviceName) &&
             (identical(other.servicePrice, servicePrice) ||
@@ -657,7 +675,7 @@ class _$OrderHistoryImpl implements _OrderHistory {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, orderId, storeId,
+  int get hashCode => Object.hash(runtimeType, id, orderId, storeId, handledBy,
       serviceName, servicePrice, orderDate, orderDescription, status);
 
   @JsonKey(ignore: true)
@@ -679,6 +697,7 @@ abstract class _OrderHistory implements OrderHistory {
       {required final String id,
       required final String orderId,
       required final String storeId,
+      required final String handledBy,
       required final String serviceName,
       required final int servicePrice,
       required final DateTime orderDate,
@@ -694,6 +713,8 @@ abstract class _OrderHistory implements OrderHistory {
   String get orderId;
   @override
   String get storeId;
+  @override
+  String get handledBy;
   @override
   String get serviceName;
   @override

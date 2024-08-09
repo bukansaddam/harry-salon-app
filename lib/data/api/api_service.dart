@@ -26,6 +26,7 @@ import 'package:tugas_akhir_app/model/review.dart';
 import 'package:tugas_akhir_app/model/service.dart';
 import 'package:tugas_akhir_app/model/store.dart';
 import 'package:tugas_akhir_app/model/store_owner.dart';
+import 'package:tugas_akhir_app/model/total_order.dart';
 import 'package:tugas_akhir_app/model/upload.dart';
 
 class ApiService {
@@ -1283,6 +1284,24 @@ class ApiService {
       return OrderResponse.fromJson(jsonDecode(response.body));
     } else {
       return OrderResponse.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  Future<TotalOrderResponse> getTotalOrder({
+    required String token,
+    required String employeeId,
+  }) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl$_history/employee/total/$employeeId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return TotalOrderResponse.fromJson(jsonDecode(response.body));
+    } else {
+      throw TotalOrderResponse.fromJson(jsonDecode(response.body));
     }
   }
 

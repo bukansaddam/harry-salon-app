@@ -6,8 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir_app/common/loading_state.dart';
 import 'package:tugas_akhir_app/model/employee.dart';
 import 'package:tugas_akhir_app/provider/employee_provider.dart';
+import 'package:tugas_akhir_app/provider/order_history_provider.dart';
 import 'package:tugas_akhir_app/provider/payslip_provider.dart';
 import 'package:tugas_akhir_app/screen/widgets/button.dart';
 import 'package:tugas_akhir_app/screen/widgets/text_field.dart';
@@ -28,6 +30,7 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
   DateTime _selectedDate = DateTime.now();
 
   late PayslipProvider _payslipProvider;
+  late OrderHistoryProvider _orderHistoryProvider;
 
   Employee? dropdownValue;
 
@@ -44,6 +47,8 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _payslipProvider = Provider.of<PayslipProvider>(context, listen: false);
+    _orderHistoryProvider =
+        Provider.of<OrderHistoryProvider>(context, listen: false);
 
     _dateController.text =
         DateFormat('EEEE, dd MMMM yyyy').format(_selectedDate);
@@ -53,6 +58,7 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
       setState(() {
         dropdownValue = employees.first;
       });
+      _orderHistoryProvider.getTotalOrder(employeeId: dropdownValue!.id);
     }
   }
 
@@ -62,6 +68,25 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
     _dateController.dispose();
     _payslipProvider.clearPayslip();
     super.dispose();
+  }
+
+  String _totalOrder() {
+    String total = context
+            .watch<OrderHistoryProvider>()
+            .totalOrderResponse
+            ?.result
+            .toString() ??
+        "0";
+
+    if (context.watch<OrderHistoryProvider>().loadingState ==
+        const LoadingState.loaded()) {
+      return total;
+    } else if (context.watch<OrderHistoryProvider>().loadingState ==
+        const LoadingState.loading()) {
+      return "calculating...";
+    } else {
+      return "0";
+    }
   }
 
   @override
@@ -104,6 +129,30 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
                     ),
                     const SizedBox(height: 4),
                     _buildEmployeeDropdown(),
+                    const SizedBox(height: 4),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text.rich(
+                        TextSpan(
+                          text: 'Total Order: ',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: _totalOrder(),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     const Text(
                       'Date',
@@ -665,6 +714,7 @@ class _AddPayslipScreenState extends State<AddPayslipScreen> {
                 setState(() {
                   dropdownValue = newValue;
                 });
+                _orderHistoryProvider.getTotalOrder(employeeId: newValue!.id);
               },
               items: context.watch<EmployeeProvider>().employees.map(
                 (Employee value) {

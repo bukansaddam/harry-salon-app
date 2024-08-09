@@ -4,6 +4,7 @@ import 'package:tugas_akhir_app/common/order_state.dart';
 import 'package:tugas_akhir_app/data/api/api_service.dart';
 import 'package:tugas_akhir_app/data/local/auth_repository.dart';
 import 'package:tugas_akhir_app/model/order_history.dart';
+import 'package:tugas_akhir_app/model/total_order.dart';
 
 class OrderHistoryProvider extends ChangeNotifier {
   final ApiService apiService;
@@ -13,6 +14,7 @@ class OrderHistoryProvider extends ChangeNotifier {
       {required this.apiService, required this.authRepository});
 
   OrderHistoryResponse? orderHistoryResponse;
+  TotalOrderResponse? totalOrderResponse;
 
   LoadingState loadingState = const LoadingState.initial();
   OrderState orderState = const OrderState.initial();
@@ -28,6 +30,7 @@ class OrderHistoryProvider extends ChangeNotifier {
 
   int totalOrder = 0;
   int totalIncome = 0;
+  int totalOrderEmployee = 0;
 
   Future<void> getOrderHistory(
       {String storeId = '', String dateStart = '', String dateEnd = ''}) async {
@@ -123,5 +126,45 @@ class OrderHistoryProvider extends ChangeNotifier {
   Future<void> clearSelectedDaysOrder() async {
     selectedDaysOrder.clear();
     notifyListeners();
+  }
+
+  Future<void> getTotalOrder({required String employeeId}) async {
+    try {
+      loadingState = const LoadingState.loading();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifyListeners();
+      });
+
+      final repository = await authRepository.getUser();
+      final token = repository?.token;
+
+      if (token == null) {
+        loadingState = const LoadingState.error('You must login first');
+        notifyListeners();
+        return;
+      }
+
+      totalOrderResponse = await apiService.getTotalOrder(
+        token: token,
+        employeeId: employeeId,
+      );
+
+      if (totalOrderResponse!.success) {
+        totalOrderEmployee = totalOrderResponse!.result;
+        notifyListeners();
+
+        debugPrint("Total Order : $totalOrderEmployee");
+        debugPrint("Total Order : ${totalOrderResponse!.result}");
+
+        loadingState = const LoadingState.loaded();
+        notifyListeners();
+      } else {
+        loadingState = LoadingState.error(totalOrderResponse!.message);
+        notifyListeners();
+      }
+    } catch (e) {
+      loadingState = LoadingState.error(e.toString());
+      notifyListeners();
+    }
   }
 }
