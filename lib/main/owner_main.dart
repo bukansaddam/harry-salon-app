@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -57,8 +58,12 @@ import 'package:tugas_akhir_app/screen/owner/store/detail_store_screen.dart';
 import 'package:tugas_akhir_app/screen/owner/store/more_employee_screen.dart';
 import '../config/injection.dart' as di;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   di.init();
+
   runApp(const OwnerApp());
 }
 
